@@ -18,11 +18,6 @@ public interface IVideoController {
     void stopFadeOut();
 
     /**
-     * 控制视图是否处于显示状态
-     */
-    boolean isShowing();
-
-    /**
      * 设置锁定状态
      *
      * @param locked 是否锁定
@@ -45,14 +40,19 @@ public interface IVideoController {
     void stopProgress();
 
     /**
+     * 控制视图是否处于显示状态
+     */
+    boolean isShowing();
+
+    /**
      * 显示控制视图
      */
-    void hide();
+    void show();
 
     /**
      * 隐藏控制视图
      */
-    void show();
+    void hide();
 
     /**
      * 是否需要适配刘海
