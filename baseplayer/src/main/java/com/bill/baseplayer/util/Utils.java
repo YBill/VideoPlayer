@@ -9,9 +9,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.telephony.TelephonyManager;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
 
@@ -183,6 +185,32 @@ public class Utils {
             statusBarHeight = context.getResources().getDimensionPixelSize(resourceId);
         }
         return statusBarHeight;
+    }
+
+    /**
+     * 边缘检测
+     */
+    public static boolean isEdge(Context context, MotionEvent e) {
+        float edgeSize = dp2px(context, 40);
+        return e.getRawX() < edgeSize
+                || e.getRawX() > getScreenWidth(context, true) - edgeSize
+                || e.getRawY() < edgeSize
+                || e.getRawY() > getScreenHeight(context, true) - edgeSize;
+    }
+
+
+    /**
+     * dp转为px
+     */
+    public static float dp2px(Context context, float dpValue) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.getResources().getDisplayMetrics());
+    }
+
+    /**
+     * sp转为px
+     */
+    public static float sp2px(Context context, float dpValue) {
+        return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, dpValue, context.getResources().getDisplayMetrics());
     }
 
 

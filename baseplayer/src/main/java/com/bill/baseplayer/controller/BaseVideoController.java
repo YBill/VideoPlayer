@@ -28,31 +28,31 @@ import java.util.Map;
 /**
  * author ywb
  * date 2021/11/24
- * desc
+ * desc 控制器基类
  */
 public abstract class BaseVideoController extends FrameLayout implements
         IVideoController, OrientationHelper.OnOrientationChangeListener {
 
-    // 播放器包装类，集合了MediaPlayerControl的api和IVideoController的api
+    // 播放器包装类，集合了PlayerControl的api和IVideoController的api
     protected ControlWrapper mControlWrapper;
 
-    protected Activity mActivity;
+    protected Activity mActivity; // 当前Activity
 
     protected boolean mIsShowing; // 控制器是否处于显示状态
     protected boolean mIsLocked; // 是否处于锁定状态
     private boolean mIsStartProgress; // 是否开始刷新进度
-    private int mOrientation = 0;
 
-    private boolean mEnableOrientation; // 是否开启根据屏幕方向进入/退出全屏
+    private boolean mEnableOrientation; // 是否开启根据屏幕方向进入/退出全屏，默认false
     protected OrientationHelper mOrientationHelper; // 屏幕方向监听辅助类
+    private int mOrientation;
 
-    private boolean mIsAdaptCutout; // 用户设置是否适配刘海屏
+    private boolean mIsAdaptCutout; // 用户设置是否适配刘海屏，默认true
     private Boolean mHasCutout; // 是否有刘海
     private int mCutoutHeight; // 刘海的高度
 
     protected int mDefaultTimeout = 4000; // 播放视图隐藏超时
 
-    //保存了所有的控制组件
+    // 保存了所有的组件
     protected LinkedHashMap<IControlComponent, Boolean> mControlComponents = new LinkedHashMap<>();
 
     private Animation mShowAnim;
@@ -309,39 +309,39 @@ public abstract class BaseVideoController extends FrameLayout implements
     public void onOrientationChanged(int orientation) {
         if (mActivity == null || mActivity.isFinishing()) return;
 
-        //记录用户手机上一次放置的位置
+        // 记录用户手机上一次放置的位置
         int lastOrientation = mOrientation;
 
         if (orientation == OrientationEventListener.ORIENTATION_UNKNOWN) {
-            //手机平放时，检测不到有效的角度
-            //重置为原始位置 -1
+            // 手机平放时，检测不到有效的角度
+            // 重置为原始位置 -1
             mOrientation = -1;
             return;
         }
 
         if (orientation > 350 || orientation < 10) {
             int o = mActivity.getRequestedOrientation();
-            //手动切换横竖屏
+            // 手动切换横竖屏
             if (o == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE && lastOrientation == 0) return;
             if (mOrientation == 0) return;
-            //0度，用户竖直拿着手机
+            // 0度，用户竖直拿着手机
             mOrientation = 0;
             onOrientationPortrait(mActivity);
         } else if (orientation > 80 && orientation < 100) {
 
             int o = mActivity.getRequestedOrientation();
-            //手动切换横竖屏
+            // 手动切换横竖屏
             if (o == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT && lastOrientation == 90) return;
             if (mOrientation == 90) return;
-            //90度，用户右侧横屏拿着手机
+            // 90度，用户右侧横屏拿着手机
             mOrientation = 90;
             onOrientationReverseLandscape(mActivity);
         } else if (orientation > 260 && orientation < 280) {
             int o = mActivity.getRequestedOrientation();
-            //手动切换横竖屏
+            // 手动切换横竖屏
             if (o == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT && lastOrientation == 270) return;
             if (mOrientation == 270) return;
-            //270度，用户左侧横屏拿着手机
+            // 270度，用户左侧横屏拿着手机
             mOrientation = 270;
             onOrientationLandscape(mActivity);
         }
@@ -553,8 +553,7 @@ public abstract class BaseVideoController extends FrameLayout implements
     };
 
     private void handleLockStateChanged(boolean isLocked) {
-        for (Map.Entry<IControlComponent, Boolean> next
-                : mControlComponents.entrySet()) {
+        for (Map.Entry<IControlComponent, Boolean> next : mControlComponents.entrySet()) {
             IControlComponent component = next.getKey();
             component.onLockStateChanged(isLocked);
         }
@@ -567,10 +566,10 @@ public abstract class BaseVideoController extends FrameLayout implements
     protected Runnable mShowProgressRunnable = new Runnable() {
         @Override
         public void run() {
-            long pos = setProgress();
+            long curPos = setProgress();
             if (mControlWrapper.isPlaying()) {
                 float speed = mControlWrapper.getSpeed() == 0 ? 1f : mControlWrapper.getSpeed();
-                postDelayed(this, (long) ((1000 - pos % 1000) / speed));
+                postDelayed(this, (long) ((1000 - curPos % 1000) / speed));
             } else {
                 mIsStartProgress = false;
             }
@@ -593,12 +592,9 @@ public abstract class BaseVideoController extends FrameLayout implements
     }
 
     private void handleVisibilityChanged(boolean isVisible, Animation anim) {
-        // 没锁住时才向ControlComponent下发此事件
-        if (!mIsLocked) {
-            for (Map.Entry<IControlComponent, Boolean> next : mControlComponents.entrySet()) {
-                IControlComponent component = next.getKey();
-                component.onVisibilityChanged(isVisible, anim);
-            }
+        for (Map.Entry<IControlComponent, Boolean> next : mControlComponents.entrySet()) {
+            IControlComponent component = next.getKey();
+            component.onVisibilityChanged(isVisible, anim);
         }
         onVisibilityChanged(isVisible, anim);
     }
@@ -624,9 +620,9 @@ public abstract class BaseVideoController extends FrameLayout implements
      * 竖屏
      */
     protected void onOrientationPortrait(Activity activity) {
-        //屏幕锁定的情况
+        // 屏幕锁定的情况
         if (mIsLocked) return;
-        //没有开启设备方向监听的情况
+        // 没有开启设备方向监听的情况
         if (!mEnableOrientation) return;
 
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

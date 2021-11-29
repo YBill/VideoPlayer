@@ -24,7 +24,7 @@ public interface IGestureComponent extends IControlComponent {
      * @param currentPosition 当前播放进度
      * @param duration        视频总长度
      */
-    void onPositionChange(int slidePosition, int currentPosition, int duration);
+    void onPositionChange(long slidePosition, long currentPosition, long duration);
 
     /**
      * 滑动调整亮度
