@@ -3,7 +3,7 @@ package com.bill.baseplayer.controller;
 /**
  * author ywb
  * date 2021/11/24
- * desc
+ * desc 控制器方法
  */
 public interface IVideoController {
 

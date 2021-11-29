@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 /**
  * author ywb
  * date 2021/11/24
- * desc
+ * desc 播放器方法
  */
 public interface PlayerControl {
 

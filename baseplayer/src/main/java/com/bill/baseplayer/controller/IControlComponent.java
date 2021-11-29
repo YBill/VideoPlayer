@@ -58,7 +58,7 @@ public interface IControlComponent {
      * @param duration 视频总时长
      * @param position 播放进度
      */
-    void setProgress(int duration, int position);
+    void setProgress(long duration, long position);
 
     /**
      * 回调控制器是否被锁定，锁定后会产生如下影响：

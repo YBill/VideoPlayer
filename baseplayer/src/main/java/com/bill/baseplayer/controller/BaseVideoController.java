@@ -60,6 +60,21 @@ public abstract class BaseVideoController extends FrameLayout implements
     protected abstract int getLayoutId();
 
     /**
+     * 重要：此方法用于将{@link VideoView} 和控制器绑定
+     */
+    @CallSuper
+    public void setMediaPlayer(PlayerControl mediaPlayer) {
+        mControlWrapper = new ControlWrapper(mediaPlayer, this);
+        //绑定ControlComponent和Controller
+        for (Map.Entry<IControlComponent, Boolean> next : mControlComponents.entrySet()) {
+            IControlComponent component = next.getKey();
+            component.attach(mControlWrapper);
+        }
+        //开始监听设备方向
+        mOrientationHelper.setOnOrientationChangeListener(this);
+    }
+
+    /**
      * {@link VideoView}调用此方法向控制器设置播放状态
      */
     @CallSuper
@@ -90,21 +105,6 @@ public abstract class BaseVideoController extends FrameLayout implements
     public boolean showNetWarning() {
         return Utils.isMobileNet(getContext())
                 && !VideoViewManager.getInstance().playOnMobileNetwork();
-    }
-
-    /**
-     * 重要：此方法用于将{@link VideoView} 和控制器绑定
-     */
-    @CallSuper
-    public void setMediaPlayer(PlayerControl mediaPlayer) {
-        mControlWrapper = new ControlWrapper(mediaPlayer, this);
-        //绑定ControlComponent和Controller
-        for (Map.Entry<IControlComponent, Boolean> next : mControlComponents.entrySet()) {
-            IControlComponent component = next.getKey();
-            component.attach(mControlWrapper);
-        }
-        //开始监听设备方向
-        mOrientationHelper.setOnOrientationChangeListener(this);
     }
 
     /**

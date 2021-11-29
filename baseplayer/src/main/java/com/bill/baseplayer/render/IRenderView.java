@@ -14,13 +14,6 @@ import com.bill.baseplayer.player.AbstractPlayer;
  */
 public interface IRenderView {
 
-    public static final int SCREEN_SCALE_DEFAULT = 0;
-    public static final int SCREEN_SCALE_16_9 = 1;
-    public static final int SCREEN_SCALE_4_3 = 2;
-    public static final int SCREEN_SCALE_MATCH_PARENT = 3;
-    public static final int SCREEN_SCALE_ORIGINAL = 4;
-    public static final int SCREEN_SCALE_CENTER_CROP = 5;
-
     /**
      * 关联AbstractPlayer
      */
