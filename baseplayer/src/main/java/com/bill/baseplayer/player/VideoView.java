@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import com.bill.baseplayer.config.VideoViewConfig;
 import com.bill.baseplayer.config.VideoViewManager;
 import com.bill.baseplayer.controller.BaseVideoController;
+import com.bill.baseplayer.controller.OnVideoStateChangeListener;
 import com.bill.baseplayer.controller.PlayerControl;
 import com.bill.baseplayer.render.IRenderView;
 import com.bill.baseplayer.render.RenderViewFactory;
@@ -86,7 +87,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     protected Map<String, String> mHeaders; // 当前视频地址的请求头
     protected AssetFileDescriptor mAssetFileDescriptor; // assets文件
 
-    protected List<OnStateChangeListener> mOnStateChangeListeners; // 保存了所有监听器
+    protected List<OnVideoStateChangeListener> mOnStateChangeListeners; // 保存了所有监听器
 
     /**
      * 监听系统中音频焦点改变，见{@link #setEnableAudioFocus(boolean)}
@@ -142,7 +143,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 是否处于播放状态
      */
-    protected boolean isInPlayState() {
+    private boolean isInPlayState() {
         return mMediaPlayer != null
                 && mCurrentPlayState != STATE_ERROR
                 && mCurrentPlayState != STATE_IDLE
@@ -154,33 +155,34 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 是否处于初始状态
      */
-    protected boolean isInIdleState() {
+    private boolean isInIdleState() {
         return mCurrentPlayState == STATE_IDLE;
     }
 
     /**
      * 播放中止状态
      */
-    protected boolean isInStartAbortState() {
+    private boolean isInStartAbortState() {
         return mCurrentPlayState == STATE_START_ABORT;
     }
 
     /**
      * 是否显示移动网络提示，可在Controller中配置
      */
-    protected boolean showNetWarning() {
+    private boolean showNetWarning() {
         //播放本地数据源时不检测网络
         if (isLocalDataSource()) {
             MLog.d("play local data");
             return false;
         }
-        return mVideoController != null && mVideoController.showNetWarning();
+        return Utils.isMobileNet(getContext())
+                && !VideoViewManager.getInstance().getConfig().mPlayOnMobileNetwork;
     }
 
     /**
      * 判断是否为本地数据源，包括 本地文件、Asset、raw
      */
-    protected boolean isLocalDataSource() {
+    private boolean isLocalDataSource() {
         if (mAssetFileDescriptor != null) {
             return true;
         } else if (!TextUtils.isEmpty(mUrl)) {
@@ -195,13 +197,13 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 设置播放器状态，并向Controller通知播放器状态，包含全屏状态和非全屏状态
      */
-    protected void setPlayerState(int playerState) {
+    private void setPlayerState(int playerState) {
         mCurrentPlayerState = playerState;
         if (mVideoController != null) {
             mVideoController.setPlayerState(playerState);
         }
         if (mOnStateChangeListeners != null) {
-            for (OnStateChangeListener l : mOnStateChangeListeners) {
+            for (OnVideoStateChangeListener l : mOnStateChangeListeners) {
                 if (l != null) {
                     l.onPlayerStateChanged(playerState);
                 }
@@ -212,13 +214,13 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 设置播放状态，并向Controller通知播放状态，用于控制Controller的ui展示
      */
-    protected void setPlayState(int playState) {
+    private void setPlayState(int playState) {
         mCurrentPlayState = playState;
         if (mVideoController != null) {
             mVideoController.setPlayState(playState);
         }
         if (mOnStateChangeListeners != null) {
-            for (OnStateChangeListener l : mOnStateChangeListeners) {
+            for (OnVideoStateChangeListener l : mOnStateChangeListeners) {
                 if (l != null) {
                     l.onPlayStateChanged(playState);
                 }
@@ -231,7 +233,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
      *
      * @return 是否成功开始播放
      */
-    protected boolean startPlay() {
+    private boolean startPlay() {
         // 如果要显示移动网络提示则不继续播放
         if (showNetWarning()) {
             // 中止播放
@@ -255,7 +257,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 初始化播放器
      */
-    protected void initPlayer() {
+    private void initPlayer() {
         mMediaPlayer = mPlayerFactory.createPlayer(getContext());
         mMediaPlayer.setPlayerEventListener(this);
         setBeforeInitOptions();
@@ -266,7 +268,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 初始化视频渲染View
      */
-    protected void addDisplay() {
+    private void addDisplay() {
         if (mRenderView != null) {
             mPlayerContainer.removeView(mRenderView.getView());
             mRenderView.release();
@@ -283,7 +285,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 开始准备播放（直接播放）
      */
-    protected void startPrepare(boolean reset) {
+    private void startPrepare(boolean reset) {
         if (reset) {
             mMediaPlayer.reset();
             // 重新设置option，MediaPlayer reset之后，option会失效
@@ -301,7 +303,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
      *
      * @return 播放数据是否设置成功
      */
-    protected boolean prepareDataSource() {
+    private boolean prepareDataSource() {
         if (mAssetFileDescriptor != null) {
             mMediaPlayer.setDataSource(mAssetFileDescriptor);
             return true;
@@ -315,7 +317,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 播放状态下开始播放
      */
-    protected void startInPlaybackState() {
+    private void startInPlaybackState() {
         mMediaPlayer.start();
         setPlayState(STATE_PLAYING);
         if (mAudioFocusHelper != null && !isMute()) {
@@ -342,7 +344,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 保存播放进度
      */
-    protected void saveProgress() {
+    private void saveProgress() {
         if (mProgressManager != null && mCurrentPosition > 0) {
             MLog.d("saveProgress: " + mCurrentPosition);
             mProgressManager.saveProgress(mUrl, mCurrentPosition);
@@ -352,7 +354,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 获取Activity
      */
-    protected Activity getActivity() {
+    private Activity getActivity() {
         Activity activity;
         if (mVideoController != null) {
             activity = Utils.scanForActivity(mVideoController.getContext());
@@ -368,7 +370,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 获取DecorView
      */
-    protected ViewGroup getDecorView() {
+    private ViewGroup getDecorView() {
         Activity activity = getActivity();
         if (activity == null) return null;
         return (ViewGroup) activity.getWindow().getDecorView();
@@ -377,7 +379,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 获取activity中的contentView
      */
-    protected ViewGroup getContentView() {
+    private ViewGroup getContentView() {
         Activity activity = getActivity();
         if (activity == null) return null;
         return activity.findViewById(android.R.id.content);
@@ -535,7 +537,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 添加播放器监听
      */
-    public void addOnStateChangeListener(@NonNull OnStateChangeListener listener) {
+    public void addVideoStateChangeListener(@NonNull OnVideoStateChangeListener listener) {
         if (mOnStateChangeListeners == null) {
             mOnStateChangeListeners = new ArrayList<>();
         }
@@ -546,7 +548,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 移除播放器监听
      */
-    public void removeOnStateChangeListener(@NonNull OnStateChangeListener listener) {
+    public void removeVideoStateChangeListener(@NonNull OnVideoStateChangeListener listener) {
         if (mOnStateChangeListeners != null) {
             mOnStateChangeListeners.remove(listener);
         }
@@ -555,7 +557,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 设置播放器监听
      */
-    public void setOnStateChangeListener(@NonNull OnStateChangeListener listener) {
+    public void setVideoStateChangeListener(@NonNull OnVideoStateChangeListener listener) {
         if (mOnStateChangeListeners == null) {
             mOnStateChangeListeners = new ArrayList<>();
         } else {
@@ -567,7 +569,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 移除所有播放器监听
      */
-    public void clearOnStateChangeListeners() {
+    public void clearVideoStateChangeListeners() {
         if (mOnStateChangeListeners != null) {
             mOnStateChangeListeners.clear();
         }
@@ -1037,24 +1039,5 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     }
 
     //////////// System End //////////////
-
-    /**
-     * 状态改变监听器
-     */
-    public interface OnStateChangeListener {
-        /**
-         * 播放器状态（全屏、小窗等）
-         *
-         * @param playerState 播放器状态
-         */
-        void onPlayerStateChanged(int playerState);
-
-        /**
-         * 播放状态
-         *
-         * @param playState 播放状态
-         */
-        void onPlayStateChanged(int playState);
-    }
 
 }

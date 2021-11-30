@@ -40,4 +40,14 @@ public interface IGestureComponent extends IControlComponent {
      */
     void onVolumeChange(int percent);
 
+    /**
+     * 单击
+     */
+    void onSingleTapConfirmed();
+
+    /**
+     * 双击
+     */
+    void onDoubleTap();
+
 }

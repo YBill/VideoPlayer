@@ -26,17 +26,12 @@ public class VideoViewManager {
     private VideoViewConfig mConfig;
 
     /**
-     * 是否在移动网络下直接播放视频
-     */
-    private boolean mPlayOnMobileNetwork;
-
-    /**
      * 保存VideoView的容器
      */
     private final LinkedHashMap<String, VideoView> mVideoViews = new LinkedHashMap<>();
 
     private VideoViewManager() {
-        mPlayOnMobileNetwork = getConfig().mPlayOnMobileNetwork;
+
     }
 
     public void setConfig(VideoViewConfig config) {
@@ -47,20 +42,6 @@ public class VideoViewManager {
         if (mConfig == null)
             setConfig(VideoViewConfig.create().build());
         return mConfig;
-    }
-
-    /**
-     * 获取是否在移动网络下直接播放视频配置
-     */
-    public boolean playOnMobileNetwork() {
-        return mPlayOnMobileNetwork;
-    }
-
-    /**
-     * 设置是否在移动网络下直接播放视频
-     */
-    public void setPlayOnMobileNetwork(boolean playOnMobileNetwork) {
-        mPlayOnMobileNetwork = playOnMobileNetwork;
     }
 
     /**

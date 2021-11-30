@@ -9,7 +9,8 @@ import androidx.annotation.NonNull;
 /**
  * author ywb
  * date 2021/11/24
- * desc  此类的目的是为了在ControlComponent中既能调用VideoView的api又能调用BaseVideoController的api，并对部分api做了封装，方便使用
+ * desc  此类的目的是为了方便ControlComponent中既能调用VideoView的api又能调用BaseVideoController的api
+ * 并对部分api做了封装，方便使用
  */
 public class ControlWrapper implements PlayerControl, IVideoController {
 
@@ -142,13 +143,13 @@ public class ControlWrapper implements PlayerControl, IVideoController {
     }
 
     @Override
-    public void startFadeOut() {
-        mController.startFadeOut();
+    public void autoHideCountdown() {
+        mController.autoHideCountdown();
     }
 
     @Override
-    public void stopFadeOut() {
-        mController.stopFadeOut();
+    public void cancelHideCountdown() {
+        mController.cancelHideCountdown();
     }
 
     @Override

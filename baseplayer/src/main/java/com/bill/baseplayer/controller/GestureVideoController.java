@@ -1,5 +1,6 @@
 package com.bill.baseplayer.controller;
 
+import android.app.Activity;
 import android.content.Context;
 import android.media.AudioManager;
 import android.util.AttributeSet;
@@ -30,12 +31,12 @@ public abstract class GestureVideoController extends BaseVideoController impleme
     private AudioManager mAudioManager;
 
     private boolean mEnabledGesture = true; // 是否开启手势功能
-    private boolean mCanChangePosByScroll = true; // 是否可以滑动调整进度
-    private boolean mEnabledDoubleTapTogglePlay = true; // 双击控制播放暂停
+    private boolean mEnabledSlide = true; // 是否支持滑动
+    private boolean mEnabledDoubleTapTogglePlay = true; // 是否可以双击控制播放暂停
+    private boolean mEnabledSingleTabToggleShow = true; // 是否可以单击控制控制器显示隐藏
 
     private boolean mFirstTouch; // 第一次触摸
     private int mCurPlayState; // 当前的播放状态
-    protected boolean mCanScroll = false; // 是否支持滑动
 
     private int mStreamVolume; // 音量
     private float mBrightness; // 亮度
@@ -67,12 +68,6 @@ public abstract class GestureVideoController extends BaseVideoController impleme
     @Override
     public void setPlayerState(int playerState) {
         super.setPlayerState(playerState);
-        // 默认小屏模式下不可以滑动手势，可以重写setPlayerState设置
-        if (playerState == VideoView.PLAYER_TINY_SCREEN) {
-            mCanScroll = false;
-        } else {
-            mCanScroll = true;
-        }
     }
 
     @Override
@@ -84,18 +79,19 @@ public abstract class GestureVideoController extends BaseVideoController impleme
     //////// 向外部暴露的方法 Start /////////
 
     /**
-     * 设置是否可以滑动调节进度，默认可以
+     * 是否开启手势控制，默认开启
+     * 关闭之后，手势调节和点击功能将关闭
      */
-    public void setCanChangePosByScroll(boolean canChangePosByScroll) {
-        mCanChangePosByScroll = canChangePosByScroll;
+    public void setGestureEnabled(boolean gestureEnabled) {
+        mEnabledGesture = gestureEnabled;
     }
 
     /**
      * 是否开启手势控制，默认开启
      * 关闭之后，手势调节进度，音量，亮度功能将关闭
      */
-    public void setGestureEnabled(boolean gestureEnabled) {
-        mEnabledGesture = gestureEnabled;
+    public void setEnabledSlide(boolean enabledSlide) {
+        mEnabledSlide = enabledSlide;
     }
 
     /**
@@ -103,6 +99,13 @@ public abstract class GestureVideoController extends BaseVideoController impleme
      */
     public void setDoubleTapTogglePlayEnabled(boolean enabledDoubleTapTogglePlay) {
         mEnabledDoubleTapTogglePlay = enabledDoubleTapTogglePlay;
+    }
+
+    /**
+     * 是否开启单击显示/隐藏控制器，默认开启
+     */
+    public void setEnabledSingleTabToggleShow(boolean enabledSingleTabToggleShow) {
+        mEnabledSingleTabToggleShow = enabledSingleTabToggleShow;
     }
 
     //////// 向外部暴露的方法 End /////////
@@ -128,10 +131,11 @@ public abstract class GestureVideoController extends BaseVideoController impleme
                 || Utils.isEdge(getContext(), e)) // 处于屏幕边沿
             return true;
         mStreamVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-        if (mActivity == null) {
+        Activity activity = mActivity;
+        if (activity == null) {
             mBrightness = 0;
         } else {
-            mBrightness = mActivity.getWindow().getAttributes().screenBrightness;
+            mBrightness = activity.getWindow().getAttributes().screenBrightness;
         }
         mFirstTouch = true;
         mChangePosition = false;
@@ -147,7 +151,7 @@ public abstract class GestureVideoController extends BaseVideoController impleme
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
         if (!isInPlayState() // 不处于播放状态
                 || !mEnabledGesture // 关闭了手势
-                || !mCanScroll // 关闭了滑动手势
+                || !mEnabledSlide // 关闭了滑动手势
                 || isLocked() // 锁住了屏幕
                 || Utils.isEdge(getContext(), e1)) //处于屏幕边沿
             return true;
@@ -156,10 +160,7 @@ public abstract class GestureVideoController extends BaseVideoController impleme
         if (mFirstTouch) {
             mFirstTouch = false;
             mChangePosition = Math.abs(distanceX) >= Math.abs(distanceY);
-            if (mChangePosition) {
-                // 根据用户设置是否可以滑动调节进度来决定最终是否可以滑动调节进度
-                mChangePosition = mCanChangePosByScroll;
-            } else {
+            if (!mChangePosition) {
                 // 半屏宽度
                 int halfScreen = Utils.getScreenWidth(getContext(), true) / 2;
                 if (e2.getX() > halfScreen) {
@@ -169,15 +170,13 @@ public abstract class GestureVideoController extends BaseVideoController impleme
                 }
             }
 
-            if (mChangePosition || mChangeBrightness || mChangeVolume) {
-                for (Map.Entry<IControlComponent, Boolean> next : mControlComponents.entrySet()) {
-                    IControlComponent component = next.getKey();
-                    if (component instanceof IGestureComponent) {
-                        ((IGestureComponent) component).onStartSlide();
-                    }
+            for (IControlComponent component : mControlComponents) {
+                if (component instanceof IGestureComponent) {
+                    ((IGestureComponent) component).onStartSlide();
                 }
             }
         }
+
         if (mChangePosition) {
             slideToChangePosition(deltaX);
         } else if (mChangeBrightness) {
@@ -218,7 +217,9 @@ public abstract class GestureVideoController extends BaseVideoController impleme
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
         if (isInPlayState()) {
-            mControlWrapper.toggleShowState();
+            if (!isLocked() && mEnabledGesture && mEnabledSingleTabToggleShow)
+                mControlWrapper.toggleShowState();
+            handleSingleTap();
         }
         return true;
     }
@@ -228,7 +229,11 @@ public abstract class GestureVideoController extends BaseVideoController impleme
      */
     @Override
     public boolean onDoubleTap(MotionEvent e) {
-        if (mEnabledDoubleTapTogglePlay && !isLocked() && isInPlayState()) togglePlay();
+        if (isInPlayState()) {
+            if (!isLocked() && mEnabledGesture && mEnabledDoubleTapTogglePlay)
+                mControlWrapper.togglePlay();
+            handleDoubleTap();
+        }
         return true;
     }
 
@@ -245,7 +250,9 @@ public abstract class GestureVideoController extends BaseVideoController impleme
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         //滑动结束时事件处理
-        if (!mGestureDetector.onTouchEvent(event)) {
+        if (mEnabledGesture && mEnabledSlide
+                && !isLocked()
+                && !mGestureDetector.onTouchEvent(event)) {
             int action = event.getAction();
             switch (action) {
                 case MotionEvent.ACTION_UP:
@@ -267,8 +274,7 @@ public abstract class GestureVideoController extends BaseVideoController impleme
     //////// System End /////////
 
     private void stopSlide() {
-        for (Map.Entry<IControlComponent, Boolean> next : mControlComponents.entrySet()) {
-            IControlComponent component = next.getKey();
+        for (IControlComponent component : mControlComponents) {
             if (component instanceof IGestureComponent) {
                 ((IGestureComponent) component).onStopSlide();
             }
@@ -286,7 +292,7 @@ public abstract class GestureVideoController extends BaseVideoController impleme
     }
 
     // 调整进度
-    protected void slideToChangePosition(float deltaX) {
+    private void slideToChangePosition(float deltaX) {
         deltaX = -deltaX;
         int width = getMeasuredWidth();
         long duration = mControlWrapper.getDuration();
@@ -294,8 +300,7 @@ public abstract class GestureVideoController extends BaseVideoController impleme
         long position = (long) (deltaX / width * 120000 + currentPosition);
         if (position > duration) position = duration;
         if (position < 0) position = 0;
-        for (Map.Entry<IControlComponent, Boolean> next : mControlComponents.entrySet()) {
-            IControlComponent component = next.getKey();
+        for (IControlComponent component : mControlComponents) {
             if (component instanceof IGestureComponent) {
                 ((IGestureComponent) component).onPositionChange(position, currentPosition, duration);
             }
@@ -304,9 +309,10 @@ public abstract class GestureVideoController extends BaseVideoController impleme
     }
 
     // 调整亮度
-    protected void slideToChangeBrightness(float deltaY) {
-        if (mActivity == null) return;
-        Window window = mActivity.getWindow();
+    private void slideToChangeBrightness(float deltaY) {
+        Activity activity = mActivity;
+        if (activity == null) return;
+        Window window = activity.getWindow();
         WindowManager.LayoutParams attributes = window.getAttributes();
         int height = getMeasuredHeight();
         if (mBrightness == -1.0f) mBrightness = 0.5f;
@@ -318,8 +324,7 @@ public abstract class GestureVideoController extends BaseVideoController impleme
         int percent = (int) (brightness * 100);
         attributes.screenBrightness = brightness;
         window.setAttributes(attributes);
-        for (Map.Entry<IControlComponent, Boolean> next : mControlComponents.entrySet()) {
-            IControlComponent component = next.getKey();
+        for (IControlComponent component : mControlComponents) {
             if (component instanceof IGestureComponent) {
                 ((IGestureComponent) component).onBrightnessChange(percent);
             }
@@ -327,7 +332,7 @@ public abstract class GestureVideoController extends BaseVideoController impleme
     }
 
     // 调整音量
-    protected void slideToChangeVolume(float deltaY) {
+    private void slideToChangeVolume(float deltaY) {
         int streamMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         int height = getMeasuredHeight();
         float deltaV = deltaY * 2 / height * streamMaxVolume;
@@ -336,10 +341,25 @@ public abstract class GestureVideoController extends BaseVideoController impleme
         if (index < 0) index = 0;
         int percent = (int) (index / streamMaxVolume * 100);
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int) index, 0);
-        for (Map.Entry<IControlComponent, Boolean> next : mControlComponents.entrySet()) {
-            IControlComponent component = next.getKey();
+        for (IControlComponent component : mControlComponents) {
             if (component instanceof IGestureComponent) {
                 ((IGestureComponent) component).onVolumeChange(percent);
+            }
+        }
+    }
+
+    private void handleSingleTap() {
+        for (IControlComponent component : mControlComponents) {
+            if (component instanceof IGestureComponent) {
+                ((IGestureComponent) component).onSingleTapConfirmed();
+            }
+        }
+    }
+
+    private void handleDoubleTap() {
+        for (IControlComponent component : mControlComponents) {
+            if (component instanceof IGestureComponent) {
+                ((IGestureComponent) component).onDoubleTap();
             }
         }
     }

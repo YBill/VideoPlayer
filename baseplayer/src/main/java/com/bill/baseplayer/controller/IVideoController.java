@@ -3,19 +3,35 @@ package com.bill.baseplayer.controller;
 /**
  * author ywb
  * date 2021/11/24
- * desc 控制器方法
+ * desc 控制器封装的功能
  */
 public interface IVideoController {
 
     /**
-     * 开始控制视图自动隐藏倒计时
+     * 控制视图是否处于显示状态
      */
-    void startFadeOut();
+    boolean isShowing();
+
+    /**
+     * 显示控制视图
+     */
+    void show();
+
+    /**
+     * 隐藏控制视图
+     */
+    void hide();
+
+    /**
+     * 开始控制视图自动隐藏倒计时
+     * 设置倒计时时间使用 {@link BaseVideoController#setAutoHideCountdown(int) }
+     */
+    void autoHideCountdown();
 
     /**
      * 取消控制视图自动隐藏倒计时
      */
-    void stopFadeOut();
+    void cancelHideCountdown();
 
     /**
      * 设置锁定状态
@@ -38,21 +54,6 @@ public interface IVideoController {
      * 停止刷新进度
      */
     void stopProgress();
-
-    /**
-     * 控制视图是否处于显示状态
-     */
-    boolean isShowing();
-
-    /**
-     * 显示控制视图
-     */
-    void show();
-
-    /**
-     * 隐藏控制视图
-     */
-    void hide();
 
     /**
      * 是否需要适配刘海

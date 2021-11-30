@@ -1,5 +1,6 @@
 package com.bill.baseplayer.controller;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -7,8 +8,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.OrientationEventListener;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
 import android.widget.FrameLayout;
 
 import androidx.annotation.CallSuper;
@@ -21,9 +20,8 @@ import com.bill.baseplayer.util.CutoutScreenUtil;
 import com.bill.baseplayer.util.MLog;
 import com.bill.baseplayer.util.Utils;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * author ywb
@@ -50,13 +48,12 @@ public abstract class BaseVideoController extends FrameLayout implements
     private Boolean mHasCutout; // 是否有刘海
     private int mCutoutHeight; // 刘海的高度
 
-    protected int mDefaultTimeout = 4000; // 播放视图隐藏超时
+    private int mAutoHideCountdown = 4000; // 视图自动隐藏倒计时
 
-    // 保存了所有的组件
-    protected LinkedHashMap<IControlComponent, Boolean> mControlComponents = new LinkedHashMap<>();
+    private IComponentState mComponentStateListener; // 控制器状态监听
 
-    private Animation mShowAnim;
-    private Animation mHideAnim;
+    // 所有的组件
+    protected ArrayList<IControlComponent> mControlComponents = new ArrayList<>();
 
     public BaseVideoController(@NonNull Context context) {
         this(context, null);
@@ -82,6 +79,7 @@ public abstract class BaseVideoController extends FrameLayout implements
         mIsAdaptCutout = VideoViewManager.getInstance().getConfig().mAdaptCutout;
 
         mActivity = Utils.scanForActivity(getContext());
+        checkCutout();
     }
 
     /**
@@ -90,12 +88,6 @@ public abstract class BaseVideoController extends FrameLayout implements
     protected abstract int getLayoutId();
 
     //////// System Start /////////
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        checkCutout();
-    }
 
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
@@ -120,23 +112,25 @@ public abstract class BaseVideoController extends FrameLayout implements
     //////// 向外部暴露的方法 Start /////////
 
     /**
-     * 添加控制组件，最后面添加的在最下面，合理组织添加顺序，可让ControlComponent位于不同的层级
+     * 添加控制组件，最后面添加的在最上面，合理组织添加顺序，可让ControlComponent位于不同的层级
      */
-    public void addControlComponent(IControlComponent... component) {
-        if (component == null) return;
-        for (IControlComponent item : component) {
-            addControlComponent(item, false);
-        }
-    }
+    public void addControlComponent(IControlComponent... components) {
+        if (components == null) return;
+        for (IControlComponent component : components) {
+            if (component == null) continue;
+            if (mControlComponents.contains(component))
+                mControlComponents.remove(component);
+            mControlComponents.add(component);
+            if (mControlWrapper != null) {
+                component.attach(mControlWrapper);
+            }
+            if (!component.isDissociate()) {
+                View view = component.getView();
+                if (view != null) {
+                    addView(view);
+                }
+            }
 
-    public void addControlComponent(IControlComponent component, boolean isDissociate) {
-        mControlComponents.put(component, isDissociate);
-        if (mControlWrapper != null) {
-            component.attach(mControlWrapper);
-        }
-        View view = component.getView();
-        if (view != null && !isDissociate) {
-            addView(view, 0);
         }
     }
 
@@ -144,40 +138,42 @@ public abstract class BaseVideoController extends FrameLayout implements
      * 移除控制组件
      */
     public void removeControlComponent(IControlComponent component) {
-        removeView(component.getView());
+        if (component == null) return;
+        if (!component.isDissociate())
+            removeView(component.getView());
         mControlComponents.remove(component);
     }
 
     /**
      * 移除所有控制组件
      */
-    public void removeAllControlComponent() {
-        for (Map.Entry<IControlComponent, Boolean> next : mControlComponents.entrySet()) {
-            removeView(next.getKey().getView());
+    public void clearControlComponents() {
+        for (IControlComponent component : mControlComponents) {
+            if (component == null) continue;
+            if (!component.isDissociate())
+                removeView(component.getView());
         }
         mControlComponents.clear();
     }
 
     /**
-     * 移除所有的游离控制组件
-     * 关于游离控制组件的定义请看 {@link #addControlComponent(IControlComponent, boolean)} 关于 isDissociate 的解释
+     * 移除所有游离组件
      */
-    public void removeAllDissociateComponents() {
-        Iterator<Map.Entry<IControlComponent, Boolean>> it = mControlComponents.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<IControlComponent, Boolean> next = it.next();
-            if (next.getValue()) {
-                it.remove();
-            }
+    public void clearDissociateComponents() {
+        Iterator<IControlComponent> iterator = mControlComponents.iterator();
+        while (iterator.hasNext()) {
+            IControlComponent component = iterator.next();
+            if (component.isDissociate())
+                iterator.remove();
         }
     }
 
     /**
-     * 设置播放视图自动隐藏超时
+     * 设置自动隐藏时间
      */
-    public void setDismissTimeout(int timeout) {
-        if (timeout > 0) {
-            mDefaultTimeout = timeout;
+    public void setAutoHideCountdown(int autoHideCountdown) {
+        if (autoHideCountdown > 0) {
+            mAutoHideCountdown = autoHideCountdown;
         }
     }
 
@@ -199,21 +195,50 @@ public abstract class BaseVideoController extends FrameLayout implements
 
     //////// IVideoController Start /////////
 
-    /**
-     * 开始计时
-     */
     @Override
-    public void startFadeOut() {
-        stopFadeOut();
-        postDelayed(mFadeOutRunnable, mDefaultTimeout);
+    public boolean isShowing() {
+        return mIsShowing;
     }
 
     /**
-     * 取消计时
+     * 显示播放视图
      */
     @Override
-    public void stopFadeOut() {
-        removeCallbacks(mFadeOutRunnable);
+    public void show() {
+        if (!mIsShowing) {
+            handleVisibilityChanged(true);
+            autoHideCountdown();
+            mIsShowing = true;
+        }
+    }
+
+    /**
+     * 隐藏播放视图
+     */
+    @Override
+    public void hide() {
+        if (mIsShowing) {
+            cancelHideCountdown();
+            handleVisibilityChanged(false);
+            mIsShowing = false;
+        }
+    }
+
+    /**
+     * 开始控制视图自动隐藏倒计时
+     */
+    @Override
+    public void autoHideCountdown() {
+        cancelHideCountdown();
+        postDelayed(mAutoHideRunnable, mAutoHideCountdown);
+    }
+
+    /**
+     * 取消控制视图自动隐藏倒计时
+     */
+    @Override
+    public void cancelHideCountdown() {
+        removeCallbacks(mAutoHideRunnable);
     }
 
     @Override
@@ -245,43 +270,6 @@ public abstract class BaseVideoController extends FrameLayout implements
         if (!mIsStartProgress) return;
         removeCallbacks(mShowProgressRunnable);
         mIsStartProgress = false;
-    }
-
-    @Override
-    public boolean isShowing() {
-        return mIsShowing;
-    }
-
-    /**
-     * 显示播放视图
-     */
-    @Override
-    public void show() {
-        if (!mIsShowing) {
-            if (mShowAnim == null) {
-                mShowAnim = new AlphaAnimation(0f, 1f);
-                mShowAnim.setDuration(300);
-            }
-            handleVisibilityChanged(true, mShowAnim);
-            startFadeOut();
-            mIsShowing = true;
-        }
-    }
-
-    /**
-     * 隐藏播放视图
-     */
-    @Override
-    public void hide() {
-        if (mIsShowing) {
-            stopFadeOut();
-            if (mHideAnim == null) {
-                mHideAnim = new AlphaAnimation(1f, 0f);
-                mHideAnim.setDuration(300);
-            }
-            handleVisibilityChanged(false, mHideAnim);
-            mIsShowing = false;
-        }
     }
 
     /**
@@ -349,141 +337,16 @@ public abstract class BaseVideoController extends FrameLayout implements
 
     //////// OrientationHelper#OnOrientationChangeListener Start /////////
 
-
-    //////// 子类可接收父类状态 Start /////////
-
-    /**
-     * 子类中请使用此方法来进入全屏
-     *
-     * @return 是否成功进入全屏
-     */
-    protected boolean startFullScreen() {
-        if (mActivity == null || mActivity.isFinishing()) return false;
-        mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        mControlWrapper.startFullScreen();
-        return true;
-    }
-
-    /**
-     * 子类中请使用此方法来退出全屏
-     *
-     * @return 是否成功退出全屏
-     */
-    protected boolean stopFullScreen() {
-        if (mActivity == null || mActivity.isFinishing()) return false;
-        mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        mControlWrapper.stopFullScreen();
-        return true;
-    }
-
-    /**
-     * 播放和暂停
-     */
-    protected void togglePlay() {
-        mControlWrapper.togglePlay();
-    }
-
-    /**
-     * 横竖屏切换
-     */
-    protected void toggleFullScreen() {
-        mControlWrapper.toggleFullScreen(mActivity);
-    }
-
-    /**
-     * 子类重写此方法并在其中更新控制器在不同播放状态下的ui
-     */
-    @CallSuper
-    protected void onPlayStateChanged(int playState) {
-        switch (playState) {
-            case VideoView.STATE_IDLE:
-                mOrientationHelper.disable();
-                mOrientation = 0;
-                mIsLocked = false;
-                mIsShowing = false;
-                //由于游离组件是独立于控制器存在的，
-                //所以在播放器release的时候需要移除
-                removeAllDissociateComponents();
-                break;
-            case VideoView.STATE_PLAYBACK_COMPLETED:
-                mIsLocked = false;
-                mIsShowing = false;
-                break;
-            case VideoView.STATE_ERROR:
-                mIsShowing = false;
-                break;
-        }
-    }
-
-    /**
-     * 子类重写此方法并在其中更新控制器在不同播放器状态下的ui
-     */
-    @CallSuper
-    protected void onPlayerStateChanged(int playerState) {
-        switch (playerState) {
-            case VideoView.PLAYER_NORMAL:
-                if (mEnableOrientation) {
-                    mOrientationHelper.enable();
-                } else {
-                    mOrientationHelper.disable();
-                }
-                if (hasCutout()) {
-                    CutoutScreenUtil.adaptCutoutAboveAndroidP(getContext(), false);
-                }
-                break;
-            case VideoView.PLAYER_FULL_SCREEN:
-                // 在全屏时强制监听设备方向
-                mOrientationHelper.enable();
-                if (hasCutout()) {
-                    CutoutScreenUtil.adaptCutoutAboveAndroidP(getContext(), true);
-                }
-                break;
-            case VideoView.PLAYER_TINY_SCREEN:
-                mOrientationHelper.disable();
-                break;
-        }
-    }
-
-    /**
-     * 子类可重写此方法监听锁定状态发生改变，然后更新ui
-     */
-    protected void onLockStateChanged(boolean isLocked) {
-
-    }
-
-    /**
-     * 刷新进度回调，子类可在此方法监听进度刷新，然后更新ui
-     *
-     * @param duration 视频总时长
-     * @param position 视频当前时长
-     */
-    protected void setProgress(long duration, long position) {
-
-    }
-
-    /**
-     * 子类重写此方法监听控制的显示和隐藏
-     *
-     * @param isVisible 是否可见
-     * @param anim      显示/隐藏动画
-     */
-    protected void onVisibilityChanged(boolean isVisible, Animation anim) {
-
-    }
-
-    //////// 子类可接收父类状态 End /////////
-
     //////// 和VideoView关联方法 Start /////////
 
     /**
-     * 重要：此方法用于将{@link VideoView} 和控制器绑定
+     * 重要：此方法用于将{@link VideoView} 和控制器绑定、
      */
     @CallSuper
     public void setMediaPlayer(PlayerControl mediaPlayer) {
         mControlWrapper = new ControlWrapper(mediaPlayer, this);
         // 绑定ControlComponent和Controller
-        for (Map.Entry<IControlComponent, Boolean> next : mControlComponents.entrySet()) {
-            IControlComponent component = next.getKey();
+        for (IControlComponent component : mControlComponents) {
             component.attach(mControlWrapper);
         }
         // 开始监听设备方向
@@ -503,23 +366,13 @@ public abstract class BaseVideoController extends FrameLayout implements
      * {@link VideoView}调用此方法向控制器设置播放器状态
      */
     @CallSuper
-    public void setPlayerState(final int playerState) {
+    public void setPlayerState(int playerState) {
         handlePlayerStateChanged(playerState);
     }
 
     /**
-     * 显示移动网络播放提示
-     *
-     * @return 返回显示移动网络播放提示的条件，false:不显示, true显示
-     * 此处默认根据手机网络类型来决定是否显示，开发者可以重写相关逻辑
-     */
-    public boolean showNetWarning() {
-        return Utils.isMobileNet(getContext())
-                && !VideoViewManager.getInstance().playOnMobileNetwork();
-    }
-
-    /**
      * 改变返回键逻辑，用于activity
+     * 子类中可以处理相关逻辑
      */
     public boolean onBackPressed() {
         return false;
@@ -545,7 +398,7 @@ public abstract class BaseVideoController extends FrameLayout implements
     /**
      * 隐藏播放视图Runnable
      */
-    protected final Runnable mFadeOutRunnable = new Runnable() {
+    private final Runnable mAutoHideRunnable = new Runnable() {
         @Override
         public void run() {
             hide();
@@ -553,17 +406,17 @@ public abstract class BaseVideoController extends FrameLayout implements
     };
 
     private void handleLockStateChanged(boolean isLocked) {
-        for (Map.Entry<IControlComponent, Boolean> next : mControlComponents.entrySet()) {
-            IControlComponent component = next.getKey();
+        for (IControlComponent component : mControlComponents) {
             component.onLockStateChanged(isLocked);
         }
-        onLockStateChanged(isLocked);
+        if (mComponentStateListener != null)
+            mComponentStateListener.onLockStateChanged(isLocked);
     }
 
     /**
      * 刷新进度Runnable
      */
-    protected Runnable mShowProgressRunnable = new Runnable() {
+    private final Runnable mShowProgressRunnable = new Runnable() {
         @Override
         public void run() {
             long curPos = setProgress();
@@ -584,42 +437,98 @@ public abstract class BaseVideoController extends FrameLayout implements
     }
 
     private void handleSetProgress(long duration, long position) {
-        for (Map.Entry<IControlComponent, Boolean> next : mControlComponents.entrySet()) {
-            IControlComponent component = next.getKey();
+        for (IControlComponent component : mControlComponents) {
             component.setProgress(duration, position);
         }
-        setProgress(duration, position);
+        if (mComponentStateListener != null)
+            mComponentStateListener.setProgress(duration, position);
     }
 
-    private void handleVisibilityChanged(boolean isVisible, Animation anim) {
-        for (Map.Entry<IControlComponent, Boolean> next : mControlComponents.entrySet()) {
-            IControlComponent component = next.getKey();
-            component.onVisibilityChanged(isVisible, anim);
+    private void handleVisibilityChanged(boolean isVisible) {
+        if (!mIsLocked) {
+            for (IControlComponent component : mControlComponents) {
+                component.onVisibilityChanged(isVisible);
+            }
         }
-        onVisibilityChanged(isVisible, anim);
+        if (mComponentStateListener != null)
+            mComponentStateListener.onVisibilityChanged(isVisible);
     }
 
     private void handlePlayStateChanged(int playState) {
-        for (Map.Entry<IControlComponent, Boolean> next : mControlComponents.entrySet()) {
-            IControlComponent component = next.getKey();
+        onPlayStateChanged(playState);
+        for (IControlComponent component : mControlComponents) {
             component.onPlayStateChanged(playState);
         }
-        onPlayStateChanged(playState);
+        if (mComponentStateListener != null)
+            mComponentStateListener.onPlayStateChanged(playState);
     }
 
     private void handlePlayerStateChanged(int playerState) {
-        for (Map.Entry<IControlComponent, Boolean> next
-                : mControlComponents.entrySet()) {
-            IControlComponent component = next.getKey();
+        onPlayerStateChanged(playerState);
+        for (IControlComponent component : mControlComponents) {
             component.onPlayerStateChanged(playerState);
         }
-        onPlayerStateChanged(playerState);
+        if (mComponentStateListener != null)
+            mComponentStateListener.onPlayerStateChanged(playerState);
+    }
+
+    /**
+     * 处理播放状态
+     */
+    private void onPlayStateChanged(int playState) {
+        switch (playState) {
+            case VideoView.STATE_IDLE:
+                mOrientationHelper.disable();
+                mOrientation = 0;
+                mIsLocked = false;
+                mIsShowing = false;
+                //由于游离组件是独立于控制器存在的，
+                //所以在播放器release的时候需要移除
+                clearDissociateComponents();
+                break;
+            case VideoView.STATE_PLAYBACK_COMPLETED:
+                mIsLocked = false;
+                mIsShowing = false;
+                break;
+            case VideoView.STATE_ERROR:
+                mIsShowing = false;
+                break;
+        }
+    }
+
+    /**
+     * 处理播放器状态
+     */
+    private void onPlayerStateChanged(int playerState) {
+        switch (playerState) {
+            case VideoView.PLAYER_NORMAL:
+                if (mEnableOrientation) {
+                    mOrientationHelper.enable();
+                } else {
+                    mOrientationHelper.disable();
+                }
+                if (hasCutout()) {
+                    CutoutScreenUtil.adaptCutoutAboveAndroidP(getContext(), false);
+                }
+                break;
+            case VideoView.PLAYER_FULL_SCREEN:
+                // 在全屏时强制监听设备方向
+                mOrientationHelper.enable();
+                if (hasCutout()) {
+                    CutoutScreenUtil.adaptCutoutAboveAndroidP(getContext(), true);
+                }
+                break;
+            case VideoView.PLAYER_TINY_SCREEN:
+                mOrientationHelper.disable();
+                break;
+        }
     }
 
     /**
      * 竖屏
      */
-    protected void onOrientationPortrait(Activity activity) {
+    @SuppressLint("SourceLockedOrientationActivity")
+    private void onOrientationPortrait(Activity activity) {
         // 屏幕锁定的情况
         if (mIsLocked) return;
         // 没有开启设备方向监听的情况
@@ -632,7 +541,7 @@ public abstract class BaseVideoController extends FrameLayout implements
     /**
      * 横屏
      */
-    protected void onOrientationLandscape(Activity activity) {
+    private void onOrientationLandscape(Activity activity) {
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         if (mControlWrapper.isFullScreen()) {
             handlePlayerStateChanged(VideoView.PLAYER_FULL_SCREEN);
@@ -644,7 +553,7 @@ public abstract class BaseVideoController extends FrameLayout implements
     /**
      * 反向横屏
      */
-    protected void onOrientationReverseLandscape(Activity activity) {
+    private void onOrientationReverseLandscape(Activity activity) {
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
         if (mControlWrapper.isFullScreen()) {
             handlePlayerStateChanged(VideoView.PLAYER_FULL_SCREEN);
