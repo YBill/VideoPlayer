@@ -21,7 +21,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
         MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnPreparedListener,
         MediaPlayer.OnVideoSizeChangedListener {
 
-    private Context mContext;
+    private final Context mContext;
     protected MediaPlayer mMediaPlayer;
     private int mBufferedPercent;
     private boolean mIsPreparing;

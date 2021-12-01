@@ -34,5 +34,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
 
     implementation project(':baseplayer')
+    implementation project(':player-ui')
+    implementation project(':players:ijk')
 
 }

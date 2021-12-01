@@ -9,3 +9,5 @@ dependencyResolutionManagement {
 rootProject.name = "VideoPlayer"
 include ':app'
 include ':baseplayer'
+include ':player-ui'
+include ':players:ijk'

@@ -29,7 +29,7 @@ public class VideoViewConfig {
     public PlayerFactory mPlayerFactory;
     public RenderViewFactory mRenderViewFactory;
 
-    public VideoViewConfig(Builder builder) {
+    VideoViewConfig(Builder builder) {
         mIsEnableLog = builder.mIsEnableLog;
         mEnableOrientation = builder.mEnableOrientation;
         mPlayOnMobileNetwork = builder.mPlayOnMobileNetwork;
