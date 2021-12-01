@@ -3,8 +3,8 @@ package com.bill.baseplayer.config;
 import androidx.annotation.Nullable;
 
 import com.bill.baseplayer.player.AndroidMediaPlayerFactory;
-import com.bill.baseplayer.player.PlayerFactory;
 import com.bill.baseplayer.player.IProgressManager;
+import com.bill.baseplayer.player.PlayerFactory;
 import com.bill.baseplayer.render.RenderViewFactory;
 import com.bill.baseplayer.render.TextureRenderViewFactory;
 
@@ -19,13 +19,13 @@ public class VideoViewConfig {
         return new Builder();
     }
 
-    public final boolean mPlayOnMobileNetwork;
-    public final boolean mEnableOrientation;
-    public final boolean mEnableAudioFocus;
     public final boolean mIsEnableLog;
+    public final boolean mEnableOrientation;
+    public final boolean mAdaptCutout;
+    public final boolean mPlayOnMobileNetwork;
+    public final boolean mEnableAudioFocus;
     public final IProgressManager mProgressManager;
     public final int mScreenScaleType;
-    public final boolean mAdaptCutout;
     public PlayerFactory mPlayerFactory;
     public RenderViewFactory mRenderViewFactory;
 
@@ -70,7 +70,7 @@ public class VideoViewConfig {
         }
 
         /**
-         * 在移动环境下调用start()后是否继续播放，默认不继续播放
+         * 在移动环境下调用start()后是否继续播放，默认继续播放
          */
         public Builder setPlayOnMobileNetwork(boolean playOnMobileNetwork) {
             mPlayOnMobileNetwork = playOnMobileNetwork;

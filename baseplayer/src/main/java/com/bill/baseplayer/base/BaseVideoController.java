@@ -1,11 +1,10 @@
-package com.bill.baseplayer.controller;
+package com.bill.baseplayer.base;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.OrientationEventListener;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -15,7 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bill.baseplayer.config.VideoViewManager;
-import com.bill.baseplayer.player.VideoView;
+import com.bill.baseplayer.controller.ControlWrapper;
+import com.bill.baseplayer.controller.IControlComponent;
+import com.bill.baseplayer.controller.IVideoController;
+import com.bill.baseplayer.controller.OrientationHelper;
+import com.bill.baseplayer.controller.PlayerControl;
 import com.bill.baseplayer.util.CutoutScreenUtil;
 import com.bill.baseplayer.util.MLog;
 import com.bill.baseplayer.util.Utils;
@@ -50,8 +53,6 @@ public abstract class BaseVideoController extends FrameLayout implements
 
     private int mAutoHideCountdown = 4000; // 视图自动隐藏倒计时
 
-    private IComponentState mComponentStateListener; // 控制器状态监听
-
     // 所有的组件
     protected ArrayList<IControlComponent> mControlComponents = new ArrayList<>();
 
@@ -69,10 +70,6 @@ public abstract class BaseVideoController extends FrameLayout implements
     }
 
     protected void initView() {
-        if (getLayoutId() != 0) {
-            LayoutInflater.from(getContext()).inflate(getLayoutId(), this, true);
-        }
-
         // 读取全局配置
         mOrientationHelper = new OrientationHelper(getContext().getApplicationContext());
         mEnableOrientation = VideoViewManager.getInstance().getConfig().mEnableOrientation;
@@ -81,11 +78,6 @@ public abstract class BaseVideoController extends FrameLayout implements
         mActivity = Utils.scanForActivity(getContext());
         checkCutout();
     }
-
-    /**
-     * 设置控制器布局文件
-     */
-    protected abstract int getLayoutId();
 
     //////// System Start /////////
 
@@ -340,10 +332,9 @@ public abstract class BaseVideoController extends FrameLayout implements
     //////// 和VideoView关联方法 Start /////////
 
     /**
-     * 重要：此方法用于将{@link VideoView} 和控制器绑定、
+     * 重要：此方法用于将{@link VideoView} 和 {@link BaseVideoController} 绑定
      */
-    @CallSuper
-    public void setMediaPlayer(PlayerControl mediaPlayer) {
+    protected void setMediaPlayer(PlayerControl mediaPlayer) {
         mControlWrapper = new ControlWrapper(mediaPlayer, this);
         // 绑定ControlComponent和Controller
         for (IControlComponent component : mControlComponents) {
@@ -357,24 +348,22 @@ public abstract class BaseVideoController extends FrameLayout implements
     /**
      * {@link VideoView}调用此方法向控制器设置播放状态
      */
-    @CallSuper
-    public void setPlayState(int playState) {
+    protected void setPlayState(int playState) {
         handlePlayStateChanged(playState);
     }
 
     /**
      * {@link VideoView}调用此方法向控制器设置播放器状态
      */
-    @CallSuper
-    public void setPlayerState(int playerState) {
+    protected void setPlayerState(int playerState) {
         handlePlayerStateChanged(playerState);
     }
 
     /**
-     * 改变返回键逻辑，用于activity
+     * 改变返回键逻辑，用于activity，默认不处理
      * 子类中可以处理相关逻辑
      */
-    public boolean onBackPressed() {
+    protected boolean onBackPressed() {
         return false;
     }
 
@@ -409,8 +398,6 @@ public abstract class BaseVideoController extends FrameLayout implements
         for (IControlComponent component : mControlComponents) {
             component.onLockStateChanged(isLocked);
         }
-        if (mComponentStateListener != null)
-            mComponentStateListener.onLockStateChanged(isLocked);
     }
 
     /**
@@ -440,8 +427,6 @@ public abstract class BaseVideoController extends FrameLayout implements
         for (IControlComponent component : mControlComponents) {
             component.setProgress(duration, position);
         }
-        if (mComponentStateListener != null)
-            mComponentStateListener.setProgress(duration, position);
     }
 
     private void handleVisibilityChanged(boolean isVisible) {
@@ -450,8 +435,6 @@ public abstract class BaseVideoController extends FrameLayout implements
                 component.onVisibilityChanged(isVisible);
             }
         }
-        if (mComponentStateListener != null)
-            mComponentStateListener.onVisibilityChanged(isVisible);
     }
 
     private void handlePlayStateChanged(int playState) {
@@ -459,8 +442,6 @@ public abstract class BaseVideoController extends FrameLayout implements
         for (IControlComponent component : mControlComponents) {
             component.onPlayStateChanged(playState);
         }
-        if (mComponentStateListener != null)
-            mComponentStateListener.onPlayStateChanged(playState);
     }
 
     private void handlePlayerStateChanged(int playerState) {
@@ -468,8 +449,6 @@ public abstract class BaseVideoController extends FrameLayout implements
         for (IControlComponent component : mControlComponents) {
             component.onPlayerStateChanged(playerState);
         }
-        if (mComponentStateListener != null)
-            mComponentStateListener.onPlayerStateChanged(playerState);
     }
 
     /**

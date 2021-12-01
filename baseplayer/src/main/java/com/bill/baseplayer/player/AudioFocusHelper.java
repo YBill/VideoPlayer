@@ -7,6 +7,8 @@ import android.os.Looper;
 
 import androidx.annotation.NonNull;
 
+import com.bill.baseplayer.base.VideoView;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -26,7 +28,7 @@ public class AudioFocusHelper implements AudioManager.OnAudioFocusChangeListener
     private boolean mPausedForLoss = false;
     private int mCurrentFocus = 0;
 
-    AudioFocusHelper(@NonNull VideoView videoView) {
+    public AudioFocusHelper(@NonNull VideoView videoView) {
         mWeakVideoView = new WeakReference<>(videoView);
         mAudioManager = (AudioManager) videoView.getContext().getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
     }
@@ -84,7 +86,7 @@ public class AudioFocusHelper implements AudioManager.OnAudioFocusChangeListener
     /**
      * Requests to obtain the audio focus
      */
-    void requestFocus() {
+    public void requestFocus() {
         if (mCurrentFocus == AudioManager.AUDIOFOCUS_GAIN) {
             return;
         }
@@ -105,7 +107,7 @@ public class AudioFocusHelper implements AudioManager.OnAudioFocusChangeListener
     /**
      * Requests the system to drop the audio focus
      */
-    void abandonFocus() {
+    public void abandonFocus() {
 
         if (mAudioManager == null) {
             return;

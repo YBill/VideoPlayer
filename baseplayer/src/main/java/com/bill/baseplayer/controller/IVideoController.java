@@ -1,5 +1,7 @@
 package com.bill.baseplayer.controller;
 
+import com.bill.baseplayer.base.BaseVideoController;
+
 /**
  * author ywb
  * date 2021/11/24

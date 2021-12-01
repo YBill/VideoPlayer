@@ -2,7 +2,7 @@ package com.bill.baseplayer.config;
 
 import android.app.Application;
 
-import com.bill.baseplayer.player.VideoView;
+import com.bill.baseplayer.base.VideoView;
 import com.bill.baseplayer.util.MLog;
 
 import java.util.LinkedHashMap;

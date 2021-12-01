@@ -2,7 +2,7 @@ package com.bill.baseplayer.render;
 
 import android.view.View;
 
-import com.bill.baseplayer.player.VideoView;
+import com.bill.baseplayer.base.VideoView;
 
 /**
  * author ywb

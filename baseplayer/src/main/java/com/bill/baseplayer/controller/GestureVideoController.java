@@ -13,10 +13,9 @@ import android.view.WindowManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.bill.baseplayer.player.VideoView;
+import com.bill.baseplayer.base.BaseVideoController;
+import com.bill.baseplayer.base.VideoView;
 import com.bill.baseplayer.util.Utils;
-
-import java.util.Map;
 
 /**
  * author ywb

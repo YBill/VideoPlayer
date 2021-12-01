@@ -33,6 +33,16 @@ public class ControlWrapper implements PlayerControl, IVideoController {
     }
 
     @Override
+    public void release() {
+        mPlayerControl.release();
+    }
+
+    @Override
+    public void replay(boolean resetPosition) {
+        mPlayerControl.replay(resetPosition);
+    }
+
+    @Override
     public long getDuration() {
         return mPlayerControl.getDuration();
     }
@@ -100,11 +110,6 @@ public class ControlWrapper implements PlayerControl, IVideoController {
     @Override
     public long getTcpSpeed() {
         return mPlayerControl.getTcpSpeed();
-    }
-
-    @Override
-    public void replay(boolean resetPosition) {
-        mPlayerControl.replay(resetPosition);
     }
 
     @Override

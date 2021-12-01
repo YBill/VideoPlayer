@@ -3,7 +3,7 @@ package com.bill.baseplayer.player;
 /**
  * author ywb
  * date 2021/11/26
- * desc 播放进度管理器，继承此接口实现自己的进度管理器。
+ * desc 播放进度管理器，实现此接口实现自己的进度管理器。
  */
 public interface IProgressManager {
 

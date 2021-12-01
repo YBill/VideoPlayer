@@ -13,6 +13,10 @@ public interface PlayerControl {
 
     void pause();
 
+    void release();
+
+    void replay(boolean resetPosition);
+
     long getDuration();
 
     long getCurrentPosition();
@@ -40,8 +44,6 @@ public interface PlayerControl {
     float getSpeed();
 
     long getTcpSpeed();
-
-    void replay(boolean resetPosition);
 
     void setMirrorRotation(boolean enable);
 
