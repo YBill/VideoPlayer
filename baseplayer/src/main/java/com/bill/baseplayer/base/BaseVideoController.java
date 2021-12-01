@@ -31,7 +31,7 @@ import java.util.Iterator;
  * date 2021/11/24
  * desc 控制器基类
  */
-public abstract class BaseVideoController extends FrameLayout implements
+public class BaseVideoController extends FrameLayout implements
         IVideoController, OrientationHelper.OnOrientationChangeListener {
 
     // 播放器包装类，集合了PlayerControl的api和IVideoController的api
@@ -334,6 +334,7 @@ public abstract class BaseVideoController extends FrameLayout implements
     /**
      * 重要：此方法用于将{@link VideoView} 和 {@link BaseVideoController} 绑定
      */
+    @CallSuper
     protected void setMediaPlayer(PlayerControl mediaPlayer) {
         mControlWrapper = new ControlWrapper(mediaPlayer, this);
         // 绑定ControlComponent和Controller
@@ -348,6 +349,7 @@ public abstract class BaseVideoController extends FrameLayout implements
     /**
      * {@link VideoView}调用此方法向控制器设置播放状态
      */
+    @CallSuper
     protected void setPlayState(int playState) {
         handlePlayStateChanged(playState);
     }
@@ -355,6 +357,7 @@ public abstract class BaseVideoController extends FrameLayout implements
     /**
      * {@link VideoView}调用此方法向控制器设置播放器状态
      */
+    @CallSuper
     protected void setPlayerState(int playerState) {
         handlePlayerStateChanged(playerState);
     }
