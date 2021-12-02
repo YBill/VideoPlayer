@@ -60,9 +60,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     public static final int STATE_PLAYING = 3; // 播放状态
     public static final int STATE_PAUSED = 4; // 暂停状态
     public static final int STATE_PLAYBACK_COMPLETED = 5; // 播放完成
-    public static final int STATE_BUFFERING = 6; // 缓存中
-    public static final int STATE_BUFFERED = 7; // 缓存完成
-    public static final int STATE_START_ABORT = 8; // 开始播放中止
+    public static final int STATE_START_ABORT = 6; // 开始播放中止
 
     // 播放器的状态
     public static final int PLAYER_NORMAL = 100;        // 普通播放器
@@ -786,7 +784,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     }
 
     /**
-     * 获取缓冲速度
+     * 获取缓冲速度，只有IjkPlayer支持
      */
     @Override
     public long getTcpSpeed() {
@@ -961,12 +959,6 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     @Override
     public void onInfo(int what, int extra) {
         switch (what) {
-            case AbstractPlayer.MEDIA_INFO_BUFFERING_START: // 缓存开始
-                setPlayState(STATE_BUFFERING);
-                break;
-            case AbstractPlayer.MEDIA_INFO_BUFFERING_END: // 缓存结束
-                setPlayState(STATE_BUFFERED);
-                break;
             case AbstractPlayer.MEDIA_INFO_RENDERING_START: // 视频/音频开始渲染
                 setPlayState(STATE_PLAYING);
                 mPlayerContainer.setKeepScreenOn(true);

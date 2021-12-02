@@ -118,12 +118,6 @@ public class DebugInfoComponent extends BaseComponent {
             case VideoView.STATE_PAUSED:
                 playStateString = "pause";
                 break;
-            case VideoView.STATE_BUFFERING:
-                playStateString = "buffering";
-                break;
-            case VideoView.STATE_BUFFERED:
-                playStateString = "buffered";
-                break;
             case VideoView.STATE_PLAYBACK_COMPLETED:
                 playStateString = "playback completed";
                 break;

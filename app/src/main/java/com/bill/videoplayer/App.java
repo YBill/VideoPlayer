@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.bill.baseplayer.config.VideoViewConfig;
 import com.bill.baseplayer.config.VideoViewManager;
+import com.bill.baseplayer.render.SurfaceRenderViewFactory;
 import com.bill.player.exo.ExoPlayerFactory;
 
 /**
@@ -19,6 +20,7 @@ public class App extends Application {
         VideoViewManager.getInstance().setConfig(VideoViewConfig.create()
                 .setLogEnabled(BuildConfig.DEBUG)
                 .setPlayerFactory(ExoPlayerFactory.create())
+                .setRenderViewFactory(SurfaceRenderViewFactory.create())
                 .build());
     }
 }
