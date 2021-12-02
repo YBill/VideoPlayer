@@ -9,6 +9,7 @@ import com.bill.baseplayer.config.VideoViewManager;
 import com.bill.baseplayer.player.AbstractPlayer;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
@@ -32,10 +33,10 @@ import java.util.Map;
  * date 2021/12/2
  * desc
  */
-public class ExoPlayer extends AbstractPlayer implements Player.Listener {
+public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     private final Context mAppContext;
-    private com.google.android.exoplayer2.ExoPlayer mInternalPlayer;
+    private ExoPlayer mInternalPlayer;
     private MediaSource mMediaSource;
     private final ExoMediaSourceHelper mMediaSourceHelper;
 
@@ -47,14 +48,14 @@ public class ExoPlayer extends AbstractPlayer implements Player.Listener {
 
     private boolean mIsPreparing;
 
-    public ExoPlayer(Context context) {
+    public ExoMediaPlayer(Context context) {
         mAppContext = context.getApplicationContext();
         mMediaSourceHelper = ExoMediaSourceHelper.getInstance(context);
     }
 
     @Override
     public void initPlayer() {
-        mInternalPlayer = new com.google.android.exoplayer2.ExoPlayer.Builder(
+        mInternalPlayer = new ExoPlayer.Builder(
                 mAppContext,
                 mRenderersFactory == null ? mRenderersFactory = new DefaultRenderersFactory(mAppContext) : mRenderersFactory,
                 new DefaultMediaSourceFactory(mAppContext),

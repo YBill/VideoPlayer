@@ -27,12 +27,12 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
         IMediaPlayer.OnBufferingUpdateListener, IMediaPlayer.OnPreparedListener,
         IMediaPlayer.OnVideoSizeChangedListener, IjkMediaPlayer.OnNativeInvokeListener {
 
-    private final Context mContext;
+    private final Context mAppContext;
     private IjkMediaPlayer mMediaPlayer;
     private int mBufferedPercent;
 
     public IjkPlayer(Context context) {
-        mContext = context.getApplicationContext();
+        mAppContext = context.getApplicationContext();
     }
 
     @Override
@@ -56,7 +56,7 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
         try {
             Uri uri = Uri.parse(path);
             if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())) {
-                RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(mContext, uri);
+                RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(mAppContext, uri);
                 mMediaPlayer.setDataSource(rawDataSourceProvider);
             } else {
                 // 处理UA问题
@@ -68,7 +68,7 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
                         headers.remove("User-Agent");
                     }
                 }
-                mMediaPlayer.setDataSource(mContext, uri, headers);
+                mMediaPlayer.setDataSource(mAppContext, uri, headers);
             }
         } catch (Exception e) {
             mPlayerEventListener.onError();

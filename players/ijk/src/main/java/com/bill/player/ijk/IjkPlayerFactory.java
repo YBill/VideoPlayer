@@ -2,7 +2,6 @@ package com.bill.player.ijk;
 
 import android.content.Context;
 
-import com.bill.baseplayer.player.AndroidMediaPlayer;
 import com.bill.baseplayer.player.PlayerFactory;
 
 /**

@@ -21,13 +21,13 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
         MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnPreparedListener,
         MediaPlayer.OnVideoSizeChangedListener {
 
-    private final Context mContext;
+    private final Context mAppContext;
     protected MediaPlayer mMediaPlayer;
     private int mBufferedPercent;
     private boolean mIsPreparing;
 
     public AndroidMediaPlayer(Context context) {
-        mContext = context.getApplicationContext();
+        mAppContext = context.getApplicationContext();
     }
 
     @Override
@@ -57,7 +57,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
         if (!isAvailable())
             return;
         try {
-            mMediaPlayer.setDataSource(mContext, Uri.parse(path), headers);
+            mMediaPlayer.setDataSource(mAppContext, Uri.parse(path), headers);
         } catch (Exception e) {
             if (mPlayerEventListener != null)
                 mPlayerEventListener.onError();
