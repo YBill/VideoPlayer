@@ -21,8 +21,8 @@ public class PlayerTestAct extends AppCompatActivity {
         mController.addDefaultControlComponent();
         videoView.setVideoController(mController);
 
-//        videoView.setUrl("http://vfx.mtime.cn/Video/2019/03/14/mp4/190314223540373995.mp4");
-        videoView.setUrl("https://rmrbtest-image.peopleapp.com/upload/video/201809/1537349021125fcfb438615c1b.mp4");
+        videoView.setUrl("http://vfx.mtime.cn/Video/2019/03/14/mp4/190314223540373995.mp4");
+//        videoView.setUrl("https://rmrbtest-image.peopleapp.com/upload/video/201809/1537349021125fcfb438615c1b.mp4");
         videoView.start();
 
     }
