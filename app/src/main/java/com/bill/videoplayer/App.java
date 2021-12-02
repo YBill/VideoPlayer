@@ -17,6 +17,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         VideoViewManager.getInstance().setConfig(VideoViewConfig.create()
+                .setLogEnabled(BuildConfig.DEBUG)
                 .setPlayerFactory(ExoPlayerFactory.create())
                 .build());
     }
