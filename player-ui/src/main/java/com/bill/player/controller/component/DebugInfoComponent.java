@@ -14,6 +14,8 @@ import com.bill.baseplayer.controller.BaseComponent;
 import com.bill.baseplayer.controller.ControlWrapper;
 import com.bill.baseplayer.player.AndroidMediaPlayerFactory;
 import com.bill.baseplayer.player.PlayerFactory;
+import com.bill.player.exo.ExoPlayerFactory;
+import com.bill.player.ijk.IjkPlayerFactory;
 
 import java.lang.reflect.Field;
 
@@ -60,8 +62,10 @@ public class DebugInfoComponent extends BaseComponent {
         Object playerFactory = getCurrentPlayerFactoryInVideoView(mControlWrapper);
         if (playerFactory instanceof AndroidMediaPlayerFactory) {
             player = "MediaPlayer";
-        } else if (playerFactory instanceof PlayerFactory) {
+        } else if (playerFactory instanceof IjkPlayerFactory) {
             player = "IjkPlayer";
+        } else if (playerFactory instanceof ExoPlayerFactory) {
+            player = "ExoPlayer";
         } else {
             player = "unknown";
         }

@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.library'
 }
-apply from: '../constants.gradle'
+apply from: '../../constants.gradle'
 
 android {
     compileSdk project.ext.compileSdkVersion
@@ -23,6 +23,11 @@ dependencies {
     implementation project.ext.appcompat
 
     implementation project(':baseplayer')
-    implementation project(':players:ijk')
-    implementation project(':players:exo')
+
+    def exoPlayerVersion = '2.16.1'
+    implementation "com.google.android.exoplayer:exoplayer-core:$exoPlayerVersion"
+    implementation "com.google.android.exoplayer:exoplayer-dash:$exoPlayerVersion"
+    implementation "com.google.android.exoplayer:exoplayer-hls:$exoPlayerVersion"
+    implementation "com.google.android.exoplayer:exoplayer-rtsp:$exoPlayerVersion"
+    implementation "com.google.android.exoplayer:extension-rtmp:$exoPlayerVersion"
 }

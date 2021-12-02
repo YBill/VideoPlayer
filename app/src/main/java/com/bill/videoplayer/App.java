@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.bill.baseplayer.config.VideoViewConfig;
 import com.bill.baseplayer.config.VideoViewManager;
+import com.bill.player.exo.ExoPlayerFactory;
 import com.bill.player.ijk.IjkPlayerFactory;
 
 /**
@@ -17,7 +18,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         VideoViewManager.getInstance().setConfig(VideoViewConfig.create()
-                .setPlayerFactory(IjkPlayerFactory.create())
+                .setPlayerFactory(ExoPlayerFactory.create())
                 .build());
     }
 }

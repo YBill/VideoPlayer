@@ -36,5 +36,6 @@ dependencies {
     implementation project(':baseplayer')
     implementation project(':player-ui')
     implementation project(':players:ijk')
+    implementation project(':players:exo')
 
 }
