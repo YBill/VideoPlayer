@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
 
+import com.bill.baseplayer.player.DataSource;
+
 /**
  * author ywb
  * date 2021/11/24
@@ -145,6 +147,11 @@ public class ControlWrapper implements PlayerControl, IVideoController {
     @Override
     public boolean isTinyScreen() {
         return mPlayerControl.isTinyScreen();
+    }
+
+    @Override
+    public DataSource getDataSource() {
+        return mPlayerControl.getDataSource();
     }
 
     @Override

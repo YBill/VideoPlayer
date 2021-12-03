@@ -26,6 +26,7 @@ import com.bill.baseplayer.controller.OnVideoStateChangeListener;
 import com.bill.baseplayer.controller.PlayerControl;
 import com.bill.baseplayer.player.AbstractPlayer;
 import com.bill.baseplayer.player.AudioFocusHelper;
+import com.bill.baseplayer.player.DataSource;
 import com.bill.baseplayer.player.IProgressManager;
 import com.bill.baseplayer.player.PlayerFactory;
 import com.bill.baseplayer.render.IRenderView;
@@ -81,10 +82,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     private FrameLayout mPlayerContainer; // 播放器总容器
     private int mPlayerBackgroundColor; // 播放器背景色，默认黑色
 
-    //--------- data sources ---------//
-    private String mUrl; // 当前播放视频的地址
-    private Map<String, String> mHeaders; // 当前视频地址的请求头
-    private AssetFileDescriptor mAssetFileDescriptor; // assets文件
+    private DataSource mDataSource; // data source
 
     private List<OnVideoStateChangeListener> mOnStateChangeListeners; // 保存了所有监听器
 
@@ -186,10 +184,11 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
      * 判断是否为本地数据源，包括 本地文件、Asset、raw
      */
     private boolean isLocalDataSource() {
-        if (mAssetFileDescriptor != null) {
+        if (mDataSource == null) return false;
+        if (mDataSource.mAssetFileDescriptor != null) {
             return true;
-        } else if (!TextUtils.isEmpty(mUrl)) {
-            Uri uri = Uri.parse(mUrl);
+        } else if (!TextUtils.isEmpty(mDataSource.mUrl)) {
+            Uri uri = Uri.parse(mDataSource.mUrl);
             return ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())
                     || ContentResolver.SCHEME_FILE.equals(uri.getScheme())
                     || "rawresource".equals(uri.getScheme());
@@ -248,8 +247,8 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
             mAudioFocusHelper = new AudioFocusHelper(this);
         }
         // 读取播放进度
-        if (mProgressManager != null) {
-            mCurrentPosition = mProgressManager.getProgress(mUrl);
+        if (mProgressManager != null && mDataSource != null) {
+            mCurrentPosition = mProgressManager.getProgress(mDataSource.mUrl);
         }
         initPlayer();
         initRenderView();
@@ -306,11 +305,12 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
      * @return 播放数据是否设置成功
      */
     private boolean prepareDataSource() {
-        if (mAssetFileDescriptor != null) {
-            mMediaPlayer.setDataSource(mAssetFileDescriptor);
+        if (mDataSource == null) return false;
+        if (mDataSource.mAssetFileDescriptor != null) {
+            mMediaPlayer.setDataSource(mDataSource.mAssetFileDescriptor);
             return true;
-        } else if (!TextUtils.isEmpty(mUrl)) {
-            mMediaPlayer.setDataSource(mUrl, mHeaders);
+        } else if (!TextUtils.isEmpty(mDataSource.mUrl)) {
+            mMediaPlayer.setDataSource(mDataSource.mUrl, mDataSource.mHeaders);
             return true;
         }
         return false;
@@ -341,9 +341,9 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
      * 保存播放进度
      */
     private void saveProgress() {
-        if (mProgressManager != null && mCurrentPosition > 0) {
+        if (mProgressManager != null && mDataSource != null && mCurrentPosition > 0) {
             MLog.d("saveProgress: " + mCurrentPosition);
-            mProgressManager.saveProgress(mUrl, mCurrentPosition);
+            mProgressManager.saveProgress(mDataSource.mUrl, mCurrentPosition);
         }
     }
 
@@ -418,28 +418,8 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 设置视频地址
      */
-    public void setUrl(String url) {
-        setUrl(url, null);
-    }
-
-    /**
-     * 设置视频地址
-     *
-     * @param url     视频地址
-     * @param headers 请求头
-     */
-    public void setUrl(String url, Map<String, String> headers) {
-        mAssetFileDescriptor = null;
-        mUrl = url;
-        mHeaders = headers;
-    }
-
-    /**
-     * 用于播放assets里面的视频文件
-     */
-    public void setAssetFD(AssetFileDescriptor fd) {
-        mUrl = null;
-        this.mAssetFileDescriptor = fd;
+    public void setDataSource(DataSource dataSource) {
+        this.mDataSource = dataSource;
     }
 
     /**
@@ -645,9 +625,9 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
                 mRenderView = null;
             }
             // 释放Assets资源
-            if (mAssetFileDescriptor != null) {
+            if (mDataSource != null && mDataSource.mAssetFileDescriptor != null) {
                 try {
-                    mAssetFileDescriptor.close();
+                    mDataSource.mAssetFileDescriptor.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -927,6 +907,11 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
         return mIsTinyScreen;
     }
 
+    @Override
+    public DataSource getDataSource() {
+        return mDataSource;
+    }
+
     //// PlayerControl End ////
 
     //// PlayerEventListener Start ////
@@ -947,8 +932,8 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     public void onCompletion() {
         mPlayerContainer.setKeepScreenOn(false);
         mCurrentPosition = 0;
-        if (mProgressManager != null) {
-            mProgressManager.saveProgress(mUrl, 0); // 播放完成，清除进度
+        if (mProgressManager != null && mDataSource != null) {
+            mProgressManager.saveProgress(mDataSource.mUrl, 0); // 播放完成，清除进度
         }
         setPlayState(STATE_PLAYBACK_COMPLETED);
     }

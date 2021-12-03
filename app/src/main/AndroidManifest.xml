@@ -13,6 +13,7 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".PlayerTestAct"
+            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

@@ -2,7 +2,6 @@ package com.bill.player.exo;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
-import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 

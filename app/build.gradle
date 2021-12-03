@@ -29,9 +29,9 @@ android {
 
 dependencies {
 
-    implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
+    implementation project.ext.appcompat
+    implementation project.ext.material
+    implementation project.ext.constraintlayout
 
     implementation project(':baseplayer')
     implementation project(':player-ui')

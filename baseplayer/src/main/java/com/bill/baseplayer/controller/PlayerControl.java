@@ -2,6 +2,8 @@ package com.bill.baseplayer.controller;
 
 import android.graphics.Bitmap;
 
+import com.bill.baseplayer.player.DataSource;
+
 /**
  * author ywb
  * date 2021/11/24
@@ -58,5 +60,7 @@ public interface PlayerControl {
     void stopTinyScreen();
 
     boolean isTinyScreen();
+
+    DataSource getDataSource();
 
 }

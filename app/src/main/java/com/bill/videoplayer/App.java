@@ -5,7 +5,9 @@ import android.app.Application;
 import com.bill.baseplayer.config.VideoViewConfig;
 import com.bill.baseplayer.config.VideoViewManager;
 import com.bill.baseplayer.render.SurfaceRenderViewFactory;
+import com.bill.baseplayer.render.TextureRenderViewFactory;
 import com.bill.player.exo.ExoPlayerFactory;
+import com.bill.player.ijk.IjkPlayerFactory;
 
 /**
  * author ywb
@@ -19,8 +21,8 @@ public class App extends Application {
         super.onCreate();
         VideoViewManager.getInstance().setConfig(VideoViewConfig.create()
                 .setLogEnabled(BuildConfig.DEBUG)
-                .setPlayerFactory(ExoPlayerFactory.create())
-                .setRenderViewFactory(SurfaceRenderViewFactory.create())
+                .setPlayerFactory(IjkPlayerFactory.create())
+                .setRenderViewFactory(TextureRenderViewFactory.create())
                 .build());
     }
 }

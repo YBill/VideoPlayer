@@ -39,12 +39,12 @@ public class BaseVideoController extends FrameLayout implements
 
     protected Activity mActivity; // 当前Activity
 
-    protected boolean mIsShowing; // 控制器是否处于显示状态
-    protected boolean mIsLocked; // 是否处于锁定状态
+    private boolean mIsShowing; // 控制器是否处于显示状态
+    private boolean mIsLocked; // 是否处于锁定状态
     private boolean mIsStartProgress; // 是否开始刷新进度
 
     private boolean mEnableOrientation; // 是否开启根据屏幕方向进入/退出全屏，默认false
-    protected OrientationHelper mOrientationHelper; // 屏幕方向监听辅助类
+    private OrientationHelper mOrientationHelper; // 屏幕方向监听辅助类
     private int mOrientation;
 
     private boolean mIsAdaptCutout; // 用户设置是否适配刘海屏，默认true

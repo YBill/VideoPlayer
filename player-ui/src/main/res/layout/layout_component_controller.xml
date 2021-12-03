@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/fl_v_ctr_top"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="@drawable/shape_controller_top_gradient">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_c_ctr_back"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            android:src="@drawable/icon_component_back" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_c_ctr_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="50dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textColor="#fff"
+            android:textSize="15sp"
+            tools:text="Title" />
+
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/fl_v_ctr_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/shape_controller_bottom_gradient"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_v_ctr_play"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            android:src="@drawable/selector_play_state" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_v_ctr_cur_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            tools:text="00:00" />
+
+        <SeekBar
+            android:id="@+id/tv_v_ctr_seekbar"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:max="1000"
+            android:maxHeight="2dp"
+            android:minHeight="2dp"
+            android:paddingStart="0dp"
+            android:paddingEnd="0dp"
+            android:progressDrawable="@drawable/layer_seekbar_progress"
+            android:thumb="@drawable/selector_seekbar_thumb"
+            android:thumbOffset="0dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_v_ctr_total_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            tools:text="00:00" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/tv_v_ctr_fullscreen"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:scaleType="center"
+            android:src="@drawable/selector_full_screen_button" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/tv_v_ctr_progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:max="1000"
+        android:progressDrawable="@drawable/layer_progress_bar"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</FrameLayout>

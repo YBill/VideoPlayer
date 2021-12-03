@@ -21,6 +21,7 @@ android {
 
 dependencies {
     implementation project.ext.appcompat
+    implementation project.ext.constraintlayout
 
     implementation project(':baseplayer')
     implementation project(':players:ijk')

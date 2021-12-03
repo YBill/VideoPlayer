@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -29,7 +30,7 @@ public abstract class GestureVideoController extends BaseVideoController impleme
     private GestureDetector mGestureDetector;
     private AudioManager mAudioManager;
 
-    private boolean mEnabledGesture = true; // 是否开启手势功能
+    private boolean mEnabledGesture = false; // 是否开启手势功能,默认不开启手势功能
     private boolean mEnabledSlide = true; // 是否支持滑动
     private boolean mEnabledDoubleTapTogglePlay = true; // 是否可以双击控制播放暂停
     private boolean mEnabledSingleTabToggleShow = true; // 是否可以单击控制控制器显示隐藏
@@ -56,6 +57,7 @@ public abstract class GestureVideoController extends BaseVideoController impleme
         super(context, attrs, defStyleAttr);
     }
 
+    @CallSuper
     @Override
     protected void initView() {
         super.initView();
@@ -78,7 +80,7 @@ public abstract class GestureVideoController extends BaseVideoController impleme
     //////// 向外部暴露的方法 Start /////////
 
     /**
-     * 是否开启手势控制，默认开启
+     * 是否开启手势控制，默认关闭
      * 关闭之后，手势调节和点击功能将关闭
      */
     public void setGestureEnabled(boolean gestureEnabled) {
