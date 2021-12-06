@@ -3,24 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <FrameLayout
-        android:id="@+id/fl_v_ctr_top"
+        android:id="@+id/fl_component_ctr_top"
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:background="@drawable/shape_controller_top_gradient">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_c_ctr_back"
+            android:id="@+id/iv_component_ctr_back"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:scaleType="center"
             android:src="@drawable/icon_component_back" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_c_ctr_title"
+            android:id="@+id/tv_component_ctr_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="50dp"
@@ -34,7 +33,7 @@
     </FrameLayout>
 
     <LinearLayout
-        android:id="@+id/fl_v_ctr_bottom"
+        android:id="@+id/fl_component_ctr_bottom"
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:layout_gravity="bottom"
@@ -43,14 +42,14 @@
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_v_ctr_play"
+            android:id="@+id/iv_component_ctr_play"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:scaleType="center"
             android:src="@drawable/selector_play_state" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_v_ctr_cur_time"
+            android:id="@+id/tv_component_ctr_cur_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
@@ -58,7 +57,7 @@
             tools:text="00:00" />
 
         <SeekBar
-            android:id="@+id/tv_v_ctr_seekbar"
+            android:id="@+id/tv_component_ctr_seekbar"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_gravity="center_vertical"
@@ -76,7 +75,7 @@
             android:thumbOffset="0dp" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_v_ctr_total_time"
+            android:id="@+id/tv_component_ctr_total_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
@@ -84,7 +83,7 @@
             tools:text="00:00" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/tv_v_ctr_fullscreen"
+            android:id="@+id/tv_component_ctr_fullscreen"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:scaleType="center"
@@ -92,7 +91,7 @@
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/tv_v_ctr_progress_bar"
+        android:id="@+id/tv_component_ctr_progress_bar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="1dp"

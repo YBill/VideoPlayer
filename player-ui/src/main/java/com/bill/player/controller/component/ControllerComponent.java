@@ -18,15 +18,14 @@ import com.bill.baseplayer.base.VideoView;
 import com.bill.baseplayer.controller.BaseComponent;
 import com.bill.baseplayer.util.Utils;
 import com.bill.player.controller.R;
-
-import java.util.Locale;
+import com.bill.player.controller.util.ComponentUtils;
 
 /**
  * author ywb
  * date 2021/12/3
  * desc
  */
-public class ControllerView extends BaseComponent implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class ControllerComponent extends BaseComponent implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     private View topView;
     private View backView;
@@ -44,7 +43,7 @@ public class ControllerView extends BaseComponent implements View.OnClickListene
     private Animation mShowAnim;
     private Animation mHideAnim;
 
-    public ControllerView(@NonNull Context context) {
+    public ControllerComponent(@NonNull Context context) {
         super(context);
         init();
     }
@@ -61,16 +60,16 @@ public class ControllerView extends BaseComponent implements View.OnClickListene
 
     private void initView() {
         LayoutInflater.from(getContext()).inflate(R.layout.layout_component_controller, this, true);
-        topView = this.findViewById(R.id.fl_v_ctr_top);
-        backView = this.findViewById(R.id.iv_c_ctr_back);
-        titleTv = this.findViewById(R.id.tv_c_ctr_title);
-        bottomView = this.findViewById(R.id.fl_v_ctr_bottom);
-        curTimeTv = this.findViewById(R.id.tv_v_ctr_cur_time);
-        totalTimeTv = this.findViewById(R.id.tv_v_ctr_total_time);
-        playIv = this.findViewById(R.id.iv_v_ctr_play);
-        fullscreenIv = this.findViewById(R.id.tv_v_ctr_fullscreen);
-        seekBar = this.findViewById(R.id.tv_v_ctr_seekbar);
-        progressBar = this.findViewById(R.id.tv_v_ctr_progress_bar);
+        topView = this.findViewById(R.id.fl_component_ctr_top);
+        backView = this.findViewById(R.id.iv_component_ctr_back);
+        titleTv = this.findViewById(R.id.tv_component_ctr_title);
+        bottomView = this.findViewById(R.id.fl_component_ctr_bottom);
+        curTimeTv = this.findViewById(R.id.tv_component_ctr_cur_time);
+        totalTimeTv = this.findViewById(R.id.tv_component_ctr_total_time);
+        playIv = this.findViewById(R.id.iv_component_ctr_play);
+        fullscreenIv = this.findViewById(R.id.tv_component_ctr_fullscreen);
+        seekBar = this.findViewById(R.id.tv_component_ctr_seekbar);
+        progressBar = this.findViewById(R.id.tv_component_ctr_progress_bar);
 
         backView.setOnClickListener(this);
         playIv.setOnClickListener(this);
@@ -178,27 +177,10 @@ public class ControllerView extends BaseComponent implements View.OnClickListene
         }
 
         if (totalTimeTv != null)
-            totalTimeTv.setText(stringForTime(duration));
+            totalTimeTv.setText(ComponentUtils.stringForTime(duration));
         if (curTimeTv != null)
-            curTimeTv.setText(stringForTime(position));
+            curTimeTv.setText(ComponentUtils.stringForTime(position));
 
-    }
-
-    /**
-     * 格式化时间
-     */
-    private static String stringForTime(long timeMs) {
-        long totalSeconds = timeMs / 1000;
-
-        long seconds = totalSeconds % 60;
-        long minutes = (totalSeconds / 60) % 60;
-        long hours = totalSeconds / 3600;
-
-        if (hours > 0) {
-            return String.format(Locale.getDefault(), "%d:%02d:%02d", hours, minutes, seconds);
-        } else {
-            return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
-        }
     }
 
     private void toggleFullScreen() {
@@ -208,16 +190,16 @@ public class ControllerView extends BaseComponent implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.iv_c_ctr_back) {
+        if (v.getId() == R.id.iv_component_ctr_back) {
             if (mControlWrapper.isFullScreen()) {
                 toggleFullScreen();
             } else {
                 Activity activity = Utils.scanForActivity(getContext());
                 activity.finish();
             }
-        } else if (v.getId() == R.id.iv_v_ctr_play) {
+        } else if (v.getId() == R.id.iv_component_ctr_play) {
             mControlWrapper.togglePlay();
-        } else if (v.getId() == R.id.tv_v_ctr_fullscreen) {
+        } else if (v.getId() == R.id.tv_component_ctr_fullscreen) {
             toggleFullScreen();
         }
     }
@@ -232,7 +214,7 @@ public class ControllerView extends BaseComponent implements View.OnClickListene
         long duration = mControlWrapper.getDuration();
         long newPosition = (duration * progress) / this.seekBar.getMax();
         if (curTimeTv != null)
-            curTimeTv.setText(stringForTime((int) newPosition));
+            curTimeTv.setText(ComponentUtils.stringForTime((int) newPosition));
     }
 
     @Override

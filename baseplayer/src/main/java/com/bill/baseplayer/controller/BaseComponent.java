@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
  * date 2021/12/1
  * desc 组件基类
  */
-public class BaseComponent extends FrameLayout implements IControlComponent {
+public class BaseComponent extends FrameLayout implements IGestureComponent {
 
     protected ControlWrapper mControlWrapper;
 
@@ -68,5 +68,40 @@ public class BaseComponent extends FrameLayout implements IControlComponent {
     @Override
     public boolean isDissociate() {
         return false;
+    }
+
+    @Override
+    public void onStartSlide() {
+
+    }
+
+    @Override
+    public void onStopSlide() {
+
+    }
+
+    @Override
+    public void onPositionChange(long slidePosition, long currentPosition, long duration) {
+
+    }
+
+    @Override
+    public void onBrightnessChange(int percent) {
+
+    }
+
+    @Override
+    public void onVolumeChange(int percent) {
+
+    }
+
+    @Override
+    public void onSingleTapConfirmed() {
+
+    }
+
+    @Override
+    public void onDoubleTap() {
+
     }
 }
