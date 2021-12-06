@@ -19,6 +19,7 @@ public class PlayerTestAct extends AppCompatActivity {
 
         videoView = findViewById(R.id.video_player);
         StandardVideoController mController = new StandardVideoController(this);
+        mController.addControlComponent(new DebugInfoComponent(this));
         mController.addDefaultControlComponent();
         videoView.setVideoController(mController);
 

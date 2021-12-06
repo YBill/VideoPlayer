@@ -7,7 +7,7 @@ import android.content.Context;
  * date 2021/11/24
  * desc
  */
-public class TextureRenderViewFactory extends RenderViewFactory{
+public class TextureRenderViewFactory extends RenderViewFactory {
 
     public static TextureRenderViewFactory create() {
         return new TextureRenderViewFactory();

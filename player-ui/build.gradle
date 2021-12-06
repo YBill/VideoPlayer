@@ -24,6 +24,4 @@ dependencies {
     implementation project.ext.constraintlayout
 
     implementation project(':baseplayer')
-    implementation project(':players:ijk')
-    implementation project(':players:exo')
 }
