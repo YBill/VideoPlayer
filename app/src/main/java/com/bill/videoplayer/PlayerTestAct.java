@@ -1,5 +1,7 @@
 package com.bill.videoplayer;
 
+import android.annotation.SuppressLint;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +31,17 @@ public class PlayerTestAct extends AppCompatActivity {
 //        videoView.setUrl("https://rmrbtest-image.peopleapp.com/upload/video/201809/1537349021125fcfb438615c1b.mp4");
         videoView.start();
 
+    }
+
+    @SuppressLint("SourceLockedOrientationActivity")
+    @Override
+    public void onBackPressed() {
+        if (videoView != null && videoView.isFullScreen()) {
+            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            videoView.stopFullScreen();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override

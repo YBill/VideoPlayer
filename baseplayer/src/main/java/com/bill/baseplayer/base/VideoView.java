@@ -558,14 +558,6 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
         }
     }
 
-    /**
-     * 改变返回键逻辑，用于activity
-     * true：拦截 finish()
-     */
-    public boolean onBackPressed() {
-        return mVideoController != null && mVideoController.onBackPressed();
-    }
-
     ////////////// 外部暴露方法 END ////////////
 
 

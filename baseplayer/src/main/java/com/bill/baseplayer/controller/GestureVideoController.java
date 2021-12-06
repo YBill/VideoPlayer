@@ -24,7 +24,7 @@ import com.bill.baseplayer.util.Utils;
  * desc 包含手势功能的控制器
  * 包括：滑动调整进度、音量、亮度 和 双击播放/暂停
  */
-public abstract class GestureVideoController extends BaseVideoController implements
+public class GestureVideoController extends BaseVideoController implements
         GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, View.OnTouchListener {
 
     private GestureDetector mGestureDetector;

@@ -362,14 +362,6 @@ public class BaseVideoController extends FrameLayout implements
         handlePlayerStateChanged(playerState);
     }
 
-    /**
-     * 改变返回键逻辑，用于activity，默认不处理
-     * 子类中可以处理相关逻辑
-     */
-    protected boolean onBackPressed() {
-        return false;
-    }
-
     //////// 和VideoView关联方法 End /////////
 
     /**
