@@ -5,6 +5,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 
@@ -39,6 +41,9 @@ public class ControllerView extends BaseComponent implements View.OnClickListene
 
     private boolean mIsDragging;
 
+    private Animation mShowAnim;
+    private Animation mHideAnim;
+
     public ControllerView(@NonNull Context context) {
         super(context);
         init();
@@ -47,6 +52,11 @@ public class ControllerView extends BaseComponent implements View.OnClickListene
     private void init() {
         initView();
         this.setVisibility(GONE);
+
+        mShowAnim = new AlphaAnimation(0f, 1f);
+        mShowAnim.setDuration(300);
+        mHideAnim = new AlphaAnimation(1f, 0f);
+        mHideAnim.setDuration(300);
     }
 
     private void initView() {
@@ -75,10 +85,20 @@ public class ControllerView extends BaseComponent implements View.OnClickListene
             topView.setVisibility(VISIBLE);
             bottomView.setVisibility(VISIBLE);
             progressBar.setVisibility(GONE);
+
+            topView.startAnimation(mShowAnim);
+            bottomView.startAnimation(mShowAnim);
+            progressBar.startAnimation(mHideAnim);
+
         } else {
             topView.setVisibility(GONE);
             bottomView.setVisibility(GONE);
             progressBar.setVisibility(VISIBLE);
+
+            topView.startAnimation(mHideAnim);
+            bottomView.startAnimation(mHideAnim);
+            progressBar.startAnimation(mShowAnim);
+
         }
     }
 
