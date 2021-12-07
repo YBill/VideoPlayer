@@ -7,7 +7,7 @@ import com.bill.baseplayer.base.VideoView;
  * date 2021/11/30
  * desc
  */
-public interface IComponentState {
+public interface IControllerState {
 
     /**
      * 回调控制器显示和隐藏状态，

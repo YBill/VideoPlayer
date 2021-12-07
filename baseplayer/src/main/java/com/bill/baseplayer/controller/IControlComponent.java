@@ -10,7 +10,7 @@ import androidx.annotation.Nullable;
  * date 2021/11/26
  * desc 可继承此接口实现自己的控制ui，以及监听播放器的状态
  */
-public interface IControlComponent extends IComponentState {
+public interface IControlComponent extends IControllerState {
 
     /**
      * 将 ControlWrapper 传递到当前 ControlComponent 中
