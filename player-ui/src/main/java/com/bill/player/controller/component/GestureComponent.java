@@ -24,31 +24,33 @@ import com.bill.player.controller.util.ComponentUtils;
 public class GestureComponent extends BaseComponent implements IGestureComponent {
 
     private View contentView;
-    private AppCompatImageView mIcon;
-    private AppCompatTextView mTextPercent;
-    private ProgressBar mProgressPercent;
+    private AppCompatImageView gesTypeIconIv;
+    private AppCompatTextView gesPercentTv;
+    private ProgressBar gesPercentPb;
 
     public GestureComponent(@NonNull Context context) {
         super(context);
-        init();
-    }
-
-    private void init() {
         initView();
         this.setVisibility(GONE);
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.layout_component_gesture;
     }
 
     private void initView() {
         LayoutInflater.from(getContext()).inflate(R.layout.layout_component_gesture, this, true);
         contentView = this.findViewById(R.id.ll_component_ges);
-        mIcon = this.findViewById(R.id.iv_component_ges_icon);
-        mTextPercent = this.findViewById(R.id.tv_component_ges_msg);
-        mProgressPercent = this.findViewById(R.id.pb_component_ges);
+        gesTypeIconIv = this.findViewById(R.id.iv_component_ges_icon);
+        gesPercentTv = this.findViewById(R.id.tv_component_ges_msg);
+        gesPercentPb = this.findViewById(R.id.pb_component_ges);
     }
 
     @Override
     public void onStartSlide() {
-        mControlWrapper.hide();
+        if (mControlWrapper != null)
+            mControlWrapper.hide();
         contentView.setVisibility(VISIBLE);
         contentView.setAlpha(1f);
     }
@@ -70,35 +72,35 @@ public class GestureComponent extends BaseComponent implements IGestureComponent
 
     @Override
     public void onPositionChange(long slidePosition, long currentPosition, long duration) {
-        mProgressPercent.setVisibility(GONE);
+        gesPercentPb.setVisibility(GONE);
         if (slidePosition > currentPosition) {
-            mIcon.setImageResource(R.drawable.icon_component_forward);
+            gesTypeIconIv.setImageResource(R.drawable.icon_component_forward);
         } else {
-            mIcon.setImageResource(R.drawable.icon_component_backward);
+            gesTypeIconIv.setImageResource(R.drawable.icon_component_backward);
         }
-        mTextPercent.setText(String.format("%s/%s", ComponentUtils.stringForTime(slidePosition), ComponentUtils.stringForTime(duration)));
+        gesPercentTv.setText(String.format("%s/%s", ComponentUtils.stringForTime(slidePosition), ComponentUtils.stringForTime(duration)));
     }
 
     @Override
     public void onBrightnessChange(int percent) {
-        mProgressPercent.setVisibility(VISIBLE);
-        mIcon.setImageResource(R.drawable.icon_component_brightness);
-        mTextPercent.setText(percent + "%");
-        mProgressPercent.setProgress(percent);
+        gesPercentPb.setVisibility(VISIBLE);
+        gesTypeIconIv.setImageResource(R.drawable.icon_component_brightness);
+        gesPercentTv.setText(percent + "%");
+        gesPercentPb.setProgress(percent);
     }
 
     @Override
     public void onVolumeChange(int percent) {
-        mProgressPercent.setVisibility(VISIBLE);
+        gesPercentPb.setVisibility(VISIBLE);
         if (percent <= 0) {
-            mIcon.setImageResource(R.drawable.icon_component_volume_0);
+            gesTypeIconIv.setImageResource(R.drawable.icon_component_volume_0);
         } else if (percent < 50) {
-            mIcon.setImageResource(R.drawable.icon_component_volume_low);
+            gesTypeIconIv.setImageResource(R.drawable.icon_component_volume_low);
         } else {
-            mIcon.setImageResource(R.drawable.icon_component_volume_high);
+            gesTypeIconIv.setImageResource(R.drawable.icon_component_volume_high);
         }
-        mTextPercent.setText(percent + "%");
-        mProgressPercent.setProgress(percent);
+        gesPercentTv.setText(percent + "%");
+        gesPercentPb.setProgress(percent);
     }
 
     @Override

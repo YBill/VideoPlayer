@@ -81,6 +81,9 @@ public class BaseVideoController extends FrameLayout implements
 
         mActivity = Utils.scanForActivity(getContext());
         checkCutout();
+
+        // 开始监听设备方向
+        mOrientationHelper.setOnOrientationChangeListener(this);
     }
 
     protected boolean isInPlayState() {
@@ -387,8 +390,6 @@ public class BaseVideoController extends FrameLayout implements
         for (IControlComponent component : mControlComponents) {
             component.attach(mControlWrapper);
         }
-        // 开始监听设备方向
-        mOrientationHelper.setOnOrientationChangeListener(this);
     }
 
 

@@ -3,7 +3,6 @@ package com.bill.player.controller.component;
 import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -46,10 +45,6 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
 
     public ControllerComponent(@NonNull Context context) {
         super(context);
-        init();
-    }
-
-    private void init() {
         initView();
         this.setVisibility(GONE);
 
@@ -59,8 +54,12 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
         mHideAnim.setDuration(300);
     }
 
+    @Override
+    protected int getLayoutId() {
+        return R.layout.layout_component_controller;
+    }
+
     private void initView() {
-        LayoutInflater.from(getContext()).inflate(R.layout.layout_component_controller, this, true);
         topView = this.findViewById(R.id.fl_component_ctr_top);
         backView = this.findViewById(R.id.iv_component_ctr_back);
         titleTv = this.findViewById(R.id.tv_component_ctr_title);
@@ -116,7 +115,7 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
             lockBtn.startAnimation(mHideAnim);
         }
 
-        if (!mControlWrapper.isLocked()) {
+        if (mControlWrapper != null && !mControlWrapper.isLocked()) {
             controllerVisible(isVisible);
         }
     }
@@ -148,9 +147,11 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
         super.onPlayStateChanged(playState);
 
         if (playState == VideoView.STATE_PREPARING) {
-            if (!TextUtils.isEmpty(mControlWrapper.getDataSource().title))
-                titleTv.setText(mControlWrapper.getDataSource().title);
-            mControlWrapper.show();
+            if (mControlWrapper != null) {
+                if (!TextUtils.isEmpty(mControlWrapper.getDataSource().title))
+                    titleTv.setText(mControlWrapper.getDataSource().title);
+                mControlWrapper.show();
+            }
         }
 
         switch (playState) {
@@ -171,7 +172,8 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
             case VideoView.STATE_PLAYING:
                 this.setVisibility(VISIBLE);
                 playIv.setSelected(true);
-                mControlWrapper.startProgress();
+                if (mControlWrapper != null)
+                    mControlWrapper.startProgress();
                 break;
             case VideoView.STATE_PAUSED:
                 playIv.setSelected(false);
@@ -226,27 +228,32 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
     }
 
     private void toggleFullScreen() {
-        Activity activity = Utils.scanForActivity(getContext());
-        mControlWrapper.toggleFullScreen(activity);
+        if (mControlWrapper != null) {
+            Activity activity = Utils.scanForActivity(getContext());
+            mControlWrapper.toggleFullScreen(activity);
+        }
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.iv_component_ctr_back) {
-            if (mControlWrapper.isFullScreen()) {
+            if (mControlWrapper != null && mControlWrapper.isFullScreen()) {
                 toggleFullScreen();
             } else {
                 Activity activity = Utils.scanForActivity(getContext());
                 activity.finish();
             }
         } else if (v.getId() == R.id.iv_component_ctr_play) {
-            mControlWrapper.togglePlay();
+            if (mControlWrapper != null)
+                mControlWrapper.togglePlay();
         } else if (v.getId() == R.id.tv_component_ctr_fullscreen) {
             toggleFullScreen();
         } else if (v.getId() == R.id.iv_component_ctr_lock) {
-            lockBtn.setEnabled(false);
-            mControlWrapper.toggleLockState();
-            controllerVisible(!mControlWrapper.isLocked());
+            if (mControlWrapper != null) {
+                lockBtn.setEnabled(false);
+                mControlWrapper.toggleLockState();
+                controllerVisible(!mControlWrapper.isLocked());
+            }
         }
     }
 
@@ -256,6 +263,7 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
         if (!fromUser) {
             return;
         }
+        if (mControlWrapper == null) return;
 
         long duration = mControlWrapper.getDuration();
         long newPosition = (duration * progress) / this.seekBar.getMax();
@@ -265,6 +273,7 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
+        if (mControlWrapper == null) return;
         mIsDragging = true;
         mControlWrapper.stopProgress();
         mControlWrapper.cancelHideCountdown();
@@ -272,6 +281,7 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+        if (mControlWrapper == null) return;
         mIsDragging = false;
         long duration = mControlWrapper.getDuration();
         long newPosition = (duration * seekBar.getProgress()) / this.seekBar.getMax();

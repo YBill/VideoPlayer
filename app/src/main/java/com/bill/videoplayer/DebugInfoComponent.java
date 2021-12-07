@@ -2,16 +2,18 @@ package com.bill.videoplayer;
 
 import android.content.Context;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
 
 import com.bill.baseplayer.base.VideoView;
-import com.bill.player.controller.component.BaseComponent;
 import com.bill.baseplayer.controller.ControlWrapper;
+import com.bill.baseplayer.controller.IControlComponent;
 import com.bill.baseplayer.player.AndroidMediaPlayerFactory;
 import com.bill.baseplayer.render.SurfaceRenderViewFactory;
 import com.bill.baseplayer.render.TextureRenderViewFactory;
@@ -25,9 +27,9 @@ import java.lang.reflect.Field;
  * date 2021/12/1
  * desc
  */
-public class DebugInfoComponent extends BaseComponent {
+public class DebugInfoComponent extends AppCompatTextView implements IControlComponent {
 
-    private AppCompatTextView mTextView;
+    private ControlWrapper mControlWrapper;
 
     public DebugInfoComponent(@NonNull Context context) {
         super(context);
@@ -35,21 +37,48 @@ public class DebugInfoComponent extends BaseComponent {
     }
 
     private void init() {
-        mTextView = new AppCompatTextView(getContext());
-        mTextView.setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
-        mTextView.setBackgroundResource(android.R.color.black);
-        mTextView.setTextSize(10);
+        setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
+        setBackgroundResource(android.R.color.black);
+        setTextSize(10);
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.gravity = Gravity.CENTER_HORIZONTAL;
-        mTextView.setLayoutParams(lp);
-        this.addView(mTextView);
+        setLayoutParams(lp);
+    }
+
+    @Override
+    public void onVisibilityChanged(boolean isVisible) {
+
     }
 
     @Override
     public void onPlayStateChanged(int playState) {
-        super.onPlayStateChanged(playState);
-        mTextView.setText(getDebugString(playState));
+        setText(getDebugString(playState));
+    }
+
+    @Override
+    public void onPlayerStateChanged(int playerState) {
+
+    }
+
+    @Override
+    public void setProgress(long duration, long position) {
+
+    }
+
+    @Override
+    public void onLockStateChanged(boolean isLocked) {
+
+    }
+
+    @Override
+    public void onSingleTapConfirmed() {
+
+    }
+
+    @Override
+    public void onDoubleTap() {
+
     }
 
     private String getDebugString(int playState) {
@@ -133,7 +162,7 @@ public class DebugInfoComponent extends BaseComponent {
                 playStateString = "pause";
                 break;
             case VideoView.STATE_PLAYBACK_COMPLETED:
-                playStateString = "playback completed";
+                playStateString = "completed";
                 break;
             case VideoView.STATE_ERROR:
                 playStateString = "error";
@@ -142,4 +171,19 @@ public class DebugInfoComponent extends BaseComponent {
         return String.format("PlayState: %s", playStateString);
     }
 
+    @Override
+    public void attach(@NonNull ControlWrapper controlWrapper) {
+        mControlWrapper = controlWrapper;
+    }
+
+    @Nullable
+    @Override
+    public View getView() {
+        return this;
+    }
+
+    @Override
+    public boolean isDissociate() {
+        return false;
+    }
 }
