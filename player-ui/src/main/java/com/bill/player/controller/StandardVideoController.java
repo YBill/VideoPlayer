@@ -9,6 +9,7 @@ import com.bill.player.controller.component.CompleteComponent;
 import com.bill.player.controller.component.ControllerComponent;
 import com.bill.player.controller.component.ErrorComponent;
 import com.bill.player.controller.component.GestureComponent;
+import com.bill.player.controller.component.PrepareComponent;
 
 /**
  * author ywb
@@ -29,6 +30,7 @@ public class StandardVideoController extends GestureVideoController {
     public void addDefaultControlComponent() {
         addControlComponent(new ControllerComponent(getContext()));
         addControlComponent(new GestureComponent(getContext()));
+        addControlComponent(new PrepareComponent(getContext()));
         addControlComponent(new CompleteComponent(getContext()));
         addControlComponent(new ErrorComponent(getContext()));
     }
