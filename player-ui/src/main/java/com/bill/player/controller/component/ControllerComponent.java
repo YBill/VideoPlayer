@@ -9,13 +9,13 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.bill.baseplayer.base.VideoView;
-import com.bill.baseplayer.controller.BaseComponent;
 import com.bill.baseplayer.util.Utils;
 import com.bill.player.controller.R;
 import com.bill.player.controller.util.ComponentUtils;
@@ -37,6 +37,7 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
     private AppCompatImageView fullscreenIv;
     private SeekBar seekBar;
     private ProgressBar progressBar;
+    private View lockBtn;
 
     private boolean mIsDragging;
 
@@ -69,8 +70,10 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
         playIv = this.findViewById(R.id.iv_component_ctr_play);
         fullscreenIv = this.findViewById(R.id.tv_component_ctr_fullscreen);
         seekBar = this.findViewById(R.id.tv_component_ctr_seekbar);
-        progressBar = this.findViewById(R.id.tv_component_ctr_progress_bar);
+        progressBar = this.findViewById(R.id.pb_component_ctr_progress_bar);
+        lockBtn = this.findViewById(R.id.iv_component_ctr_lock);
 
+        lockBtn.setOnClickListener(this);
         backView.setOnClickListener(this);
         playIv.setOnClickListener(this);
         fullscreenIv.setOnClickListener(this);
@@ -78,8 +81,47 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
     }
 
     @Override
+    public void onSingleTapConfirmed() {
+        if (mControlWrapper != null)
+            mControlWrapper.toggleShowState();
+    }
+
+    @Override
+    public void onDoubleTap() {
+        if (mControlWrapper != null && !mControlWrapper.isLocked())
+            mControlWrapper.togglePlay();
+    }
+
+    @Override
+    public void onLockStateChanged(boolean isLocked) {
+        super.onLockStateChanged(isLocked);
+        lockBtn.setEnabled(true);
+        if (isLocked) {
+            lockBtn.setSelected(true);
+            Toast.makeText(getContext(), R.string.player_ui_locked, Toast.LENGTH_SHORT).show();
+        } else {
+            lockBtn.setSelected(false);
+            Toast.makeText(getContext(), R.string.player_ui_unlocked, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
     public void onVisibilityChanged(boolean isVisible) {
         super.onVisibilityChanged(isVisible);
+        if (isVisible) {
+            lockBtn.setVisibility(VISIBLE);
+            lockBtn.startAnimation(mShowAnim);
+        } else {
+            lockBtn.setVisibility(GONE);
+            lockBtn.startAnimation(mHideAnim);
+        }
+
+        if (!mControlWrapper.isLocked()) {
+            controllerVisible(isVisible);
+        }
+    }
+
+    private void controllerVisible(boolean isVisible) {
         if (isVisible) {
             topView.setVisibility(VISIBLE);
             bottomView.setVisibility(VISIBLE);
@@ -201,6 +243,10 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
             mControlWrapper.togglePlay();
         } else if (v.getId() == R.id.tv_component_ctr_fullscreen) {
             toggleFullScreen();
+        } else if (v.getId() == R.id.iv_component_ctr_lock) {
+            lockBtn.setEnabled(false);
+            mControlWrapper.toggleLockState();
+            controllerVisible(!mControlWrapper.isLocked());
         }
     }
 

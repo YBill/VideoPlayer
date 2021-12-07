@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -91,7 +90,7 @@
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/tv_component_ctr_progress_bar"
+        android:id="@+id/pb_component_ctr_progress_bar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -100,5 +99,16 @@
         android:progressDrawable="@drawable/layer_progress_bar"
         android:visibility="gone"
         tools:visibility="visible" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_component_ctr_lock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/shape_lock_btn_bg"
+        android:scaleType="center"
+        android:src="@drawable/selector_lock_button"
+        android:visibility="visible" />
 
 </FrameLayout>

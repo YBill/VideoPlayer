@@ -1,4 +1,4 @@
-package com.bill.baseplayer.controller;
+package com.bill.player.controller.component;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -8,12 +8,16 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bill.baseplayer.controller.ControlWrapper;
+import com.bill.baseplayer.controller.IControlComponent;
+import com.bill.baseplayer.controller.IGestureComponent;
+
 /**
  * author ywb
  * date 2021/12/1
  * desc 组件基类
  */
-public class BaseComponent extends FrameLayout implements IGestureComponent {
+public class BaseComponent extends FrameLayout implements IControlComponent {
 
     protected ControlWrapper mControlWrapper;
 
@@ -55,6 +59,16 @@ public class BaseComponent extends FrameLayout implements IGestureComponent {
     }
 
     @Override
+    public void onSingleTapConfirmed() {
+
+    }
+
+    @Override
+    public void onDoubleTap() {
+
+    }
+
+    @Override
     public void attach(@NonNull ControlWrapper controlWrapper) {
         this.mControlWrapper = controlWrapper;
     }
@@ -70,38 +84,4 @@ public class BaseComponent extends FrameLayout implements IGestureComponent {
         return false;
     }
 
-    @Override
-    public void onStartSlide() {
-
-    }
-
-    @Override
-    public void onStopSlide() {
-
-    }
-
-    @Override
-    public void onPositionChange(long slidePosition, long currentPosition, long duration) {
-
-    }
-
-    @Override
-    public void onBrightnessChange(int percent) {
-
-    }
-
-    @Override
-    public void onVolumeChange(int percent) {
-
-    }
-
-    @Override
-    public void onSingleTapConfirmed() {
-
-    }
-
-    @Override
-    public void onDoubleTap() {
-
-    }
 }

@@ -12,7 +12,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.bill.baseplayer.base.VideoView;
-import com.bill.baseplayer.controller.BaseComponent;
+import com.bill.baseplayer.controller.IGestureComponent;
 import com.bill.player.controller.R;
 import com.bill.player.controller.util.ComponentUtils;
 
@@ -21,7 +21,7 @@ import com.bill.player.controller.util.ComponentUtils;
  * date 2021/12/6
  * desc
  */
-public class GestureComponent extends BaseComponent {
+public class GestureComponent extends BaseComponent implements IGestureComponent {
 
     private View contentView;
     private AppCompatImageView mIcon;
@@ -48,7 +48,6 @@ public class GestureComponent extends BaseComponent {
 
     @Override
     public void onStartSlide() {
-        super.onStartSlide();
         mControlWrapper.hide();
         contentView.setVisibility(VISIBLE);
         contentView.setAlpha(1f);

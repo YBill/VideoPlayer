@@ -14,7 +14,8 @@
         <activity
             android:name=".PlayerTestAct"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

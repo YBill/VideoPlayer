@@ -49,4 +49,13 @@ public interface IComponentState {
      */
     void onLockStateChanged(boolean isLocked);
 
+    /**
+     * 单击
+     */
+    void onSingleTapConfirmed();
+
+    /**
+     * 双击
+     */
+    void onDoubleTap();
 }

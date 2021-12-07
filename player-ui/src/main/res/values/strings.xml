@@ -1,3 +1,4 @@
 <resources>
-
+    <string name="player_ui_unlocked">已解锁</string>
+    <string name="player_ui_locked">已锁定</string>
 </resources>

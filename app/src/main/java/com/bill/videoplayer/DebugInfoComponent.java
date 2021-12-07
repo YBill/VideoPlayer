@@ -10,7 +10,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
 
 import com.bill.baseplayer.base.VideoView;
-import com.bill.baseplayer.controller.BaseComponent;
+import com.bill.player.controller.component.BaseComponent;
 import com.bill.baseplayer.controller.ControlWrapper;
 import com.bill.baseplayer.player.AndroidMediaPlayerFactory;
 import com.bill.baseplayer.render.SurfaceRenderViewFactory;

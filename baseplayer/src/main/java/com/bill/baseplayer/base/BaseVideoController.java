@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.OrientationEventListener;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -32,7 +34,7 @@ import java.util.Iterator;
  * desc 控制器基类
  */
 public class BaseVideoController extends FrameLayout implements
-        IVideoController, OrientationHelper.OnOrientationChangeListener {
+        IVideoController, OrientationHelper.OnOrientationChangeListener, GestureDetector.OnDoubleTapListener {
 
     // 播放器包装类，集合了PlayerControl的api和IVideoController的api
     protected ControlWrapper mControlWrapper;
@@ -50,6 +52,8 @@ public class BaseVideoController extends FrameLayout implements
     private boolean mIsAdaptCutout; // 用户设置是否适配刘海屏，默认true
     private Boolean mHasCutout; // 是否有刘海
     private int mCutoutHeight; // 刘海的高度
+
+    private int mCurPlayState; // 当前的播放状态
 
     private int mAutoHideCountdown = 4000; // 视图自动隐藏倒计时
 
@@ -79,12 +83,24 @@ public class BaseVideoController extends FrameLayout implements
         checkCutout();
     }
 
+    protected boolean isInPlayState() {
+        return mControlWrapper != null
+                && mCurPlayState != VideoView.STATE_ERROR
+                && mCurPlayState != VideoView.STATE_IDLE
+                && mCurPlayState != VideoView.STATE_PREPARING
+                && mCurPlayState != VideoView.STATE_PREPARED
+                && mCurPlayState != VideoView.STATE_START_ABORT
+                && mCurPlayState != VideoView.STATE_PLAYBACK_COMPLETED;
+    }
+
     //////// System Start /////////
 
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);
-        if (mControlWrapper.isPlaying() && (mEnableOrientation || mControlWrapper.isFullScreen())) {
+        if (!mEnableOrientation)
+            return;
+        if (!mIsLocked && isInPlayState()) {
             if (hasWindowFocus) {
                 postDelayed(new Runnable() {
                     @Override
@@ -110,8 +126,7 @@ public class BaseVideoController extends FrameLayout implements
         if (components == null) return;
         for (IControlComponent component : components) {
             if (component == null) continue;
-            if (mControlComponents.contains(component))
-                mControlComponents.remove(component);
+            mControlComponents.remove(component);
             mControlComponents.add(component);
             if (mControlWrapper != null) {
                 component.attach(mControlWrapper);
@@ -236,6 +251,7 @@ public class BaseVideoController extends FrameLayout implements
     @Override
     public void setLocked(boolean locked) {
         mIsLocked = locked;
+        orientationSensing();
         handleLockStateChanged(locked);
     }
 
@@ -328,6 +344,36 @@ public class BaseVideoController extends FrameLayout implements
     }
 
     //////// OrientationHelper#OnOrientationChangeListener Start /////////
+
+    //////// GestureDetector.OnDoubleTapListener Start /////////
+
+    /**
+     * 单击
+     */
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) {
+        if (isInPlayState())
+            handleSingleTap();
+        return true;
+    }
+
+    /**
+     * 双击
+     */
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        if (isInPlayState())
+            handleDoubleTap();
+        return true;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent e) {
+        return false;
+    }
+
+    //////// GestureDetector.OnDoubleTapListener End /////////
+
 
     //////// 和VideoView关联方法 Start /////////
 
@@ -425,10 +471,8 @@ public class BaseVideoController extends FrameLayout implements
     }
 
     private void handleVisibilityChanged(boolean isVisible) {
-        if (!mIsLocked) {
-            for (IControlComponent component : mControlComponents) {
-                component.onVisibilityChanged(isVisible);
-            }
+        for (IControlComponent component : mControlComponents) {
+            component.onVisibilityChanged(isVisible);
         }
     }
 
@@ -446,10 +490,23 @@ public class BaseVideoController extends FrameLayout implements
         }
     }
 
+    private void handleSingleTap() {
+        for (IControlComponent component : mControlComponents) {
+            component.onSingleTapConfirmed();
+        }
+    }
+
+    private void handleDoubleTap() {
+        for (IControlComponent component : mControlComponents) {
+            component.onDoubleTap();
+        }
+    }
+
     /**
      * 处理播放状态
      */
     private void onPlayStateChanged(int playState) {
+        mCurPlayState = playState;
         switch (playState) {
             case VideoView.STATE_IDLE:
                 mOrientationHelper.disable();
@@ -476,24 +533,20 @@ public class BaseVideoController extends FrameLayout implements
     private void onPlayerStateChanged(int playerState) {
         switch (playerState) {
             case VideoView.PLAYER_NORMAL:
-                if (mEnableOrientation) {
-                    mOrientationHelper.enable();
-                } else {
-                    mOrientationHelper.disable();
-                }
+                orientationSensing();
                 if (hasCutout()) {
                     CutoutScreenUtil.adaptCutoutAboveAndroidP(getContext(), false);
                 }
                 break;
             case VideoView.PLAYER_FULL_SCREEN:
-                // 在全屏时强制监听设备方向
-                mOrientationHelper.enable();
+                orientationSensing();
                 if (hasCutout()) {
                     CutoutScreenUtil.adaptCutoutAboveAndroidP(getContext(), true);
                 }
                 break;
             case VideoView.PLAYER_TINY_SCREEN:
-                mOrientationHelper.disable();
+                if (mEnableOrientation)
+                    mOrientationHelper.disable();
                 break;
         }
     }
@@ -503,11 +556,6 @@ public class BaseVideoController extends FrameLayout implements
      */
     @SuppressLint("SourceLockedOrientationActivity")
     private void onOrientationPortrait(Activity activity) {
-        // 屏幕锁定的情况
-        if (mIsLocked) return;
-        // 没有开启设备方向监听的情况
-        if (!mEnableOrientation) return;
-
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         mControlWrapper.stopFullScreen();
     }
@@ -536,5 +584,17 @@ public class BaseVideoController extends FrameLayout implements
         }
     }
 
+    /**
+     * 处理方向感应
+     */
+    private void orientationSensing() {
+        if (!mEnableOrientation)
+            return;
+        if (mIsLocked) {
+            mOrientationHelper.disable();
+        } else {
+            mOrientationHelper.enable();
+        }
+    }
 
 }

@@ -23,6 +23,7 @@ public class App extends Application {
                 .setLogEnabled(BuildConfig.DEBUG)
                 .setPlayerFactory(IjkPlayerFactory.create())
                 .setRenderViewFactory(TextureRenderViewFactory.create())
+                .setEnableOrientation(true)
                 .build());
     }
 }
