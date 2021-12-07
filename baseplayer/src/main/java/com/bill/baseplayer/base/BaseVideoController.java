@@ -50,12 +50,12 @@ public class BaseVideoController extends FrameLayout implements
     private int mOrientation;
 
     private boolean mIsAdaptCutout; // 用户设置是否适配刘海屏，默认true
-    private Boolean mHasCutout; // 是否有刘海
+    private boolean mHasCutout; // 是否有刘海
     private int mCutoutHeight; // 刘海的高度
 
     private int mCurPlayState; // 当前的播放状态
 
-    private int mAutoHideCountdown = 4000; // 视图自动隐藏倒计时
+    private int mAutoHideCountdown = 5000; // 视图自动隐藏倒计时
 
     // 所有的组件
     protected ArrayList<IControlComponent> mControlComponents = new ArrayList<>();
@@ -176,7 +176,7 @@ public class BaseVideoController extends FrameLayout implements
     }
 
     /**
-     * 设置自动隐藏时间
+     * 设置自动隐藏时间，默认5s
      */
     public void setAutoHideCountdown(int autoHideCountdown) {
         if (autoHideCountdown > 0) {
@@ -185,14 +185,14 @@ public class BaseVideoController extends FrameLayout implements
     }
 
     /**
-     * 设置是否适配刘海屏
+     * 设置是否适配刘海屏，默认适配
      */
     public void setAdaptCutout(boolean adaptCutout) {
         mIsAdaptCutout = adaptCutout;
     }
 
     /**
-     * 是否自动旋转， 默认不自动旋转
+     * 是否自动旋转，默认不自动旋转
      */
     public void setEnableOrientation(boolean enableOrientation) {
         mEnableOrientation = enableOrientation;
@@ -285,7 +285,7 @@ public class BaseVideoController extends FrameLayout implements
      */
     @Override
     public boolean hasCutout() {
-        return mHasCutout != null && mHasCutout;
+        return mHasCutout;
     }
 
     /**
@@ -415,7 +415,7 @@ public class BaseVideoController extends FrameLayout implements
      */
     private void checkCutout() {
         if (!mIsAdaptCutout) return;
-        if (mActivity != null && mHasCutout == null) {
+        if (mActivity != null) {
             mHasCutout = CutoutScreenUtil.allowDisplayToCutout(mActivity);
             if (mHasCutout) {
                 //竖屏下的状态栏高度可认为是刘海的高度
