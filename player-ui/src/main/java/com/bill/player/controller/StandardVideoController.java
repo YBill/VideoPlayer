@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.bill.baseplayer.controller.GestureVideoController;
 import com.bill.player.controller.component.CompleteComponent;
 import com.bill.player.controller.component.ControllerComponent;
+import com.bill.player.controller.component.ErrorComponent;
 import com.bill.player.controller.component.GestureComponent;
 
 /**
@@ -29,5 +30,6 @@ public class StandardVideoController extends GestureVideoController {
         addControlComponent(new ControllerComponent(getContext()));
         addControlComponent(new GestureComponent(getContext()));
         addControlComponent(new CompleteComponent(getContext()));
+        addControlComponent(new ErrorComponent(getContext()));
     }
 }

@@ -3,5 +3,6 @@
     <color name="controller_bg_dark">#66000000</color>
     <color name="controller_bg_light">#00000000</color>
     <color name="progress_select_bg">#FF0000</color>
+    <color name="play_retry_bg">#39C5BB</color>
 
 </resources>

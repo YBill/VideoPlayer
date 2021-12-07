@@ -1,4 +1,7 @@
 <resources>
     <string name="player_ui_unlocked">已解锁</string>
     <string name="player_ui_locked">已锁定</string>
+    <string name="player_ui_retry">重试</string>
+    <string name="player_ui_error_msg">播放出现问题了</string>
+    <string name="player_ui_replay">重新播放</string>
 </resources>
