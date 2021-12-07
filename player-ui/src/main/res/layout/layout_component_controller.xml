@@ -8,7 +8,7 @@
         android:id="@+id/fl_component_ctr_top"
         android:layout_width="match_parent"
         android:layout_height="36dp"
-        android:background="@drawable/shape_controller_top_gradient">
+        android:background="@drawable/player_ui_shape_controller_top_gradient">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/iv_component_ctr_back"
@@ -36,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:layout_gravity="bottom"
-        android:background="@drawable/shape_controller_bottom_gradient"
+        android:background="@drawable/player_ui_shape_controller_bottom_gradient"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -45,7 +45,7 @@
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:scaleType="center"
-            android:src="@drawable/selector_play_state" />
+            android:src="@drawable/player_ui_selector_play_state" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/tv_component_ctr_cur_time"
@@ -69,8 +69,8 @@
             android:minHeight="2dp"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
-            android:progressDrawable="@drawable/layer_seekbar_progress"
-            android:thumb="@drawable/selector_seekbar_thumb"
+            android:progressDrawable="@drawable/player_ui_layer_seekbar_progress"
+            android:thumb="@drawable/player_ui_selector_seekbar_thumb"
             android:thumbOffset="0dp" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -86,7 +86,7 @@
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:scaleType="center"
-            android:src="@drawable/selector_full_screen_button" />
+            android:src="@drawable/player_ui_selector_full_screen_button" />
     </LinearLayout>
 
     <ProgressBar
@@ -96,7 +96,7 @@
         android:layout_height="1dp"
         android:layout_gravity="bottom"
         android:max="1000"
-        android:progressDrawable="@drawable/layer_progress_bar"
+        android:progressDrawable="@drawable/player_ui_layer_progress_bar"
         android:visibility="gone"
         tools:visibility="visible" />
 
@@ -106,9 +106,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="20dp"
-        android:background="@drawable/shape_lock_btn_bg"
+        android:background="@drawable/player_ui_shape_lock_btn_bg"
         android:scaleType="center"
-        android:src="@drawable/selector_lock_button"
+        android:src="@drawable/player_ui_selector_lock_button"
         android:visibility="visible" />
 
 </FrameLayout>

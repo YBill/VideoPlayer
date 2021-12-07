@@ -38,7 +38,7 @@
             android:layout_width="100dp"
             android:layout_height="3dp"
             android:max="100"
-            android:progressDrawable="@drawable/layer_slide_progress_bar" />
+            android:progressDrawable="@drawable/player_ui_layer_slide_progress_bar" />
 
     </LinearLayout>
 

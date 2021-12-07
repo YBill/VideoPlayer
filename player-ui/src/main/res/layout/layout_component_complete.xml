@@ -20,7 +20,7 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_replay_bg"
+            android:background="@drawable/player_ui_shape_replay_bg"
             android:scaleType="center"
             android:src="@drawable/icon_component_replay" />
 
