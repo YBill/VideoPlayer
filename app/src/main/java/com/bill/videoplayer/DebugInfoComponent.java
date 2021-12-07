@@ -161,7 +161,7 @@ public class DebugInfoComponent extends AppCompatTextView implements IControlCom
             case VideoView.STATE_PAUSED:
                 playStateString = "pause";
                 break;
-            case VideoView.STATE_PLAYBACK_COMPLETED:
+            case VideoView.STATE_COMPLETED:
                 playStateString = "completed";
                 break;
             case VideoView.STATE_ERROR:

@@ -93,7 +93,7 @@ public class BaseVideoController extends FrameLayout implements
                 && mCurPlayState != VideoView.STATE_PREPARING
                 && mCurPlayState != VideoView.STATE_PREPARED
                 && mCurPlayState != VideoView.STATE_START_ABORT
-                && mCurPlayState != VideoView.STATE_PLAYBACK_COMPLETED;
+                && mCurPlayState != VideoView.STATE_COMPLETED;
     }
 
     //////// System Start /////////
@@ -518,7 +518,7 @@ public class BaseVideoController extends FrameLayout implements
                 //所以在播放器release的时候需要移除
                 clearDissociateComponents();
                 break;
-            case VideoView.STATE_PLAYBACK_COMPLETED:
+            case VideoView.STATE_COMPLETED:
                 mIsLocked = false;
                 mIsShowing = false;
                 break;

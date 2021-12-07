@@ -22,7 +22,7 @@ import com.bill.player.controller.util.ComponentUtils;
 /**
  * author ywb
  * date 2021/12/3
- * desc
+ * desc 控制组件
  */
 public class ControllerComponent extends BaseComponent implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
@@ -156,7 +156,7 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
 
         switch (playState) {
             case VideoView.STATE_IDLE:
-            case VideoView.STATE_PLAYBACK_COMPLETED:
+            case VideoView.STATE_COMPLETED:
                 this.setVisibility(GONE);
                 progressBar.setProgress(0);
                 progressBar.setSecondaryProgress(0);

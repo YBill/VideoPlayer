@@ -3,7 +3,6 @@ package com.bill.baseplayer.base;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -37,7 +36,6 @@ import com.bill.baseplayer.util.Utils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * author ywb
@@ -60,7 +58,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     public static final int STATE_PREPARED = 2; // 准备完成（onPrepare回调）
     public static final int STATE_PLAYING = 3; // 播放状态
     public static final int STATE_PAUSED = 4; // 暂停状态
-    public static final int STATE_PLAYBACK_COMPLETED = 5; // 播放完成
+    public static final int STATE_COMPLETED = 5; // 播放完成
     public static final int STATE_START_ABORT = 6; // 开始播放中止
 
     // 播放器的状态
@@ -151,7 +149,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
                 && mCurrentPlayState != STATE_IDLE
                 && mCurrentPlayState != STATE_PREPARING
                 && mCurrentPlayState != STATE_START_ABORT
-                && mCurrentPlayState != STATE_PLAYBACK_COMPLETED;
+                && mCurrentPlayState != STATE_COMPLETED;
     }
 
     /**
@@ -927,7 +925,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
         if (mProgressManager != null && mDataSource != null) {
             mProgressManager.saveProgress(mDataSource.mUrl, 0); // 播放完成，清除进度
         }
-        setPlayState(STATE_PLAYBACK_COMPLETED);
+        setPlayState(STATE_COMPLETED);
     }
 
     /**

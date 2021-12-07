@@ -19,7 +19,7 @@ import com.bill.player.controller.util.ComponentUtils;
 /**
  * author ywb
  * date 2021/12/6
- * desc
+ * desc 手势组件
  */
 public class GestureComponent extends BaseComponent implements IGestureComponent {
 
@@ -110,7 +110,7 @@ public class GestureComponent extends BaseComponent implements IGestureComponent
                 || playState == VideoView.STATE_PREPARING
                 || playState == VideoView.STATE_PREPARED
                 || playState == VideoView.STATE_ERROR
-                || playState == VideoView.STATE_PLAYBACK_COMPLETED) {
+                || playState == VideoView.STATE_COMPLETED) {
             setVisibility(GONE);
         } else {
             setVisibility(VISIBLE);
