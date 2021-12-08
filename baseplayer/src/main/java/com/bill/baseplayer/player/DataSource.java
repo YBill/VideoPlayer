@@ -1,6 +1,6 @@
 package com.bill.baseplayer.player;
 
-import android.content.res.AssetFileDescriptor;
+import androidx.annotation.RawRes;
 
 import java.util.Map;
 
@@ -15,9 +15,10 @@ public class DataSource {
 
     public Map<String, String> mHeaders; // 当前视频地址的请求头
 
-    public AssetFileDescriptor mAssetFileDescriptor; // assets文件
-
     public String mAssetsPath; // assets下视频文件名
+
+    public @RawRes
+    int mRawId; // raw下视频文件ID
 
     public String title; // 视频的title
 
@@ -29,10 +30,5 @@ public class DataSource {
         mUrl = url;
         mHeaders = headers;
     }
-
-    public DataSource(AssetFileDescriptor assetFileDescriptor) {
-        mAssetFileDescriptor = assetFileDescriptor;
-    }
-
 
 }

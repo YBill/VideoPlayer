@@ -1,5 +1,6 @@
 package com.bill.baseplayer.util;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
@@ -31,6 +32,14 @@ public class DataSourceUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static String buildRawPath(String packageName, int rawId) {
+        return ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + rawId;
+    }
+
+    public static Uri buildRawUri(String packageName, int rawId) {
+        return Uri.parse(buildRawPath(packageName, rawId));
     }
 
 }

@@ -12,9 +12,6 @@ import android.view.SurfaceHolder;
 
 import com.bill.baseplayer.util.DataSourceUtil;
 
-import java.io.IOException;
-import java.util.Map;
-
 /**
  * author ywb
  * date 2021/11/23
@@ -62,7 +59,10 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
             return;
 
         try {
-            if (!TextUtils.isEmpty(dataSource.mAssetsPath)) {
+            if (dataSource.mRawId != 0) {
+                Uri rawUri = DataSourceUtil.buildRawUri(mAppContext.getPackageName(), dataSource.mRawId);
+                mMediaPlayer.setDataSource(mAppContext, rawUri);
+            } else if (!TextUtils.isEmpty(dataSource.mAssetsPath)) {
                 AssetFileDescriptor fd = DataSourceUtil.getAssetsFileDescriptor(mAppContext, dataSource.mAssetsPath);
                 mMediaPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
             } else {

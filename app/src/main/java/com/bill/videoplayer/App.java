@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.bill.baseplayer.config.VideoViewConfig;
 import com.bill.baseplayer.config.VideoViewManager;
+import com.bill.baseplayer.player.AndroidMediaPlayerFactory;
 import com.bill.baseplayer.render.SurfaceRenderViewFactory;
 import com.bill.baseplayer.render.TextureRenderViewFactory;
 import com.bill.player.exo.ExoPlayerFactory;

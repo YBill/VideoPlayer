@@ -91,4 +91,8 @@ public class RawDataSourceProvider implements IMediaDataSource {
         }
         return null;
     }
+
+    public static RawDataSourceProvider create(AssetFileDescriptor fileDescriptor) {
+        return new RawDataSourceProvider(fileDescriptor);
+    }
 }

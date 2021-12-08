@@ -14,7 +14,6 @@ import com.bill.baseplayer.player.AbstractPlayer;
 import com.bill.baseplayer.player.DataSource;
 import com.bill.baseplayer.util.DataSourceUtil;
 
-import java.io.IOException;
 import java.util.Map;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
@@ -57,9 +56,12 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
     @Override
     public void setDataSource(DataSource dataSource) {
         try {
-            if (!TextUtils.isEmpty(dataSource.mAssetsPath)) {
+            if (dataSource.mRawId != 0) {
+                Uri rawUri = DataSourceUtil.buildRawUri(mAppContext.getPackageName(), dataSource.mRawId);
+                mMediaPlayer.setDataSource(RawDataSourceProvider.create(mAppContext, rawUri));
+            } else if (!TextUtils.isEmpty(dataSource.mAssetsPath)) {
                 AssetFileDescriptor fd = DataSourceUtil.getAssetsFileDescriptor(mAppContext, dataSource.mAssetsPath);
-                mMediaPlayer.setDataSource(new RawDataSourceProvider(fd));
+                mMediaPlayer.setDataSource(RawDataSourceProvider.create(fd));
             } else {
                 Uri uri = Uri.parse(dataSource.mUrl);
                 if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())) {

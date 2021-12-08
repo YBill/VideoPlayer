@@ -179,7 +179,9 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
      */
     private boolean isLocalDataSource() {
         if (mDataSource == null) return false;
-        if (mDataSource.mAssetFileDescriptor != null) {
+        if (mDataSource.mRawId != 0) {
+            return true;
+        } else if (!TextUtils.isEmpty(mDataSource.mAssetsPath)) {
             return true;
         } else if (!TextUtils.isEmpty(mDataSource.mUrl)) {
             Uri uri = Uri.parse(mDataSource.mUrl);
@@ -602,14 +604,6 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
                 mPlayerContainer.removeView(mRenderView.getView());
                 mRenderView.release();
                 mRenderView = null;
-            }
-            // 释放Assets资源
-            if (mDataSource != null && mDataSource.mAssetFileDescriptor != null) {
-                try {
-                    mDataSource.mAssetFileDescriptor.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
             // 关闭AudioFocus监听
             if (mAudioFocusHelper != null) {

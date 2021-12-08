@@ -1,6 +1,7 @@
 package com.bill.player.exo;
 
 import android.content.Context;
+import android.net.Uri;
 import android.text.TextUtils;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -88,7 +89,10 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @Override
     public void setDataSource(DataSource dataSource) {
         try {
-            if (!TextUtils.isEmpty(dataSource.mAssetsPath)) {
+            if (dataSource.mRawId != 0) {
+                String rawUri = DataSourceUtil.buildRawPath(mAppContext.getPackageName(), dataSource.mRawId);
+                mMediaSource = mMediaSourceHelper.getMediaSource(rawUri, null);
+            } else if (!TextUtils.isEmpty(dataSource.mAssetsPath)) {
                 mMediaSource = mMediaSourceHelper.getMediaSource(DataSourceUtil.buildAssets(dataSource.mAssetsPath), null);
             } else {
                 mMediaSource = mMediaSourceHelper.getMediaSource(dataSource.mUrl, dataSource.mHeaders);
