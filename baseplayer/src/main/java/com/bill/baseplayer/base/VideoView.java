@@ -299,14 +299,8 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
      */
     private boolean prepareDataSource() {
         if (mDataSource == null) return false;
-        if (mDataSource.mAssetFileDescriptor != null) {
-            mMediaPlayer.setDataSource(mDataSource.mAssetFileDescriptor);
-            return true;
-        } else if (!TextUtils.isEmpty(mDataSource.mUrl)) {
-            mMediaPlayer.setDataSource(mDataSource.mUrl, mDataSource.mHeaders);
-            return true;
-        }
-        return false;
+        mMediaPlayer.setDataSource(mDataSource);
+        return true;
     }
 
     /**

@@ -17,6 +17,8 @@ public class DataSource {
 
     public AssetFileDescriptor mAssetFileDescriptor; // assets文件
 
+    public String mAssetsPath; // assets下视频文件名
+
     public String title; // 视频的title
 
     public DataSource(String url) {

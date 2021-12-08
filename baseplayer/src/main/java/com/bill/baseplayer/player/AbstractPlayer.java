@@ -36,15 +36,9 @@ public abstract class AbstractPlayer {
     /**
      * 设置播放地址
      *
-     * @param path    播放地址
-     * @param headers 播放地址请求头
+     * @param dataSource 视频资源
      */
-    public abstract void setDataSource(String path, Map<String, String> headers);
-
-    /**
-     * 用于播放raw和asset里面的视频文件
-     */
-    public abstract void setDataSource(AssetFileDescriptor fd);
+    public abstract void setDataSource(DataSource dataSource);
 
     /**
      * 播放

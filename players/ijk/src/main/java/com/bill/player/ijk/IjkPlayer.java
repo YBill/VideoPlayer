@@ -11,7 +11,10 @@ import android.view.SurfaceHolder;
 
 import com.bill.baseplayer.config.VideoViewManager;
 import com.bill.baseplayer.player.AbstractPlayer;
+import com.bill.baseplayer.player.DataSource;
+import com.bill.baseplayer.util.DataSourceUtil;
 
+import java.io.IOException;
 import java.util.Map;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
@@ -52,35 +55,34 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
     }
 
     @Override
-    public void setDataSource(String path, Map<String, String> headers) {
+    public void setDataSource(DataSource dataSource) {
         try {
-            Uri uri = Uri.parse(path);
-            if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())) {
-                RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(mAppContext, uri);
-                mMediaPlayer.setDataSource(rawDataSourceProvider);
+            if (!TextUtils.isEmpty(dataSource.mAssetsPath)) {
+                AssetFileDescriptor fd = DataSourceUtil.getAssetsFileDescriptor(mAppContext, dataSource.mAssetsPath);
+                mMediaPlayer.setDataSource(new RawDataSourceProvider(fd));
             } else {
-                // 处理UA问题
-                if (headers != null) {
-                    String userAgent = headers.get("User-Agent");
-                    if (!TextUtils.isEmpty(userAgent)) {
-                        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
-                        // 移除header中的User-Agent，防止重复
-                        headers.remove("User-Agent");
+                Uri uri = Uri.parse(dataSource.mUrl);
+                if (ContentResolver.SCHEME_ANDROID_RESOURCE.equals(uri.getScheme())) {
+                    RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(mAppContext, uri);
+                    mMediaPlayer.setDataSource(rawDataSourceProvider);
+                } else {
+                    // 处理UA问题
+                    Map<String, String> headers = dataSource.mHeaders;
+                    if (headers != null) {
+                        String userAgent = headers.get("User-Agent");
+                        if (!TextUtils.isEmpty(userAgent)) {
+                            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
+                            // 移除header中的User-Agent，防止重复
+                            headers.remove("User-Agent");
+                        }
                     }
+                    mMediaPlayer.setDataSource(mAppContext, uri, headers);
                 }
-                mMediaPlayer.setDataSource(mAppContext, uri, headers);
             }
         } catch (Exception e) {
-            mPlayerEventListener.onError();
-        }
-    }
-
-    @Override
-    public void setDataSource(AssetFileDescriptor fd) {
-        try {
-            mMediaPlayer.setDataSource(new RawDataSourceProvider(fd));
-        } catch (Exception e) {
-            mPlayerEventListener.onError();
+            e.printStackTrace();
+            if (mPlayerEventListener != null)
+                mPlayerEventListener.onError();
         }
     }
 

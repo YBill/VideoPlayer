@@ -1,12 +1,14 @@
 package com.bill.player.exo;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
+import android.text.TextUtils;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import com.bill.baseplayer.config.VideoViewManager;
 import com.bill.baseplayer.player.AbstractPlayer;
+import com.bill.baseplayer.player.DataSource;
+import com.bill.baseplayer.util.DataSourceUtil;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -25,8 +27,6 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.EventLogger;
 import com.google.android.exoplayer2.video.VideoSize;
-
-import java.util.Map;
 
 /**
  * author ywb
@@ -86,13 +86,18 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     }
 
     @Override
-    public void setDataSource(String path, Map<String, String> headers) {
-        mMediaSource = mMediaSourceHelper.getMediaSource(path, headers);
-    }
-
-    @Override
-    public void setDataSource(AssetFileDescriptor fd) {
-        //no support
+    public void setDataSource(DataSource dataSource) {
+        try {
+            if (!TextUtils.isEmpty(dataSource.mAssetsPath)) {
+                mMediaSource = mMediaSourceHelper.getMediaSource(DataSourceUtil.buildAssets(dataSource.mAssetsPath), null);
+            } else {
+                mMediaSource = mMediaSourceHelper.getMediaSource(dataSource.mUrl, dataSource.mHeaders);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (mPlayerEventListener != null)
+                mPlayerEventListener.onError();
+        }
     }
 
     @Override

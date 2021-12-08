@@ -2,6 +2,8 @@ package com.bill.videoplayer;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bill.baseplayer.base.VideoView;
 import com.bill.baseplayer.player.DataSource;
 import com.bill.player.controller.StandardVideoController;
+
+import java.io.IOException;
 
 public class PlayerTestAct extends AppCompatActivity {
 
@@ -25,10 +29,11 @@ public class PlayerTestAct extends AppCompatActivity {
         mController.addControlComponent(new DebugInfoComponent(this));
         videoView.setVideoController(mController);
 
+        // https://rmrbtest-image.peopleapp.com/upload/video/201809/1537349021125fcfb438615c1b.mp4
         DataSource dataSource = new DataSource("http://vfx.mtime.cn/Video/2019/03/14/mp4/190314223540373995.mp4");
+//        dataSource.mAssetsPath = "avengers.mp4";
         dataSource.title = "复仇者联盟4";
         videoView.setDataSource(dataSource);
-//        videoView.setUrl("https://rmrbtest-image.peopleapp.com/upload/video/201809/1537349021125fcfb438615c1b.mp4");
         videoView.start();
 
     }
