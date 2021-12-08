@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * author ywb
  * date 2021/12/3
- * desc
+ * desc 数据
  */
 public class DataSource {
 
@@ -21,6 +21,10 @@ public class DataSource {
     int mRawId; // raw下视频文件ID
 
     public String title; // 视频的title
+
+    public DataSource() {
+
+    }
 
     public DataSource(String url) {
         this(url, null);

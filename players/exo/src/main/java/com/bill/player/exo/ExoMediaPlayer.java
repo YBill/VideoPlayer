@@ -268,6 +268,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         switch (playbackState) {
             case Player.STATE_READY:
                 mPlayerEventListener.onPrepared();
+                mPlayerEventListener.onInfo(MEDIA_INFO_RENDERING_START, 0);
                 break;
             case Player.STATE_ENDED:
                 mPlayerEventListener.onCompletion();
@@ -294,8 +295,9 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     @Override
     public void onRenderedFirstFrame() {
-        if (mPlayerEventListener != null)
-            mPlayerEventListener.onInfo(MEDIA_INFO_RENDERING_START, 0);
+        // onRenderedFirstFrame 比 onPlaybackStateChanged 中 STATE_READY 先执行有问题，放到onPlaybackStateChanged 中了
+//        if (mPlayerEventListener != null)
+//            mPlayerEventListener.onInfo(MEDIA_INFO_RENDERING_START, 0);
     }
 
     @Override
