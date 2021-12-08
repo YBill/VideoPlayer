@@ -24,6 +24,7 @@ public class App extends Application {
                 .setPlayerFactory(IjkPlayerFactory.create())
                 .setRenderViewFactory(TextureRenderViewFactory.create())
                 .setEnableOrientation(true)
+                .setPlayOnMobileNetwork(false)
                 .build());
     }
 }

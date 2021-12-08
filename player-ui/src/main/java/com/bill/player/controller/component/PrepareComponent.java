@@ -5,8 +5,10 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import com.bill.baseplayer.base.VideoView;
+import com.bill.baseplayer.config.VideoViewManager;
 import com.bill.player.controller.R;
 
 /**
@@ -14,23 +16,16 @@ import com.bill.player.controller.R;
  * date 2021/12/7
  * desc 准备组件
  */
-public class PrepareComponent extends BaseComponent {
+public class PrepareComponent extends BaseComponent implements View.OnClickListener {
 
+    private AppCompatImageView thumbIv;
+    private View playBtn;
     private ProgressBar loadPb;
     private View netView;
 
     public PrepareComponent(@NonNull Context context) {
         super(context);
-        loadPb = this.findViewById(R.id.pb_component_pre_loading);
-        netView = this.findViewById(R.id.fl_component_pre_net);
-        this.findViewById(R.id.tv_component_pre_continue_play).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                netView.setVisibility(GONE);
-//                VideoViewManager.getInstance().setPlayOnMobileNetwork(true);
-                mControlWrapper.start();
-            }
-        });
+        initView();
     }
 
     @Override
@@ -38,11 +33,28 @@ public class PrepareComponent extends BaseComponent {
         return R.layout.layout_component_prepare;
     }
 
+    private void initView() {
+        thumbIv = this.findViewById(R.id.iv_component_pre_thumb);
+        playBtn = this.findViewById(R.id.iv_component_pre_play);
+        loadPb = this.findViewById(R.id.pb_component_pre_loading);
+        netView = this.findViewById(R.id.fl_component_pre_net);
+        playBtn.setOnClickListener(this);
+        this.findViewById(R.id.tv_component_pre_continue_play).setOnClickListener(this);
+    }
+
+    /**
+     * 封面图
+     */
+    public AppCompatImageView getThumbIv() {
+        return thumbIv;
+    }
+
     @Override
     public void onPlayStateChanged(int playState) {
         switch (playState) {
             case VideoView.STATE_PREPARING:
                 setVisibility(VISIBLE);
+                playBtn.setVisibility(View.GONE);
                 netView.setVisibility(GONE);
                 loadPb.setVisibility(View.VISIBLE);
                 break;
@@ -54,14 +66,31 @@ public class PrepareComponent extends BaseComponent {
                 break;
             case VideoView.STATE_IDLE:
                 setVisibility(VISIBLE);
-                bringToFront();
                 loadPb.setVisibility(View.GONE);
                 netView.setVisibility(GONE);
+                playBtn.setVisibility(View.VISIBLE);
+                thumbIv.setVisibility(View.VISIBLE);
                 break;
             case VideoView.STATE_START_ABORT:
                 setVisibility(VISIBLE);
                 netView.setVisibility(VISIBLE);
+                loadPb.setVisibility(View.GONE);
+                playBtn.setVisibility(View.GONE);
                 break;
         }
     }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.iv_component_pre_play) {
+            if (mControlWrapper != null)
+                mControlWrapper.start();
+        } else if (v.getId() == R.id.tv_component_pre_continue_play) {
+            netView.setVisibility(GONE);
+            VideoViewManager.getInstance().setPlayOnMobileNetwork(true);
+            if (mControlWrapper != null)
+                mControlWrapper.start();
+        }
+    }
+
 }

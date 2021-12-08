@@ -21,8 +21,8 @@ public class PlayerTestAct extends AppCompatActivity {
 
         videoView = findViewById(R.id.video_player);
         StandardVideoController mController = new StandardVideoController(this);
-        mController.addControlComponent(new DebugInfoComponent(this));
         mController.addDefaultControlComponent();
+        mController.addControlComponent(new DebugInfoComponent(this));
         videoView.setVideoController(mController);
 
         DataSource dataSource = new DataSource("http://vfx.mtime.cn/Video/2019/03/14/mp4/190314223540373995.mp4");

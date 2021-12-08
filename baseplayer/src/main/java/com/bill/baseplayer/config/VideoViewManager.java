@@ -23,7 +23,15 @@ public class VideoViewManager {
         return SingletonHolder.instance;
     }
 
+    /**
+     * 全局配置
+     */
     private VideoViewConfig mConfig;
+
+    /**
+     * 在移动环境下调用start()后是否继续播放，默认继续播放(true)
+     */
+    private boolean mPlayOnMobileNetwork;
 
     /**
      * 保存VideoView的容器
@@ -31,17 +39,36 @@ public class VideoViewManager {
     private final LinkedHashMap<String, VideoView> mVideoViews = new LinkedHashMap<>();
 
     private VideoViewManager() {
+        init(getConfig());
+    }
 
+    private void init(VideoViewConfig config) {
+        mPlayOnMobileNetwork = config.mPlayOnMobileNetwork;
     }
 
     public void setConfig(VideoViewConfig config) {
         this.mConfig = config;
+        init(config);
     }
 
     public VideoViewConfig getConfig() {
         if (mConfig == null)
             setConfig(VideoViewConfig.create().build());
         return mConfig;
+    }
+
+    /**
+     * 在移动环境下调用start()后是否继续播放，默认继续播放(true)
+     */
+    public boolean isPlayOnMobileNetwork() {
+        return mPlayOnMobileNetwork;
+    }
+
+    /**
+     * 在移动环境下调用start()后是否继续播放 false:不播放，此时应该考虑监听STATE_START_ABORT状态处理UI
+     */
+    public void setPlayOnMobileNetwork(boolean playOnMobileNetwork) {
+        mPlayOnMobileNetwork = playOnMobileNetwork;
     }
 
     /**

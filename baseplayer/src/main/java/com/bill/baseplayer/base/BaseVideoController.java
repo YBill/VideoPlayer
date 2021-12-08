@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -142,6 +143,22 @@ public class BaseVideoController extends FrameLayout implements
             }
 
         }
+    }
+
+    /**
+     * 获取控制器中的某个组件
+     *
+     * @param key 根据 {@link IControlComponent#getKey()} 获取
+     */
+    public IControlComponent getControlComponent(String key) {
+        if (TextUtils.isEmpty(key))
+            return null;
+        for (IControlComponent component : mControlComponents) {
+            if (component == null) continue;
+            if (key.equals(component.getKey()))
+                return component;
+        }
+        return null;
     }
 
     /**

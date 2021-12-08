@@ -66,7 +66,6 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     public static final int PLAYER_FULL_SCREEN = 101;   // 全屏播放器
     public static final int PLAYER_TINY_SCREEN = 102;   // 小屏播放器
 
-    private int mCurrentPlayerState = PLAYER_NORMAL; // 当前播放器的状态
     private int mCurrentPlayState = STATE_IDLE; // 当前的播放状态
 
     private AbstractPlayer mMediaPlayer; // 解码器
@@ -93,8 +92,6 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     private IProgressManager mProgressManager; // 进度管理器，设置之后播放器会记录播放进度，以便下次播放恢复进度
 
     private int mCurrentScreenScaleType; // 视频比例
-
-    private boolean mPlayOnMobileNetwork; // 在移动环境下调用start()后是否继续播放，默认继续播放(true)
 
     private boolean mIsLooping; // 是否循环播放
     private boolean mIsMute; // 是否静音
@@ -123,7 +120,6 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     private void init() {
         // 读取全局配置
         VideoViewConfig config = VideoViewManager.getInstance().getConfig();
-        mPlayOnMobileNetwork = config.mPlayOnMobileNetwork;
         mEnableAudioFocus = config.mEnableAudioFocus;
         mProgressManager = config.mProgressManager;
         mCurrentScreenScaleType = config.mScreenScaleType;
@@ -175,7 +171,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
             MLog.d("play local data");
             return false;
         }
-        return Utils.isMobileNet(getContext()) && !mPlayOnMobileNetwork;
+        return Utils.isMobileNet(getContext()) && !VideoViewManager.getInstance().isPlayOnMobileNetwork();
     }
 
     /**
@@ -198,7 +194,6 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
      * 设置播放器状态，并向Controller通知播放器状态
      */
     private void setPlayerState(int playerState) {
-        mCurrentPlayerState = playerState;
         if (mVideoController != null) {
             mVideoController.setPlayerState(playerState);
         }
@@ -433,13 +428,6 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     }
 
     /**
-     * 在移动环境下调用start()后是否继续播放 false:不播放，此时应该考虑监听STATE_START_ABORT状态处理UI
-     */
-    public void setPlayOnMobileNetwork(boolean playOnMobileNetwork) {
-        mPlayOnMobileNetwork = playOnMobileNetwork;
-    }
-
-    /**
      * 是否开启AudioFocus监听，默认开启，用于监听其它地方是否获取音频焦点，如果有其它地方获取了
      * 音频焦点，此播放器将做出相应反应，具体实现见{@link AudioFocusHelper}
      */
@@ -504,6 +492,13 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
                     ViewGroup.LayoutParams.MATCH_PARENT);
             mPlayerContainer.addView(mVideoController, params);
         }
+    }
+
+    /**
+     * 获取控制器
+     */
+    public BaseVideoController getVideoController() {
+        return mVideoController;
     }
 
     /**

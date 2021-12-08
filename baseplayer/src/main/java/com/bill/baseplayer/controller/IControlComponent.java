@@ -30,4 +30,10 @@ public interface IControlComponent extends IControllerState {
      */
     boolean isDissociate();
 
+    /**
+     * 组件的唯一标识，如果需要根据控制器查找组件可以根据key找到组件
+     */
+    @Nullable
+    String getKey();
+
 }

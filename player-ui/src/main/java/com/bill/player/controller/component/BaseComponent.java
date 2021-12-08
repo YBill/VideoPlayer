@@ -94,4 +94,9 @@ public abstract class BaseComponent extends FrameLayout implements IControlCompo
         return false;
     }
 
+    @Nullable
+    @Override
+    public String getKey() {
+        return this.getClass().getSimpleName();
+    }
 }

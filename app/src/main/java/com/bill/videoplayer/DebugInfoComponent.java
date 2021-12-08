@@ -1,6 +1,7 @@
 package com.bill.videoplayer;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,7 @@ public class DebugInfoComponent extends AppCompatTextView implements IControlCom
 
     private void init() {
         setTextColor(ContextCompat.getColor(getContext(), android.R.color.white));
-        setBackgroundResource(android.R.color.black);
+        setBackgroundColor(Color.parseColor("#66000000"));
         setTextSize(10);
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -185,5 +186,11 @@ public class DebugInfoComponent extends AppCompatTextView implements IControlCom
     @Override
     public boolean isDissociate() {
         return false;
+    }
+
+    @Nullable
+    @Override
+    public String getKey() {
+        return null;
     }
 }
