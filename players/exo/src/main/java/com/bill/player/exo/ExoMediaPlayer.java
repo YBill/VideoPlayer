@@ -1,7 +1,6 @@
 package com.bill.player.exo;
 
 import android.content.Context;
-import android.net.Uri;
 import android.text.TextUtils;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -46,6 +45,8 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     private LoadControl mLoadControl;
 
     private PlaybackParameters mSpeedPlaybackParameters;
+
+    private boolean mIsPreparing; // 判断seekTo后重复准备问题
 
     public ExoMediaPlayer(Context context) {
         mAppContext = context.getApplicationContext();
@@ -142,6 +143,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         if (mSpeedPlaybackParameters != null) {
             mInternalPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
         }
+        mIsPreparing = true;
         mInternalPlayer.setMediaSource(mMediaSource);
         mInternalPlayer.prepare();
     }
@@ -153,6 +155,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         mInternalPlayer.stop();
         mInternalPlayer.clearMediaItems();
         mInternalPlayer.setVideoSurface(null);
+        mIsPreparing = false;
     }
 
     @Override
@@ -186,6 +189,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             mInternalPlayer = null;
         }
 
+        mIsPreparing = false;
         mSpeedPlaybackParameters = null;
     }
 
@@ -265,11 +269,14 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     public void onPlaybackStateChanged(int playbackState) {
         if (mPlayerEventListener == null) return;
 
+        // 调用seekTo时还会重新走这里，还会prepared，这里check下
+        if (mIsPreparing && playbackState == Player.STATE_READY) {
+            mPlayerEventListener.onPrepared();
+            mPlayerEventListener.onInfo(MEDIA_INFO_RENDERING_START, 0);
+            mIsPreparing = false;
+        }
+
         switch (playbackState) {
-            case Player.STATE_READY:
-                mPlayerEventListener.onPrepared();
-                mPlayerEventListener.onInfo(MEDIA_INFO_RENDERING_START, 0);
-                break;
             case Player.STATE_ENDED:
                 mPlayerEventListener.onCompletion();
                 break;
