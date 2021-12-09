@@ -311,6 +311,8 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     public void onIsLoadingChanged(boolean isLoading) {
         if (!isLoading) {
             int buffer = getBufferedPercentage();
+            if (mPlayerEventListener != null)
+                mPlayerEventListener.onBufferingUpdate(buffer);
         }
     }
 }

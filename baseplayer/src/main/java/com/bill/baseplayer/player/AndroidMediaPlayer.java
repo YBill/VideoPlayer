@@ -275,6 +275,8 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
     @Override
     public void onBufferingUpdate(MediaPlayer iMediaPlayer, int percent) {
         mBufferedPercent = percent;
+        if (mPlayerEventListener != null)
+            mPlayerEventListener.onBufferingUpdate(percent);
     }
 
     @Override

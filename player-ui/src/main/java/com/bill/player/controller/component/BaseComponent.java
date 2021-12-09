@@ -64,6 +64,11 @@ public abstract class BaseComponent extends FrameLayout implements IControlCompo
     }
 
     @Override
+    public void setBufferingProgress(int percent) {
+
+    }
+
+    @Override
     public void onLockStateChanged(boolean isLocked) {
 
     }

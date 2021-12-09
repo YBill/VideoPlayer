@@ -68,6 +68,11 @@ public class DebugInfoComponent extends AppCompatTextView implements IControlCom
     }
 
     @Override
+    public void setBufferingProgress(int percent) {
+
+    }
+
+    @Override
     public void onLockStateChanged(boolean isLocked) {
 
     }

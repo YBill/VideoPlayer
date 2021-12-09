@@ -956,6 +956,15 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
         }
     }
 
+    /**
+     * 缓存进度回调
+     */
+    @Override
+    public void onBufferingUpdate(int percent) {
+        if (mVideoController != null)
+            mVideoController.onBufferingUpdate(percent);
+    }
+
     //// PlayerEventListener End ////
 
     //////////// System Start //////////////

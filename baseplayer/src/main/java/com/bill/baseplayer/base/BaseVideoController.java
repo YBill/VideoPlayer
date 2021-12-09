@@ -409,6 +409,15 @@ public class BaseVideoController extends FrameLayout implements
         }
     }
 
+    /**
+     * {@link VideoView}调用此方法向控制器更新缓存进度
+     */
+    @CallSuper
+    protected void onBufferingUpdate(int percent) {
+        for (IControlComponent component : mControlComponents) {
+            component.setBufferingProgress(percent);
+        }
+    }
 
     /**
      * {@link VideoView}调用此方法向控制器设置播放状态

@@ -275,6 +275,8 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
     @Override
     public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int percent) {
         mBufferedPercent = percent;
+        if (mPlayerEventListener != null)
+            mPlayerEventListener.onBufferingUpdate(percent);
     }
 
     @Override

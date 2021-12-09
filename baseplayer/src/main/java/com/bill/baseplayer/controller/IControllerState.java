@@ -42,6 +42,13 @@ public interface IControllerState {
     void setProgress(long duration, long position);
 
     /**
+     * 回调缓存进度，根据缓存实时回调
+     *
+     * @param percent 进度
+     */
+    void setBufferingProgress(int percent);
+
+    /**
      * 回调控制器是否被锁定，锁定后会产生如下影响：
      * 无法响应滑动手势，双击事件，点击显示和隐藏控制UI，跟随重力感应切换横竖屏
      *

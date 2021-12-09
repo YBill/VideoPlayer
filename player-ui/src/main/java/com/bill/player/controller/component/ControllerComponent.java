@@ -210,14 +210,6 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
             } else {
                 seekBar.setEnabled(false);
             }
-            int percent = mControlWrapper.getBufferedPercentage();
-            if (percent >= 95) { //解决缓冲进度不能100%问题
-                seekBar.setSecondaryProgress(seekBar.getMax());
-                progressBar.setSecondaryProgress(progressBar.getMax());
-            } else {
-                seekBar.setSecondaryProgress(percent * 10);
-                progressBar.setSecondaryProgress(percent * 10);
-            }
         }
 
         if (totalTimeTv != null)
@@ -225,6 +217,17 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
         if (curTimeTv != null)
             curTimeTv.setText(ComponentUtils.stringForTime(position));
 
+    }
+
+    @Override
+    public void setBufferingProgress(int percent) {
+        if (percent >= 95) { // 解决缓冲进度不能100%问题
+            seekBar.setSecondaryProgress(seekBar.getMax());
+            progressBar.setSecondaryProgress(progressBar.getMax());
+        } else {
+            seekBar.setSecondaryProgress(percent * 10);
+            progressBar.setSecondaryProgress(percent * 10);
+        }
     }
 
     private void toggleFullScreen() {

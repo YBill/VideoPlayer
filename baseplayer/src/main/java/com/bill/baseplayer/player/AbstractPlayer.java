@@ -151,6 +151,8 @@ public abstract class AbstractPlayer {
 
         void onVideoSizeChanged(int width, int height);
 
+        void onBufferingUpdate(int percent);
+
     }
 
 }
