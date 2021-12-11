@@ -47,21 +47,6 @@ import java.util.List;
  */
 public class VideoView extends FrameLayout implements PlayerControl, AbstractPlayer.PlayerEventListener {
 
-    // 播放状态
-//    public static final int STATE_ERROR = -1; // 错误
-//    public static final int STATE_IDLE = 0; // 未初始化状态
-//    public static final int STATE_PREPARING = 1; // 准备中（调用prepareAsync方法）
-//    public static final int STATE_PREPARED = 2; // 准备完成（onPrepare回调）
-//    public static final int STATE_PLAYING = 3; // 播放状态
-//    public static final int STATE_PAUSED = 4; // 暂停状态
-//    public static final int STATE_COMPLETED = 5; // 播放完成
-//    public static final int STATE_START_ABORT = 6; // 开始播放中止
-
-    // 播放器的状态
-//    public static final int PLAYER_NORMAL = 100;        // 普通播放器
-//    public static final int PLAYER_FULL_SCREEN = 101;   // 全屏播放器
-//    public static final int PLAYER_TINY_SCREEN = 102;   // 小屏播放器
-
     private int mCurrentPlayState = VideoPlayType.STATE_IDLE; // 当前的播放状态
     private @AspectRatioType
     int mScreenScaleType; // 视频比例

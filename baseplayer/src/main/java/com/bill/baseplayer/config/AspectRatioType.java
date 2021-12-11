@@ -20,11 +20,11 @@ import java.lang.annotation.RetentionPolicy;
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface AspectRatioType {
-    int AR_ASPECT_FIT_PARENT = 0; // without clip (fitCenter)
-    int AR_ASPECT_FILL_PARENT = 1; // may clip (centerCrop)
-    int AR_ASPECT_WRAP_CONTENT = 2; // without stretch (wrap content)
-    int AR_MATCH_PARENT = 3; // may stretch (match parent)
-    int AR_16_9_FIT_PARENT = 4; // 16:9 without stretch and clip
-    int AR_4_3_FIT_PARENT = 5; // 4:3 without stretch and clip
+    int AR_ASPECT_FIT_PARENT = 0; // fitCenter (without clip)
+    int AR_ASPECT_FILL_PARENT = 1; // centerCrop (may clip)
+    int AR_ASPECT_WRAP_CONTENT = 2; // wrap content (without stretch)
+    int AR_MATCH_PARENT = 3; // match parent (may stretch)
+    int AR_16_9_FIT_PARENT = 4; // 16:9 (without stretch and clip)
+    int AR_4_3_FIT_PARENT = 5; // 4:3 (without stretch and clip)
 
 }
