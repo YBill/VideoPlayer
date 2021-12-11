@@ -25,7 +25,8 @@ public class VideoViewConfig {
     public final boolean mPlayOnMobileNetwork;
     public final boolean mEnableAudioFocus;
     public final IProgressManager mProgressManager;
-    public final int mScreenScaleType;
+    public final @AspectRatioType
+    int mScreenScaleType;
     public PlayerFactory mPlayerFactory;
     public RenderViewFactory mRenderViewFactory;
 
@@ -59,7 +60,7 @@ public class VideoViewConfig {
         private IProgressManager mProgressManager;
         private PlayerFactory mPlayerFactory;
         private RenderViewFactory mRenderViewFactory;
-        private int mScreenScaleType;
+        private int mScreenScaleType = AspectRatioType.AR_ASPECT_FIT_PARENT;
 
         /**
          * 是否打印日志，默认不打印
@@ -128,7 +129,7 @@ public class VideoViewConfig {
         /**
          * 设置视频比例
          */
-        public Builder setScreenScaleType(int screenScaleType) {
+        public Builder setScreenScaleType(@AspectRatioType int screenScaleType) {
             mScreenScaleType = screenScaleType;
             return this;
         }

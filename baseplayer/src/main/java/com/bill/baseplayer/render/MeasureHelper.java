@@ -3,21 +3,20 @@ package com.bill.baseplayer.render;
 import android.view.View;
 
 import com.bill.baseplayer.base.VideoView;
+import com.bill.baseplayer.config.AspectRatioType;
 
 /**
  * author ywb
  * date 2021/11/24
- * desc
+ * desc 渲染器测量
  */
 public class MeasureHelper {
 
     private int mVideoWidth;
-
     private int mVideoHeight;
-
-    private int mCurrentScreenScale;
-
     private int mVideoRotationDegree;
+    private @AspectRatioType
+    int mCurrentAspectRatio;
 
     public void setVideoRotation(int videoRotationDegree) {
         mVideoRotationDegree = videoRotationDegree;
@@ -28,15 +27,16 @@ public class MeasureHelper {
         mVideoHeight = height;
     }
 
-    public void setScreenScale(int screenScale) {
-        mCurrentScreenScale = screenScale;
+    public void setAspectRatio(@AspectRatioType int aspectRatio) {
+        mCurrentAspectRatio = aspectRatio;
     }
 
     /**
-     * 注意：VideoView的宽高一定要定死，否者以下算法不成立
+     * 测量
      */
     public int[] doMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (mVideoRotationDegree == 90 || mVideoRotationDegree == 270) { // 软解码时处理旋转信息，交换宽高
+        if (mVideoRotationDegree == 90 || mVideoRotationDegree == 270) {
+            // swap
             widthMeasureSpec = widthMeasureSpec + heightMeasureSpec;
             heightMeasureSpec = widthMeasureSpec - heightMeasureSpec;
             widthMeasureSpec = widthMeasureSpec - heightMeasureSpec;
@@ -50,8 +50,8 @@ public class MeasureHelper {
         }
 
         //如果设置了比例
-        switch (mCurrentScreenScale) {
-            case VideoView.SCREEN_SCALE_DEFAULT:
+        switch (mCurrentAspectRatio) {
+            case AspectRatioType.AR_ASPECT_FIT_PARENT:
             default:
                 if (mVideoWidth * height < width * mVideoHeight) {
                     width = height * mVideoWidth / mVideoHeight;
@@ -59,29 +59,29 @@ public class MeasureHelper {
                     height = width * mVideoHeight / mVideoWidth;
                 }
                 break;
-            case VideoView.SCREEN_SCALE_ORIGINAL:
+            case AspectRatioType.AR_ASPECT_WRAP_CONTENT:
                 width = mVideoWidth;
                 height = mVideoHeight;
                 break;
-            case VideoView.SCREEN_SCALE_16_9:
-                if (height > width / 16 * 9) {
-                    height = width / 16 * 9;
+            case AspectRatioType.AR_16_9_FIT_PARENT:
+                if (height > width / 16f * 9) {
+                    height = (int) (width / 16f * 9);
                 } else {
-                    width = height / 9 * 16;
+                    width = (int) (height / 9f * 16);
                 }
                 break;
-            case VideoView.SCREEN_SCALE_4_3:
-                if (height > width / 4 * 3) {
-                    height = width / 4 * 3;
+            case AspectRatioType.AR_4_3_FIT_PARENT:
+                if (height > width / 4f * 3) {
+                    height = (int) (width / 4f * 3);
                 } else {
-                    width = height / 3 * 4;
+                    width = (int) (height / 3f * 4);
                 }
                 break;
-            case VideoView.SCREEN_SCALE_MATCH_PARENT:
+            case AspectRatioType.AR_MATCH_PARENT:
                 width = widthMeasureSpec;
                 height = heightMeasureSpec;
                 break;
-            case VideoView.SCREEN_SCALE_CENTER_CROP:
+            case AspectRatioType.AR_ASPECT_FILL_PARENT:
                 if (mVideoWidth * height > width * mVideoHeight) {
                     width = height * mVideoWidth / mVideoHeight;
                 } else {
@@ -89,6 +89,7 @@ public class MeasureHelper {
                 }
                 break;
         }
+
         return new int[]{width, height};
     }
 

@@ -10,6 +10,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bill.baseplayer.config.AspectRatioType;
 import com.bill.baseplayer.player.AbstractPlayer;
 
 /**
@@ -53,8 +54,8 @@ public class TextureRenderView extends TextureView implements IRenderView, Textu
     }
 
     @Override
-    public void setScaleType(int scaleType) {
-        mMeasureHelper.setScreenScale(scaleType);
+    public void setScaleType(@AspectRatioType int scaleType) {
+        mMeasureHelper.setAspectRatio(scaleType);
         requestLayout();
     }
 

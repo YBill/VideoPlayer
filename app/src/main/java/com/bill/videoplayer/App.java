@@ -2,6 +2,7 @@ package com.bill.videoplayer;
 
 import android.app.Application;
 
+import com.bill.baseplayer.config.AspectRatioType;
 import com.bill.baseplayer.config.VideoViewConfig;
 import com.bill.baseplayer.config.VideoViewManager;
 import com.bill.baseplayer.player.AndroidMediaPlayerFactory;
@@ -26,6 +27,7 @@ public class App extends Application {
                 .setRenderViewFactory(TextureRenderViewFactory.create())
                 .setEnableOrientation(true)
                 .setPlayOnMobileNetwork(false)
+                .setScreenScaleType(AspectRatioType.AR_ASPECT_FIT_PARENT)
                 .build());
     }
 }

@@ -19,6 +19,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bill.baseplayer.config.AspectRatioType;
 import com.bill.baseplayer.config.VideoViewConfig;
 import com.bill.baseplayer.config.VideoViewManager;
 import com.bill.baseplayer.controller.OnVideoStateChangeListener;
@@ -43,13 +44,6 @@ import java.util.List;
  * desc
  */
 public class VideoView extends FrameLayout implements PlayerControl, AbstractPlayer.PlayerEventListener {
-
-    public static final int SCREEN_SCALE_DEFAULT = 0;
-    public static final int SCREEN_SCALE_16_9 = 1;
-    public static final int SCREEN_SCALE_4_3 = 2;
-    public static final int SCREEN_SCALE_MATCH_PARENT = 3;
-    public static final int SCREEN_SCALE_ORIGINAL = 4;
-    public static final int SCREEN_SCALE_CENTER_CROP = 5;
 
     // 播放状态
     public static final int STATE_ERROR = -1; // 错误
@@ -91,7 +85,8 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
 
     private IProgressManager mProgressManager; // 进度管理器，设置之后播放器会记录播放进度，以便下次播放恢复进度
 
-    private int mCurrentScreenScaleType; // 视频比例
+    private @AspectRatioType
+    int mScreenScaleType; // 视频比例
 
     private boolean mIsLooping; // 是否循环播放
     private boolean mIsMute; // 是否静音
@@ -122,7 +117,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
         VideoViewConfig config = VideoViewManager.getInstance().getConfig();
         mEnableAudioFocus = config.mEnableAudioFocus;
         mProgressManager = config.mProgressManager;
-        mCurrentScreenScaleType = config.mScreenScaleType;
+        mScreenScaleType = config.mScreenScaleType;
         mPlayerFactory = config.mPlayerFactory;
         mRenderViewFactory = config.mRenderViewFactory;
 
@@ -708,8 +703,8 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
      * 设置视频比例
      */
     @Override
-    public void setScreenScaleType(int screenScaleType) {
-        mCurrentScreenScaleType = screenScaleType;
+    public void setScreenScaleType(@AspectRatioType int screenScaleType) {
+        this.mScreenScaleType = screenScaleType;
         if (mRenderView != null) {
             mRenderView.setScaleType(screenScaleType);
         }
@@ -951,7 +946,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
         mVideoSize[1] = videoHeight;
 
         if (mRenderView != null) {
-            mRenderView.setScaleType(mCurrentScreenScaleType);
+            mRenderView.setScaleType(mScreenScaleType);
             mRenderView.setVideoSize(videoWidth, videoHeight);
         }
     }

@@ -29,8 +29,9 @@ public class PlayerTestAct extends AppCompatActivity {
         mController.addControlComponent(new DebugInfoComponent(this));
         videoView.setVideoController(mController);
 
+        // http://vfx.mtime.cn/Video/2019/03/14/mp4/190314223540373995.mp4
         // https://rmrbtest-image.peopleapp.com/upload/video/201809/1537349021125fcfb438615c1b.mp4
-        DataSource dataSource = new DataSource("http://vfx.mtime.cn/Video/2019/03/14/mp4/190314223540373995.mp4");
+        DataSource dataSource = new DataSource("https://rmrbtest-image.peopleapp.com/upload/video/201809/1537349021125fcfb438615c1b.mp4");
 //        dataSource.mAssetsPath = "avengers.mp4";
 //        dataSource.mRawId = R.raw.avengers;
         dataSource.title = "复仇者联盟4";

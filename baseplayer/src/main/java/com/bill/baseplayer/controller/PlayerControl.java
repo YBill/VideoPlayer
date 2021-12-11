@@ -2,6 +2,7 @@ package com.bill.baseplayer.controller;
 
 import android.graphics.Bitmap;
 
+import com.bill.baseplayer.config.AspectRatioType;
 import com.bill.baseplayer.player.DataSource;
 
 /**
@@ -39,7 +40,7 @@ public interface PlayerControl {
 
     boolean isMute();
 
-    void setScreenScaleType(int screenScaleType);
+    void setScreenScaleType(@AspectRatioType int screenScaleType);
 
     void setSpeed(float speed);
 

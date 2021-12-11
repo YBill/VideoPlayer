@@ -9,6 +9,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.bill.baseplayer.config.AspectRatioType;
 import com.bill.baseplayer.player.AbstractPlayer;
 
 /**
@@ -49,8 +50,8 @@ public class SurfaceRenderView extends SurfaceView implements IRenderView, Surfa
     }
 
     @Override
-    public void setScaleType(int scaleType) {
-        mMeasureHelper.setScreenScale(scaleType);
+    public void setScaleType(@AspectRatioType int scaleType) {
+        mMeasureHelper.setAspectRatio(scaleType);
         requestLayout();
     }
 

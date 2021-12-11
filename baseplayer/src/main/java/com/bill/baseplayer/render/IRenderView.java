@@ -5,6 +5,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.bill.baseplayer.config.AspectRatioType;
 import com.bill.baseplayer.player.AbstractPlayer;
 
 /**
@@ -39,7 +40,7 @@ public interface IRenderView {
      *
      * @param scaleType 类型
      */
-    void setScaleType(int scaleType);
+    void setScaleType(@AspectRatioType int scaleType);
 
     /**
      * 获取真实的RenderView
