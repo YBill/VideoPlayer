@@ -16,6 +16,8 @@ import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bill.baseplayer.config.VideoPlayType;
+import com.bill.baseplayer.config.VideoPlayerType;
 import com.bill.baseplayer.config.VideoViewManager;
 import com.bill.baseplayer.controller.ControlWrapper;
 import com.bill.baseplayer.controller.IControlComponent;
@@ -89,12 +91,12 @@ public class BaseVideoController extends FrameLayout implements
 
     protected boolean isInPlayState() {
         return mControlWrapper != null
-                && mCurPlayState != VideoView.STATE_ERROR
-                && mCurPlayState != VideoView.STATE_IDLE
-                && mCurPlayState != VideoView.STATE_PREPARING
-                && mCurPlayState != VideoView.STATE_PREPARED
-                && mCurPlayState != VideoView.STATE_START_ABORT
-                && mCurPlayState != VideoView.STATE_COMPLETED;
+                && mCurPlayState != VideoPlayType.STATE_ERROR
+                && mCurPlayState != VideoPlayType.STATE_IDLE
+                && mCurPlayState != VideoPlayType.STATE_PREPARING
+                && mCurPlayState != VideoPlayType.STATE_PREPARED
+                && mCurPlayState != VideoPlayType.STATE_START_ABORT
+                && mCurPlayState != VideoPlayType.STATE_COMPLETED;
     }
 
     //////// System Start /////////
@@ -423,7 +425,7 @@ public class BaseVideoController extends FrameLayout implements
      * {@link VideoView}调用此方法向控制器设置播放状态
      */
     @CallSuper
-    protected void setPlayState(int playState) {
+    protected void setPlayState(@VideoPlayType int playState) {
         handlePlayStateChanged(playState);
     }
 
@@ -431,7 +433,7 @@ public class BaseVideoController extends FrameLayout implements
      * {@link VideoView}调用此方法向控制器设置播放器状态
      */
     @CallSuper
-    protected void setPlayerState(int playerState) {
+    protected void setPlayerState(@VideoPlayerType int playerState) {
         handlePlayerStateChanged(playerState);
     }
 
@@ -503,14 +505,14 @@ public class BaseVideoController extends FrameLayout implements
         }
     }
 
-    private void handlePlayStateChanged(int playState) {
+    private void handlePlayStateChanged(@VideoPlayType int playState) {
         onPlayStateChanged(playState);
         for (IControlComponent component : mControlComponents) {
             component.onPlayStateChanged(playState);
         }
     }
 
-    private void handlePlayerStateChanged(int playerState) {
+    private void handlePlayerStateChanged(@VideoPlayerType int playerState) {
         onPlayerStateChanged(playerState);
         for (IControlComponent component : mControlComponents) {
             component.onPlayerStateChanged(playerState);
@@ -535,7 +537,7 @@ public class BaseVideoController extends FrameLayout implements
     private void onPlayStateChanged(int playState) {
         mCurPlayState = playState;
         switch (playState) {
-            case VideoView.STATE_IDLE:
+            case VideoPlayType.STATE_IDLE:
                 mOrientationHelper.disable();
                 mOrientation = 0;
                 mIsLocked = false;
@@ -544,11 +546,11 @@ public class BaseVideoController extends FrameLayout implements
                 //所以在播放器release的时候需要移除
                 clearDissociateComponents();
                 break;
-            case VideoView.STATE_COMPLETED:
+            case VideoPlayType.STATE_COMPLETED:
                 mIsLocked = false;
                 mIsShowing = false;
                 break;
-            case VideoView.STATE_ERROR:
+            case VideoPlayType.STATE_ERROR:
                 mIsShowing = false;
                 break;
         }
@@ -559,19 +561,19 @@ public class BaseVideoController extends FrameLayout implements
      */
     private void onPlayerStateChanged(int playerState) {
         switch (playerState) {
-            case VideoView.PLAYER_NORMAL:
+            case VideoPlayerType.PLAYER_NORMAL:
                 orientationSensing();
                 if (hasCutout()) {
                     CutoutScreenUtil.adaptCutoutAboveAndroidP(getContext(), false);
                 }
                 break;
-            case VideoView.PLAYER_FULL_SCREEN:
+            case VideoPlayerType.PLAYER_FULL_SCREEN:
                 orientationSensing();
                 if (hasCutout()) {
                     CutoutScreenUtil.adaptCutoutAboveAndroidP(getContext(), true);
                 }
                 break;
-            case VideoView.PLAYER_TINY_SCREEN:
+            case VideoPlayerType.PLAYER_TINY_SCREEN:
                 if (mEnableOrientation)
                     mOrientationHelper.disable();
                 break;
@@ -593,7 +595,7 @@ public class BaseVideoController extends FrameLayout implements
     private void onOrientationLandscape(Activity activity) {
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         if (mControlWrapper.isFullScreen()) {
-            handlePlayerStateChanged(VideoView.PLAYER_FULL_SCREEN);
+            handlePlayerStateChanged(VideoPlayerType.PLAYER_FULL_SCREEN);
         } else {
             mControlWrapper.startFullScreen();
         }
@@ -605,7 +607,7 @@ public class BaseVideoController extends FrameLayout implements
     private void onOrientationReverseLandscape(Activity activity) {
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
         if (mControlWrapper.isFullScreen()) {
-            handlePlayerStateChanged(VideoView.PLAYER_FULL_SCREEN);
+            handlePlayerStateChanged(VideoPlayerType.PLAYER_FULL_SCREEN);
         } else {
             mControlWrapper.startFullScreen();
         }

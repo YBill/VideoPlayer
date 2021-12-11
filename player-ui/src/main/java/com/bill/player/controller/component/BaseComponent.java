@@ -10,6 +10,8 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bill.baseplayer.config.VideoPlayType;
+import com.bill.baseplayer.config.VideoPlayerType;
 import com.bill.baseplayer.controller.ControlWrapper;
 import com.bill.baseplayer.controller.IControlComponent;
 
@@ -49,12 +51,12 @@ public abstract class BaseComponent extends FrameLayout implements IControlCompo
     }
 
     @Override
-    public void onPlayStateChanged(int playState) {
+    public void onPlayStateChanged(@VideoPlayType int playState) {
 
     }
 
     @Override
-    public void onPlayerStateChanged(int playerState) {
+    public void onPlayerStateChanged(@VideoPlayerType int playerState) {
 
     }
 

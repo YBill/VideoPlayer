@@ -7,7 +7,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.bill.baseplayer.base.VideoView;
+import com.bill.baseplayer.config.VideoPlayType;
 import com.bill.baseplayer.util.Utils;
 import com.bill.player.controller.R;
 
@@ -34,8 +34,8 @@ public class ErrorComponent extends BaseComponent implements View.OnClickListene
     }
 
     @Override
-    public void onPlayStateChanged(int playState) {
-        if (playState == VideoView.STATE_ERROR) {
+    public void onPlayStateChanged(@VideoPlayType int playState) {
+        if (playState == VideoPlayType.STATE_ERROR) {
             setVisibility(VISIBLE);
         } else {
             setVisibility(GONE);

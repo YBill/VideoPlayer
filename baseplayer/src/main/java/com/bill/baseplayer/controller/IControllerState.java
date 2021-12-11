@@ -1,6 +1,8 @@
 package com.bill.baseplayer.controller;
 
 import com.bill.baseplayer.base.VideoView;
+import com.bill.baseplayer.config.VideoPlayType;
+import com.bill.baseplayer.config.VideoPlayerType;
 
 /**
  * author ywb
@@ -23,7 +25,7 @@ public interface IControllerState {
      *
      * @param playState 播放状态
      */
-    void onPlayStateChanged(int playState);
+    void onPlayStateChanged(@VideoPlayType int playState);
 
     /**
      * 回调播放器的状态，如果你只是单纯的想监听此状态，建议使用
@@ -31,7 +33,7 @@ public interface IControllerState {
      *
      * @param playerState 播放器状态
      */
-    void onPlayerStateChanged(int playerState);
+    void onPlayerStateChanged(@VideoPlayerType int playerState);
 
     /**
      * 回调播放进度，1秒回调一次

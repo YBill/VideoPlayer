@@ -14,7 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.bill.baseplayer.base.VideoView;
+import com.bill.baseplayer.config.VideoPlayType;
+import com.bill.baseplayer.config.VideoPlayerType;
 import com.bill.baseplayer.util.Utils;
 import com.bill.player.controller.R;
 import com.bill.player.controller.util.ComponentUtils;
@@ -143,10 +144,10 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
     }
 
     @Override
-    public void onPlayStateChanged(int playState) {
+    public void onPlayStateChanged(@VideoPlayType int playState) {
         super.onPlayStateChanged(playState);
 
-        if (playState == VideoView.STATE_PREPARING) {
+        if (playState == VideoPlayType.STATE_PREPARING) {
             if (mControlWrapper != null) {
                 if (!TextUtils.isEmpty(mControlWrapper.getDataSource().title))
                     titleTv.setText(mControlWrapper.getDataSource().title);
@@ -155,39 +156,39 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
         }
 
         switch (playState) {
-            case VideoView.STATE_IDLE:
-            case VideoView.STATE_COMPLETED:
+            case VideoPlayType.STATE_IDLE:
+            case VideoPlayType.STATE_COMPLETED:
                 this.setVisibility(GONE);
                 progressBar.setProgress(0);
                 progressBar.setSecondaryProgress(0);
                 seekBar.setProgress(0);
                 seekBar.setSecondaryProgress(0);
                 break;
-            case VideoView.STATE_START_ABORT:
-            case VideoView.STATE_PREPARING:
-            case VideoView.STATE_PREPARED:
-            case VideoView.STATE_ERROR:
+            case VideoPlayType.STATE_START_ABORT:
+            case VideoPlayType.STATE_PREPARING:
+            case VideoPlayType.STATE_PREPARED:
+            case VideoPlayType.STATE_ERROR:
                 this.setVisibility(GONE);
                 break;
-            case VideoView.STATE_PLAYING:
+            case VideoPlayType.STATE_PLAYING:
                 this.setVisibility(VISIBLE);
                 playIv.setSelected(true);
                 if (mControlWrapper != null)
                     mControlWrapper.startProgress();
                 break;
-            case VideoView.STATE_PAUSED:
+            case VideoPlayType.STATE_PAUSED:
                 playIv.setSelected(false);
                 break;
         }
     }
 
     @Override
-    public void onPlayerStateChanged(int playerState) {
+    public void onPlayerStateChanged(@VideoPlayerType int playerState) {
         switch (playerState) {
-            case VideoView.PLAYER_NORMAL:
+            case VideoPlayerType.PLAYER_NORMAL:
                 fullscreenIv.setSelected(false);
                 break;
-            case VideoView.PLAYER_FULL_SCREEN:
+            case VideoPlayerType.PLAYER_FULL_SCREEN:
                 fullscreenIv.setSelected(true);
                 break;
         }

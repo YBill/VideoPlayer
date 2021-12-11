@@ -20,6 +20,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bill.baseplayer.config.AspectRatioType;
+import com.bill.baseplayer.config.VideoPlayType;
+import com.bill.baseplayer.config.VideoPlayerType;
 import com.bill.baseplayer.config.VideoViewConfig;
 import com.bill.baseplayer.config.VideoViewManager;
 import com.bill.baseplayer.controller.OnVideoStateChangeListener;
@@ -46,21 +48,23 @@ import java.util.List;
 public class VideoView extends FrameLayout implements PlayerControl, AbstractPlayer.PlayerEventListener {
 
     // 播放状态
-    public static final int STATE_ERROR = -1; // 错误
-    public static final int STATE_IDLE = 0; // 未初始化状态
-    public static final int STATE_PREPARING = 1; // 准备中（调用prepareAsync方法）
-    public static final int STATE_PREPARED = 2; // 准备完成（onPrepare回调）
-    public static final int STATE_PLAYING = 3; // 播放状态
-    public static final int STATE_PAUSED = 4; // 暂停状态
-    public static final int STATE_COMPLETED = 5; // 播放完成
-    public static final int STATE_START_ABORT = 6; // 开始播放中止
+//    public static final int STATE_ERROR = -1; // 错误
+//    public static final int STATE_IDLE = 0; // 未初始化状态
+//    public static final int STATE_PREPARING = 1; // 准备中（调用prepareAsync方法）
+//    public static final int STATE_PREPARED = 2; // 准备完成（onPrepare回调）
+//    public static final int STATE_PLAYING = 3; // 播放状态
+//    public static final int STATE_PAUSED = 4; // 暂停状态
+//    public static final int STATE_COMPLETED = 5; // 播放完成
+//    public static final int STATE_START_ABORT = 6; // 开始播放中止
 
     // 播放器的状态
-    public static final int PLAYER_NORMAL = 100;        // 普通播放器
-    public static final int PLAYER_FULL_SCREEN = 101;   // 全屏播放器
-    public static final int PLAYER_TINY_SCREEN = 102;   // 小屏播放器
+//    public static final int PLAYER_NORMAL = 100;        // 普通播放器
+//    public static final int PLAYER_FULL_SCREEN = 101;   // 全屏播放器
+//    public static final int PLAYER_TINY_SCREEN = 102;   // 小屏播放器
 
-    private int mCurrentPlayState = STATE_IDLE; // 当前的播放状态
+    private int mCurrentPlayState = VideoPlayType.STATE_IDLE; // 当前的播放状态
+    private @AspectRatioType
+    int mScreenScaleType; // 视频比例
 
     private AbstractPlayer mMediaPlayer; // 解码器
     private PlayerFactory mPlayerFactory; // 用于实例化解码器
@@ -84,9 +88,6 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     private AudioFocusHelper mAudioFocusHelper;
 
     private IProgressManager mProgressManager; // 进度管理器，设置之后播放器会记录播放进度，以便下次播放恢复进度
-
-    private @AspectRatioType
-    int mScreenScaleType; // 视频比例
 
     private boolean mIsLooping; // 是否循环播放
     private boolean mIsMute; // 是否静音
@@ -136,25 +137,25 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
      */
     private boolean isInPlayState() {
         return mMediaPlayer != null
-                && mCurrentPlayState != STATE_ERROR
-                && mCurrentPlayState != STATE_IDLE
-                && mCurrentPlayState != STATE_PREPARING
-                && mCurrentPlayState != STATE_START_ABORT
-                && mCurrentPlayState != STATE_COMPLETED;
+                && mCurrentPlayState != VideoPlayType.STATE_ERROR
+                && mCurrentPlayState != VideoPlayType.STATE_IDLE
+                && mCurrentPlayState != VideoPlayType.STATE_PREPARING
+                && mCurrentPlayState != VideoPlayType.STATE_START_ABORT
+                && mCurrentPlayState != VideoPlayType.STATE_COMPLETED;
     }
 
     /**
      * 是否处于初始状态
      */
     private boolean isInIdleState() {
-        return mCurrentPlayState == STATE_IDLE;
+        return mCurrentPlayState == VideoPlayType.STATE_IDLE;
     }
 
     /**
      * 播放中止状态
      */
     private boolean isInStartAbortState() {
-        return mCurrentPlayState == STATE_START_ABORT;
+        return mCurrentPlayState == VideoPlayType.STATE_START_ABORT;
     }
 
     /**
@@ -190,7 +191,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 设置播放器状态，并向Controller通知播放器状态
      */
-    private void setPlayerState(int playerState) {
+    private void setPlayerState(@VideoPlayerType int playerState) {
         if (mVideoController != null) {
             mVideoController.setPlayerState(playerState);
         }
@@ -206,7 +207,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 设置播放状态，并向Controller通知播放状态，用于控制Controller的ui展示
      */
-    private void setPlayState(int playState) {
+    private void setPlayState(@VideoPlayType int playState) {
         mCurrentPlayState = playState;
         if (mVideoController != null) {
             mVideoController.setPlayState(playState);
@@ -229,7 +230,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
         // 如果要显示移动网络提示则不继续播放
         if (showNetWarning()) {
             // 中止播放
-            setPlayState(STATE_START_ABORT);
+            setPlayState(VideoPlayType.STATE_START_ABORT);
             return false;
         }
         // 监听音频焦点改变，初始化mAudioFocusHelper
@@ -284,8 +285,9 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
         }
         if (prepareDataSource()) {
             mMediaPlayer.prepareAsync();
-            setPlayState(STATE_PREPARING);
-            setPlayerState(isFullScreen() ? PLAYER_FULL_SCREEN : isTinyScreen() ? PLAYER_TINY_SCREEN : PLAYER_NORMAL);
+            setPlayState(VideoPlayType.STATE_PREPARING);
+            setPlayerState(isFullScreen() ? VideoPlayerType.PLAYER_FULL_SCREEN :
+                    isTinyScreen() ? VideoPlayerType.PLAYER_TINY_SCREEN : VideoPlayerType.PLAYER_NORMAL);
         }
     }
 
@@ -305,7 +307,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
      */
     private void startInPlaybackState() {
         mMediaPlayer.start();
-        setPlayState(STATE_PLAYING);
+        setPlayState(VideoPlayType.STATE_PLAYING);
         if (mAudioFocusHelper != null && !isMute()) {
             mAudioFocusHelper.requestFocus();
         }
@@ -566,7 +568,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     public void pause() {
         if (isInPlayState() && mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
-            setPlayState(STATE_PAUSED);
+            setPlayState(VideoPlayType.STATE_PAUSED);
             if (mAudioFocusHelper != null && !isMute()) {
                 mAudioFocusHelper.abandonFocus();
             }
@@ -612,7 +614,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
             // 重置播放进度
             mCurrentPosition = 0;
             // 切换转态
-            setPlayState(STATE_IDLE);
+            setPlayState(VideoPlayType.STATE_IDLE);
         }
     }
 
@@ -786,7 +788,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
         this.removeView(mPlayerContainer);
         decorView.addView(mPlayerContainer);
 
-        setPlayerState(PLAYER_FULL_SCREEN);
+        setPlayerState(VideoPlayerType.PLAYER_FULL_SCREEN);
     }
 
     /**
@@ -807,7 +809,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
         decorView.removeView(mPlayerContainer);
         this.addView(mPlayerContainer);
 
-        setPlayerState(PLAYER_NORMAL);
+        setPlayerState(VideoPlayerType.PLAYER_NORMAL);
     }
 
     /**
@@ -842,7 +844,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
         LayoutParams params = new LayoutParams(width, height);
         params.gravity = Gravity.BOTTOM | Gravity.END;
         contentView.addView(mPlayerContainer, params);
-        setPlayerState(PLAYER_TINY_SCREEN);
+        setPlayerState(VideoPlayerType.PLAYER_TINY_SCREEN);
     }
 
     /**
@@ -862,7 +864,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
                 ViewGroup.LayoutParams.MATCH_PARENT);
         this.addView(mPlayerContainer, params);
 
-        setPlayerState(PLAYER_NORMAL);
+        setPlayerState(VideoPlayerType.PLAYER_NORMAL);
     }
 
     /**
@@ -890,7 +892,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     @Override
     public void onError() {
         mPlayerContainer.setKeepScreenOn(false);
-        setPlayState(STATE_ERROR);
+        setPlayState(VideoPlayType.STATE_ERROR);
     }
 
     /**
@@ -903,7 +905,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
         if (mProgressManager != null && mDataSource != null) {
             mProgressManager.saveProgress(mDataSource.mUrl, 0); // 播放完成，清除进度
         }
-        setPlayState(STATE_COMPLETED);
+        setPlayState(VideoPlayType.STATE_COMPLETED);
     }
 
     /**
@@ -913,7 +915,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     public void onInfo(int what, int extra) {
         switch (what) {
             case AbstractPlayer.MEDIA_INFO_RENDERING_START: // 视频/音频开始渲染
-                setPlayState(STATE_PLAYING);
+                setPlayState(VideoPlayType.STATE_PLAYING);
                 mPlayerContainer.setKeepScreenOn(true);
                 break;
             case AbstractPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED:
@@ -928,7 +930,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
      */
     @Override
     public void onPrepared() {
-        setPlayState(STATE_PREPARED);
+        setPlayState(VideoPlayType.STATE_PREPARED);
         if (!isMute() && mAudioFocusHelper != null) {
             mAudioFocusHelper.requestFocus();
         }

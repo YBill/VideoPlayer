@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 
 import androidx.annotation.NonNull;
 
+import com.bill.baseplayer.config.AspectRatioType;
 import com.bill.baseplayer.player.DataSource;
 
 /**
@@ -95,7 +96,7 @@ public class ControlWrapper implements PlayerControl, IVideoController {
     }
 
     @Override
-    public void setScreenScaleType(int screenScaleType) {
+    public void setScreenScaleType(@AspectRatioType int screenScaleType) {
         mPlayerControl.setScreenScaleType(screenScaleType);
     }
 

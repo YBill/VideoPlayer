@@ -7,7 +7,7 @@ import android.widget.ProgressBar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 
-import com.bill.baseplayer.base.VideoView;
+import com.bill.baseplayer.config.VideoPlayType;
 import com.bill.baseplayer.config.VideoViewManager;
 import com.bill.player.controller.R;
 
@@ -50,28 +50,28 @@ public class PrepareComponent extends BaseComponent implements View.OnClickListe
     }
 
     @Override
-    public void onPlayStateChanged(int playState) {
+    public void onPlayStateChanged(@VideoPlayType int playState) {
         switch (playState) {
-            case VideoView.STATE_PREPARING:
+            case VideoPlayType.STATE_PREPARING:
                 setVisibility(VISIBLE);
                 playBtn.setVisibility(View.GONE);
                 netView.setVisibility(GONE);
                 loadPb.setVisibility(View.VISIBLE);
                 break;
-            case VideoView.STATE_PLAYING:
-            case VideoView.STATE_PAUSED:
-            case VideoView.STATE_ERROR:
-            case VideoView.STATE_COMPLETED:
+            case VideoPlayType.STATE_PLAYING:
+            case VideoPlayType.STATE_PAUSED:
+            case VideoPlayType.STATE_ERROR:
+            case VideoPlayType.STATE_COMPLETED:
                 setVisibility(GONE);
                 break;
-            case VideoView.STATE_IDLE:
+            case VideoPlayType.STATE_IDLE:
                 setVisibility(VISIBLE);
                 loadPb.setVisibility(View.GONE);
                 netView.setVisibility(GONE);
                 playBtn.setVisibility(View.VISIBLE);
                 thumbIv.setVisibility(View.VISIBLE);
                 break;
-            case VideoView.STATE_START_ABORT:
+            case VideoPlayType.STATE_START_ABORT:
                 setVisibility(VISIBLE);
                 netView.setVisibility(VISIBLE);
                 loadPb.setVisibility(View.GONE);

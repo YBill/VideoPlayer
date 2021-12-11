@@ -13,6 +13,8 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
 
 import com.bill.baseplayer.base.VideoView;
+import com.bill.baseplayer.config.VideoPlayType;
+import com.bill.baseplayer.config.VideoPlayerType;
 import com.bill.baseplayer.controller.ControlWrapper;
 import com.bill.baseplayer.controller.IControlComponent;
 import com.bill.baseplayer.player.AndroidMediaPlayerFactory;
@@ -53,12 +55,12 @@ public class DebugInfoComponent extends AppCompatTextView implements IControlCom
     }
 
     @Override
-    public void onPlayStateChanged(int playState) {
+    public void onPlayStateChanged(@VideoPlayType int playState) {
         setText(getDebugString(playState));
     }
 
     @Override
-    public void onPlayerStateChanged(int playerState) {
+    public void onPlayerStateChanged(@VideoPlayerType int playerState) {
 
     }
 
@@ -152,25 +154,25 @@ public class DebugInfoComponent extends AppCompatTextView implements IControlCom
         String playStateString;
         switch (state) {
             default:
-            case VideoView.STATE_IDLE:
+            case VideoPlayType.STATE_IDLE:
                 playStateString = "idle";
                 break;
-            case VideoView.STATE_PREPARING:
+            case VideoPlayType.STATE_PREPARING:
                 playStateString = "preparing";
                 break;
-            case VideoView.STATE_PREPARED:
+            case VideoPlayType.STATE_PREPARED:
                 playStateString = "prepared";
                 break;
-            case VideoView.STATE_PLAYING:
+            case VideoPlayType.STATE_PLAYING:
                 playStateString = "playing";
                 break;
-            case VideoView.STATE_PAUSED:
+            case VideoPlayType.STATE_PAUSED:
                 playStateString = "pause";
                 break;
-            case VideoView.STATE_COMPLETED:
+            case VideoPlayType.STATE_COMPLETED:
                 playStateString = "completed";
                 break;
-            case VideoView.STATE_ERROR:
+            case VideoPlayType.STATE_ERROR:
                 playStateString = "error";
                 break;
         }

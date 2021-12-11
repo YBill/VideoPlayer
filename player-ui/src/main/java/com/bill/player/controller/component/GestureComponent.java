@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.bill.baseplayer.base.VideoView;
+import com.bill.baseplayer.config.VideoPlayType;
 import com.bill.baseplayer.controller.IGestureComponent;
 import com.bill.player.controller.R;
 import com.bill.player.controller.util.ComponentUtils;
@@ -104,13 +104,13 @@ public class GestureComponent extends BaseComponent implements IGestureComponent
     }
 
     @Override
-    public void onPlayStateChanged(int playState) {
-        if (playState == VideoView.STATE_IDLE
-                || playState == VideoView.STATE_START_ABORT
-                || playState == VideoView.STATE_PREPARING
-                || playState == VideoView.STATE_PREPARED
-                || playState == VideoView.STATE_ERROR
-                || playState == VideoView.STATE_COMPLETED) {
+    public void onPlayStateChanged(@VideoPlayType int playState) {
+        if (playState == VideoPlayType.STATE_IDLE
+                || playState == VideoPlayType.STATE_START_ABORT
+                || playState == VideoPlayType.STATE_PREPARING
+                || playState == VideoPlayType.STATE_PREPARED
+                || playState == VideoPlayType.STATE_ERROR
+                || playState == VideoPlayType.STATE_COMPLETED) {
             setVisibility(GONE);
         } else {
             setVisibility(VISIBLE);

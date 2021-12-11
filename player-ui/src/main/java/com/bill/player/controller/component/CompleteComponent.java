@@ -6,7 +6,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.bill.baseplayer.base.VideoView;
+import com.bill.baseplayer.config.VideoPlayType;
 import com.bill.baseplayer.util.Utils;
 import com.bill.player.controller.R;
 
@@ -30,8 +30,8 @@ public class CompleteComponent extends BaseComponent implements View.OnClickList
     }
 
     @Override
-    public void onPlayStateChanged(int playState) {
-        if (playState == VideoView.STATE_COMPLETED) {
+    public void onPlayStateChanged(@VideoPlayType int playState) {
+        if (playState == VideoPlayType.STATE_COMPLETED) {
             setVisibility(VISIBLE);
         } else {
             setVisibility(GONE);
