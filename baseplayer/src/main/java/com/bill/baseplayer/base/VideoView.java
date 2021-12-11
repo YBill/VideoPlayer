@@ -30,9 +30,8 @@ import com.bill.baseplayer.player.AbstractPlayer;
 import com.bill.baseplayer.player.AudioFocusHelper;
 import com.bill.baseplayer.player.DataSource;
 import com.bill.baseplayer.player.IProgressManager;
-import com.bill.baseplayer.player.PlayerFactory;
 import com.bill.baseplayer.render.IRenderView;
-import com.bill.baseplayer.render.RenderViewFactory;
+import com.bill.baseplayer.util.CreateClsFactory;
 import com.bill.baseplayer.util.MLog;
 import com.bill.baseplayer.util.Utils;
 
@@ -52,10 +51,10 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     int mScreenScaleType; // 视频比例
 
     private AbstractPlayer mMediaPlayer; // 解码器
-    private PlayerFactory mPlayerFactory; // 用于实例化解码器
+    private CreateClsFactory<AbstractPlayer> mPlayerFactory; // 用于实例化解码器
 
     private IRenderView mRenderView; // 渲染器
-    private RenderViewFactory mRenderViewFactory; // 用于实例化渲染器
+    private CreateClsFactory<IRenderView> mRenderViewFactory; // 用于实例化渲染器
 
     private BaseVideoController mVideoController; // 控制器
 
@@ -236,7 +235,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
      * 初始化播放器
      */
     private void initPlayer() {
-        mMediaPlayer = mPlayerFactory.createPlayer(getContext());
+        mMediaPlayer = mPlayerFactory.create(getContext());
         mMediaPlayer.setPlayerEventListener(this);
         mMediaPlayer.initPlayer();
         setOptions();
@@ -250,7 +249,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
             mPlayerContainer.removeView(mRenderView.getView());
             mRenderView.release();
         }
-        mRenderView = mRenderViewFactory.createRenderView(getContext());
+        mRenderView = mRenderViewFactory.create(getContext());
         if (mRenderView != null) {
             mRenderView.attachToPlayer(mMediaPlayer);
             LayoutParams params = new LayoutParams(
@@ -440,9 +439,9 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     }
 
     /**
-     * 自定义解码器，继承{@link PlayerFactory}实现自己的解码器
+     * 自定义解码器，继承{@link CreateClsFactory<AbstractPlayer>}实现自己的解码器
      */
-    public void setPlayerFactory(PlayerFactory playerFactory) {
+    public void setPlayerFactory(CreateClsFactory<AbstractPlayer> playerFactory) {
         if (playerFactory == null) {
             throw new IllegalArgumentException("PlayerFactory can not be null!");
         }
@@ -450,9 +449,9 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     }
 
     /**
-     * 自定义渲染器，继承{@link RenderViewFactory}实现自己的渲染器
+     * 自定义渲染器，继承{@link CreateClsFactory<IRenderView>}实现自己的渲染器
      */
-    public void setRenderViewFactory(RenderViewFactory renderViewFactory) {
+    public void setRenderViewFactory(CreateClsFactory<IRenderView> renderViewFactory) {
         if (renderViewFactory == null) {
             throw new IllegalArgumentException("RenderViewFactory can not be null!");
         }

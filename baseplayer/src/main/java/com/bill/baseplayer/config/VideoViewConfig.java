@@ -2,11 +2,12 @@ package com.bill.baseplayer.config;
 
 import androidx.annotation.Nullable;
 
+import com.bill.baseplayer.player.AbstractPlayer;
 import com.bill.baseplayer.player.AndroidMediaPlayerFactory;
 import com.bill.baseplayer.player.IProgressManager;
-import com.bill.baseplayer.player.PlayerFactory;
-import com.bill.baseplayer.render.RenderViewFactory;
+import com.bill.baseplayer.render.IRenderView;
 import com.bill.baseplayer.render.TextureRenderViewFactory;
+import com.bill.baseplayer.util.CreateClsFactory;
 
 /**
  * author ywb
@@ -27,8 +28,8 @@ public class VideoViewConfig {
     public final IProgressManager mProgressManager;
     public final @AspectRatioType
     int mScreenScaleType;
-    public PlayerFactory mPlayerFactory;
-    public RenderViewFactory mRenderViewFactory;
+    public CreateClsFactory<AbstractPlayer> mPlayerFactory;
+    public CreateClsFactory<IRenderView> mRenderViewFactory;
 
     VideoViewConfig(Builder builder) {
         mIsEnableLog = builder.mIsEnableLog;
@@ -58,8 +59,8 @@ public class VideoViewConfig {
         private boolean mEnableAudioFocus = true;
         private boolean mAdaptCutout = true;
         private IProgressManager mProgressManager;
-        private PlayerFactory mPlayerFactory;
-        private RenderViewFactory mRenderViewFactory;
+        private CreateClsFactory<AbstractPlayer> mPlayerFactory;
+        private CreateClsFactory<IRenderView> mRenderViewFactory;
         private int mScreenScaleType = AspectRatioType.AR_ASPECT_FIT_PARENT;
 
         /**
@@ -113,7 +114,7 @@ public class VideoViewConfig {
         /**
          * 设置解码器
          */
-        public Builder setPlayerFactory(PlayerFactory playerFactory) {
+        public Builder setPlayerFactory(CreateClsFactory<AbstractPlayer> playerFactory) {
             mPlayerFactory = playerFactory;
             return this;
         }
@@ -121,7 +122,7 @@ public class VideoViewConfig {
         /**
          * 设置渲染器
          */
-        public Builder setRenderViewFactory(RenderViewFactory renderViewFactory) {
+        public Builder setRenderViewFactory(CreateClsFactory<IRenderView> renderViewFactory) {
             mRenderViewFactory = renderViewFactory;
             return this;
         }
