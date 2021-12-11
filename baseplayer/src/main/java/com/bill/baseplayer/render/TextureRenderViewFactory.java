@@ -5,7 +5,7 @@ import android.content.Context;
 /**
  * author ywb
  * date 2021/11/24
- * desc
+ * desc TextureView
  */
 public class TextureRenderViewFactory extends RenderViewFactory {
 

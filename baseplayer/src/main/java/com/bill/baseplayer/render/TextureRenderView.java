@@ -16,7 +16,7 @@ import com.bill.baseplayer.player.AbstractPlayer;
 /**
  * author ywb
  * date 2021/11/24
- * desc
+ * desc TextureView
  */
 public class TextureRenderView extends TextureView implements IRenderView, TextureView.SurfaceTextureListener {
 

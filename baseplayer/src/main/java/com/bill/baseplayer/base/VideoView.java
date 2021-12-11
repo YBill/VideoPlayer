@@ -251,12 +251,14 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
             mRenderView.release();
         }
         mRenderView = mRenderViewFactory.createRenderView(getContext());
-        mRenderView.attachToPlayer(mMediaPlayer);
-        LayoutParams params = new LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                Gravity.CENTER);
-        mPlayerContainer.addView(mRenderView.getView(), 0, params);
+        if (mRenderView != null) {
+            mRenderView.attachToPlayer(mMediaPlayer);
+            LayoutParams params = new LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    Gravity.CENTER);
+            mPlayerContainer.addView(mRenderView.getView(), 0, params);
+        }
     }
 
     /**
