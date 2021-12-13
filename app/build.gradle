@@ -15,6 +15,16 @@ android {
 
     }
 
+    signingConfigs {
+        release {
+            storeFile file("VideoPlayer.jks")
+            storePassword "videoplayer"
+            keyAlias "videoPlayer"
+            keyPassword "videoplayer"
+            v2SigningEnabled true
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
