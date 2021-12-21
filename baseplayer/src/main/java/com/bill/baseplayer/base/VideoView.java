@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -60,7 +61,6 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     private BaseVideoController mVideoController; // 控制器
 
     private FrameLayout mPlayerContainer; // 播放器总容器
-    private int mPlayerBackgroundColor; // 播放器背景色，默认黑色
 
     private DataSource mDataSource; // data source
 
@@ -112,7 +112,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
 
     private void initView() {
         mPlayerContainer = new FrameLayout(getContext());
-        mPlayerContainer.setBackgroundColor(Color.BLACK);
+        setPlayerBackgroundColor(Color.BLACK);
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         this.addView(mPlayerContainer, params);
     }
@@ -387,6 +387,15 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     }
 
     ////////////// 外部暴露方法 ////////////
+
+    /**
+     * 设置播放器背景底色
+     *
+     * @param color
+     */
+    public void setPlayerBackgroundColor(@ColorInt int color) {
+        mPlayerContainer.setBackgroundColor(color);
+    }
 
     /**
      * 设置视频地址
