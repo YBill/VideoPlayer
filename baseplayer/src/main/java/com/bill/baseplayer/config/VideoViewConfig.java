@@ -22,7 +22,6 @@ public class VideoViewConfig {
 
     public final boolean mIsEnableLog;
     public final boolean mEnableOrientation;
-    public final boolean mAdaptCutout;
     public final boolean mPlayOnMobileNetwork;
     public final boolean mEnableAudioFocus;
     public final IProgressManager mProgressManager;
@@ -40,7 +39,6 @@ public class VideoViewConfig {
         mScreenScaleType = builder.mScreenScaleType;
         mPlayerFactory = builder.mPlayerFactory;
         mRenderViewFactory = builder.mRenderViewFactory;
-        mAdaptCutout = builder.mAdaptCutout;
         initialValue();
     }
 
@@ -57,7 +55,6 @@ public class VideoViewConfig {
         private boolean mPlayOnMobileNetwork = true;
         private boolean mEnableOrientation = false;
         private boolean mEnableAudioFocus = true;
-        private boolean mAdaptCutout = true;
         private IProgressManager mProgressManager;
         private CreateClsFactory<AbstractPlayer> mPlayerFactory;
         private CreateClsFactory<IRenderView> mRenderViewFactory;
@@ -84,22 +81,6 @@ public class VideoViewConfig {
          */
         public Builder setEnableOrientation(boolean enableOrientation) {
             mEnableOrientation = enableOrientation;
-            return this;
-        }
-
-        /**
-         * 是否开启AudioFocus监听，默认开启
-         */
-        public Builder setEnableAudioFocus(boolean enableAudioFocus) {
-            mEnableAudioFocus = enableAudioFocus;
-            return this;
-        }
-
-        /**
-         * 是否适配刘海屏，默认适配
-         */
-        public Builder setAdaptCutout(boolean adaptCutout) {
-            mAdaptCutout = adaptCutout;
             return this;
         }
 

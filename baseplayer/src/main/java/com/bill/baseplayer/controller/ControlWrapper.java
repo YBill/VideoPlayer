@@ -200,16 +200,6 @@ public class ControlWrapper implements PlayerControl, IVideoController {
         mController.show();
     }
 
-    @Override
-    public boolean hasCutout() {
-        return mController.hasCutout();
-    }
-
-    @Override
-    public int getCutoutHeight() {
-        return mController.getCutoutHeight();
-    }
-
     /**
      * 播放和暂停
      */

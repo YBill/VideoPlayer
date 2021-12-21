@@ -24,8 +24,6 @@ import com.bill.baseplayer.controller.IControlComponent;
 import com.bill.baseplayer.controller.IVideoController;
 import com.bill.baseplayer.controller.OrientationHelper;
 import com.bill.baseplayer.controller.PlayerControl;
-import com.bill.baseplayer.util.CutoutScreenUtil;
-import com.bill.baseplayer.util.MLog;
 import com.bill.baseplayer.util.Utils;
 
 import java.util.ArrayList;
@@ -52,10 +50,6 @@ public class BaseVideoController extends FrameLayout implements
     private OrientationHelper mOrientationHelper; // 屏幕方向监听辅助类
     private int mOrientation;
 
-    private boolean mIsAdaptCutout; // 用户设置是否适配刘海屏，默认true
-    private boolean mHasCutout; // 是否有刘海
-    private int mCutoutHeight; // 刘海的高度
-
     private int mCurPlayState; // 当前的播放状态
 
     private int mAutoHideCountdown = 5000; // 视图自动隐藏倒计时
@@ -80,10 +74,8 @@ public class BaseVideoController extends FrameLayout implements
         // 读取全局配置
         mOrientationHelper = new OrientationHelper(getContext().getApplicationContext());
         mEnableOrientation = VideoViewManager.getInstance().getConfig().mEnableOrientation;
-        mIsAdaptCutout = VideoViewManager.getInstance().getConfig().mAdaptCutout;
 
         mActivity = Utils.scanForActivity(getContext());
-        checkCutout();
 
         // 开始监听设备方向
         mOrientationHelper.setOnOrientationChangeListener(this);
@@ -207,13 +199,6 @@ public class BaseVideoController extends FrameLayout implements
     }
 
     /**
-     * 设置是否适配刘海屏，默认适配
-     */
-    public void setAdaptCutout(boolean adaptCutout) {
-        mIsAdaptCutout = adaptCutout;
-    }
-
-    /**
      * 是否自动旋转，默认不自动旋转
      */
     public void setEnableOrientation(boolean enableOrientation) {
@@ -300,22 +285,6 @@ public class BaseVideoController extends FrameLayout implements
         if (!mIsStartProgress) return;
         removeCallbacks(mShowProgressRunnable);
         mIsStartProgress = false;
-    }
-
-    /**
-     * 是否有刘海屏
-     */
-    @Override
-    public boolean hasCutout() {
-        return mHasCutout;
-    }
-
-    /**
-     * 刘海的高度
-     */
-    @Override
-    public int getCutoutHeight() {
-        return mCutoutHeight;
     }
 
     //////// IVideoController End /////////
@@ -440,21 +409,6 @@ public class BaseVideoController extends FrameLayout implements
     //////// 和VideoView关联方法 End /////////
 
     /**
-     * 检查是否需要适配刘海
-     */
-    private void checkCutout() {
-        if (!mIsAdaptCutout) return;
-        if (mActivity != null) {
-            mHasCutout = CutoutScreenUtil.allowDisplayToCutout(mActivity);
-            if (mHasCutout) {
-                //竖屏下的状态栏高度可认为是刘海的高度
-                mCutoutHeight = (int) Utils.getStatusBarHeightPortrait(mActivity);
-            }
-        }
-        MLog.d("hasCutout: " + mHasCutout + " cutout height: " + mCutoutHeight);
-    }
-
-    /**
      * 隐藏播放视图Runnable
      */
     private final Runnable mAutoHideRunnable = new Runnable() {
@@ -563,15 +517,9 @@ public class BaseVideoController extends FrameLayout implements
         switch (playerState) {
             case VideoPlayerType.PLAYER_NORMAL:
                 orientationSensing();
-                if (hasCutout()) {
-                    CutoutScreenUtil.adaptCutoutAboveAndroidP(getContext(), false);
-                }
                 break;
             case VideoPlayerType.PLAYER_FULL_SCREEN:
                 orientationSensing();
-                if (hasCutout()) {
-                    CutoutScreenUtil.adaptCutoutAboveAndroidP(getContext(), true);
-                }
                 break;
             case VideoPlayerType.PLAYER_TINY_SCREEN:
                 if (mEnableOrientation)
