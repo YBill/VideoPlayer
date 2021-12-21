@@ -18,8 +18,7 @@ public interface IControlComponent extends IControllerState {
     void attach(@NonNull ControlWrapper controlWrapper);
 
     /**
-     * 如果 ControlComponent 是 View，返回当前控件（this）即可
-     * 如果不是，返回null
+     * 此View会添加到控制器上
      */
     @Nullable
     View getView();

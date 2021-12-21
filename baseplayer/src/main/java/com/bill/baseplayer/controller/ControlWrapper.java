@@ -71,13 +71,13 @@ public class ControlWrapper implements PlayerControl, IVideoController {
     }
 
     @Override
-    public void startFullScreen() {
-        mPlayerControl.startFullScreen();
+    public void enterFullScreen() {
+        mPlayerControl.enterFullScreen();
     }
 
     @Override
-    public void stopFullScreen() {
-        mPlayerControl.stopFullScreen();
+    public void exitFullScreen() {
+        mPlayerControl.exitFullScreen();
     }
 
     @Override
@@ -136,13 +136,13 @@ public class ControlWrapper implements PlayerControl, IVideoController {
     }
 
     @Override
-    public void startTinyScreen() {
-        mPlayerControl.startTinyScreen();
+    public void enterTinyScreen() {
+        mPlayerControl.enterTinyScreen();
     }
 
     @Override
-    public void stopTinyScreen() {
-        mPlayerControl.stopTinyScreen();
+    public void exitTinyScreen() {
+        mPlayerControl.exitTinyScreen();
     }
 
     @Override
@@ -219,10 +219,10 @@ public class ControlWrapper implements PlayerControl, IVideoController {
             return;
         if (isFullScreen()) {
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            stopFullScreen();
+            exitFullScreen();
         } else {
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            startFullScreen();
+            enterFullScreen();
         }
     }
 
@@ -231,9 +231,9 @@ public class ControlWrapper implements PlayerControl, IVideoController {
      */
     public void toggleFullScreen() {
         if (isFullScreen()) {
-            stopFullScreen();
+            exitFullScreen();
         } else {
-            startFullScreen();
+            enterFullScreen();
         }
     }
 
@@ -247,12 +247,12 @@ public class ControlWrapper implements PlayerControl, IVideoController {
         int width = size[0];
         int height = size[1];
         if (isFullScreen()) {
-            stopFullScreen();
+            exitFullScreen();
             if (width > height) {
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
         } else {
-            startFullScreen();
+            enterFullScreen();
             if (width > height) {
                 activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }

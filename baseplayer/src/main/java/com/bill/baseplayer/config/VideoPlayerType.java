@@ -17,7 +17,7 @@ import java.lang.annotation.RetentionPolicy;
 })
 @Retention(RetentionPolicy.SOURCE)
 public @interface VideoPlayerType {
-    int PLAYER_NORMAL = 0;
+    int PLAYER_NORMAL = 0; // 普通状态
     int PLAYER_FULL_SCREEN = 1; // 全屏
     int PLAYER_TINY_SCREEN = 2; // 小窗
 

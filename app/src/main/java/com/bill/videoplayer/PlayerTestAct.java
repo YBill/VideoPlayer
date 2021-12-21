@@ -45,7 +45,7 @@ public class PlayerTestAct extends AppCompatActivity {
     public void onBackPressed() {
         if (videoView != null && videoView.isFullScreen()) {
             this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            videoView.stopFullScreen();
+            videoView.exitFullScreen();
         } else {
             super.onBackPressed();
         }

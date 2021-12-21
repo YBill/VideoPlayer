@@ -46,7 +46,8 @@ import java.util.List;
  */
 public class VideoView extends FrameLayout implements PlayerControl, AbstractPlayer.PlayerEventListener {
 
-    private int mCurrentPlayState = VideoPlayType.STATE_IDLE; // 当前的播放状态
+    private @VideoPlayType
+    int mCurrentPlayState = VideoPlayType.STATE_IDLE; // 当前的播放状态
     private @AspectRatioType
     int mScreenScaleType; // 视频比例
 
@@ -760,7 +761,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
      * 进入全屏
      */
     @Override
-    public void startFullScreen() {
+    public void enterFullScreen() {
         if (mIsFullScreen)
             return;
 
@@ -781,7 +782,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
      * 退出全屏
      */
     @Override
-    public void stopFullScreen() {
+    public void exitFullScreen() {
         if (!mIsFullScreen)
             return;
 
@@ -809,7 +810,8 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 进入小窗
      */
-    public void startTinyScreen() {
+    @Override
+    public void enterTinyScreen() {
         if (mIsTinyScreen) return;
         ViewGroup contentView = getContentView();
         if (contentView == null)
@@ -836,7 +838,8 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     /**
      * 退出小窗
      */
-    public void stopTinyScreen() {
+    @Override
+    public void exitTinyScreen() {
         if (!mIsTinyScreen) return;
         ViewGroup contentView = getContentView();
         if (contentView == null)

@@ -534,7 +534,7 @@ public class BaseVideoController extends FrameLayout implements
     @SuppressLint("SourceLockedOrientationActivity")
     private void onOrientationPortrait(Activity activity) {
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        mControlWrapper.stopFullScreen();
+        mControlWrapper.exitFullScreen();
     }
 
     /**
@@ -545,7 +545,7 @@ public class BaseVideoController extends FrameLayout implements
         if (mControlWrapper.isFullScreen()) {
             handlePlayerStateChanged(VideoPlayerType.PLAYER_FULL_SCREEN);
         } else {
-            mControlWrapper.startFullScreen();
+            mControlWrapper.enterFullScreen();
         }
     }
 
@@ -557,7 +557,7 @@ public class BaseVideoController extends FrameLayout implements
         if (mControlWrapper.isFullScreen()) {
             handlePlayerStateChanged(VideoPlayerType.PLAYER_FULL_SCREEN);
         } else {
-            mControlWrapper.startFullScreen();
+            mControlWrapper.enterFullScreen();
         }
     }
 

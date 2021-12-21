@@ -67,6 +67,7 @@ public class GestureVideoController extends BaseVideoController implements
     /**
      * 是否开启手势控制，默认关闭
      * 关闭之后，手势调节和点击功能将关闭
+     * 开启后添加的组件需要实现 {@link IGestureComponent} 接口来处理UI
      */
     public void setGestureEnabled(boolean gestureEnabled) {
         mEnabledGesture = gestureEnabled;

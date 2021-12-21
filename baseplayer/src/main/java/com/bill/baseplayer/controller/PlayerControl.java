@@ -30,9 +30,9 @@ public interface PlayerControl {
 
     int getBufferedPercentage();
 
-    void startFullScreen();
+    void enterFullScreen();
 
-    void stopFullScreen();
+    void exitFullScreen();
 
     boolean isFullScreen();
 
@@ -56,9 +56,9 @@ public interface PlayerControl {
 
     void setRotation(float rotation);
 
-    void startTinyScreen();
+    void enterTinyScreen();
 
-    void stopTinyScreen();
+    void exitTinyScreen();
 
     boolean isTinyScreen();
 
