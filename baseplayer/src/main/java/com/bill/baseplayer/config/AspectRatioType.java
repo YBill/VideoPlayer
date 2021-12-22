@@ -24,7 +24,7 @@ public @interface AspectRatioType {
     int AR_ASPECT_FILL_PARENT = 1; // centerCrop (may clip)
     int AR_ASPECT_WRAP_CONTENT = 2; // center (without stretch) , use video width and height
     int AR_MATCH_PARENT = 3; // fitXY (may stretch)
-    int AR_16_9_FIT_PARENT = 4; // 16:9 (without stretch and clip)
-    int AR_4_3_FIT_PARENT = 5; // 4:3 (without stretch and clip)
+    int AR_16_9_FIT_PARENT = 4; // 16:9 (without stretch)
+    int AR_4_3_FIT_PARENT = 5; // 4:3 (without stretch)
 
 }

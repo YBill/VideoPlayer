@@ -148,6 +148,7 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
         super.onPlayStateChanged(playState);
 
         if (playState == VideoPlayType.STATE_PREPARING) {
+            titleTv.setText("");
             if (mControlWrapper != null) {
                 if (!TextUtils.isEmpty(mControlWrapper.getDataSource().title))
                     titleTv.setText(mControlWrapper.getDataSource().title);

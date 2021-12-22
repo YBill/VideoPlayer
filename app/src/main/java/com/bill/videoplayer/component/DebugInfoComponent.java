@@ -26,6 +26,7 @@ import com.bill.videoplayer.util.DebugUtils;
 public class DebugInfoComponent extends AppCompatTextView implements IControlComponent {
 
     private ControlWrapper mControlWrapper;
+    private int mCurrentPlayState;
 
     public DebugInfoComponent(@NonNull Context context) {
         super(context);
@@ -42,6 +43,18 @@ public class DebugInfoComponent extends AppCompatTextView implements IControlCom
         setLayoutParams(lp);
     }
 
+    private String getDebugString(int playState) {
+        return DebugUtils.getCurrentPlayer(mControlWrapper) + DebugUtils.getCurrentRenderer(mControlWrapper) + "\n"
+                + "Video Size: [" + mControlWrapper.getVideoSize()[0] + "," + mControlWrapper.getVideoSize()[1] + "]\n"
+                + DebugUtils.getAspectRatioType(mControlWrapper) + "\n"
+                + "Play Speed：" + mControlWrapper.getSpeed() + "\n"
+                + DebugUtils.getPlayState2str(playState);
+    }
+
+    public void refreshUI() {
+        setText(getDebugString(mCurrentPlayState));
+    }
+
     @Override
     public void onVisibilityChanged(boolean isVisible) {
 
@@ -49,7 +62,8 @@ public class DebugInfoComponent extends AppCompatTextView implements IControlCom
 
     @Override
     public void onPlayStateChanged(@VideoPlayType int playState) {
-        setText(getDebugString(playState));
+        this.mCurrentPlayState = playState;
+        refreshUI();
     }
 
     @Override
@@ -82,13 +96,6 @@ public class DebugInfoComponent extends AppCompatTextView implements IControlCom
 
     }
 
-    private String getDebugString(int playState) {
-        return DebugUtils.getCurrentPlayer(mControlWrapper) + DebugUtils.getCurrentRenderer(mControlWrapper) + "\n"
-                + "Video Size: [" + mControlWrapper.getVideoSize()[0] + "," + mControlWrapper.getVideoSize()[1] + "]\n"
-                + DebugUtils.getAspectRatioType(mControlWrapper) + "\n"
-                + DebugUtils.getPlayState2str(playState);
-    }
-
     @Override
     public void attach(@NonNull ControlWrapper controlWrapper) {
         mControlWrapper = controlWrapper;
@@ -108,6 +115,6 @@ public class DebugInfoComponent extends AppCompatTextView implements IControlCom
     @Nullable
     @Override
     public String getKey() {
-        return null;
+        return this.getClass().getSimpleName();
     }
 }

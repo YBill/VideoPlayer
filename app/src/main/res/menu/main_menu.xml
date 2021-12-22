@@ -41,13 +41,13 @@
                 android:title="FitCenter" />
             <item
                 android:id="@+id/center_crop"
-                android:title="centerCrop" />
+                android:title="CenterCrop" />
             <item
                 android:id="@+id/center"
-                android:title="center" />
+                android:title="Center" />
             <item
                 android:id="@+id/fit_xy"
-                android:title="fitXY" />
+                android:title="FitXY" />
             <item
                 android:id="@+id/st_16_9"
                 android:title="16:9" />
