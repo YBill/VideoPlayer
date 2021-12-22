@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingDefaultResource">
+    <item
+        android:id="@+id/switch_decoder"
+        android:title="切换解码器">
+        <menu>
+            <item
+                android:id="@+id/ijk"
+                android:title="IjkPlayer" />
+            <item
+                android:id="@+id/exo"
+                android:title="ExoPlayer" />
+            <item
+                android:id="@+id/media"
+                android:title="MediaPlayer" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/switch_renderer"
+        android:title="切换渲染器">
+        <menu>
+            <item
+                android:id="@+id/texture"
+                android:title="TextureView" />
+            <item
+                android:id="@+id/surface"
+                android:title="SurfaceView" />
+            <item
+                android:id="@+id/none"
+                android:title="NullRenderView" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/switch_aspect_ratio_type"
+        android:title="切换视频裁切方式">
+        <menu>
+            <item
+                android:id="@+id/fit_center"
+                android:title="FitCenter" />
+            <item
+                android:id="@+id/center_crop"
+                android:title="centerCrop" />
+            <item
+                android:id="@+id/center"
+                android:title="center" />
+            <item
+                android:id="@+id/fit_xy"
+                android:title="fitXY" />
+            <item
+                android:id="@+id/st_16_9"
+                android:title="16:9" />
+            <item
+                android:id="@+id/st_4_3"
+                android:title="4:3" />
+        </menu>
+    </item>
+
+
+</menu>

@@ -2,8 +2,6 @@ package com.bill.videoplayer;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,8 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bill.baseplayer.base.VideoView;
 import com.bill.baseplayer.player.DataSource;
 import com.bill.player.controller.StandardVideoController;
-
-import java.io.IOException;
+import com.bill.videoplayer.component.DebugInfoComponent;
 
 public class PlayerTestAct extends AppCompatActivity {
 
