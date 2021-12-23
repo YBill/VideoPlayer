@@ -12,6 +12,11 @@
         android:theme="@style/Theme.VideoPlayer"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".act.ParallelPlayerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".act.UniversalPlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:exported="true"

@@ -15,6 +15,7 @@ import com.bill.baseplayer.render.SurfaceRenderViewFactory;
 import com.bill.baseplayer.render.TextureRenderViewFactory;
 import com.bill.player.exo.ExoPlayerFactory;
 import com.bill.player.ijk.IjkPlayerFactory;
+import com.bill.videoplayer.act.ParallelPlayerActivity;
 import com.bill.videoplayer.act.UniversalPlayerActivity;
 import com.bill.videoplayer.util.DebugUtils;
 
@@ -28,6 +29,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void handlePlayer(View view) {
         Intent intent = new Intent(this, UniversalPlayerActivity.class);
+        startActivity(intent);
+    }
+
+    public void handleOpenMore(View view) {
+        Intent intent = new Intent(this, ParallelPlayerActivity.class);
         startActivity(intent);
     }
 

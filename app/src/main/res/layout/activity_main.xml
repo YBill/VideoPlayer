@@ -13,4 +13,10 @@
         android:onClick="handlePlayer"
         android:text="通用播放器" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="handleOpenMore"
+        android:text="播放器多开" />
+
 </LinearLayout>
