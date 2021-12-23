@@ -108,15 +108,21 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
     @Override
     public void onVisibilityChanged(boolean isVisible) {
         super.onVisibilityChanged(isVisible);
-        if (isVisible) {
-            lockBtn.setVisibility(VISIBLE);
-            lockBtn.startAnimation(mShowAnim);
-        } else {
-            lockBtn.setVisibility(GONE);
-            lockBtn.startAnimation(mHideAnim);
+
+        if (mControlWrapper == null)
+            return;
+
+        if (mControlWrapper.isFullScreen()) {
+            if (isVisible) {
+                lockBtn.setVisibility(VISIBLE);
+                lockBtn.startAnimation(mShowAnim);
+            } else {
+                lockBtn.setVisibility(GONE);
+                lockBtn.startAnimation(mHideAnim);
+            }
         }
 
-        if (mControlWrapper != null && !mControlWrapper.isLocked()) {
+        if (!mControlWrapper.isLocked()) {
             controllerVisible(isVisible);
         }
     }
@@ -150,8 +156,8 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
         if (playState == VideoPlayType.STATE_PREPARING) {
             titleTv.setText("");
             if (mControlWrapper != null) {
-                if (!TextUtils.isEmpty(mControlWrapper.getDataSource().title))
-                    titleTv.setText(mControlWrapper.getDataSource().title);
+                if (!TextUtils.isEmpty(mControlWrapper.getDataSource().mTitle))
+                    titleTv.setText(mControlWrapper.getDataSource().mTitle);
                 mControlWrapper.show();
             }
         }
@@ -188,9 +194,15 @@ public class ControllerComponent extends BaseComponent implements View.OnClickLi
         switch (playerState) {
             case VideoPlayerType.PLAYER_NORMAL:
                 fullscreenIv.setSelected(false);
+
+                // 如果锁屏时为解锁强制用物理按键关闭全屏时要恢复下解锁状态
+                if (mControlWrapper != null && mControlWrapper.isLocked())
+                    lockBtn.performClick(); // 模拟点击解锁
+                lockBtn.setVisibility(GONE);
                 break;
             case VideoPlayerType.PLAYER_FULL_SCREEN:
                 fullscreenIv.setSelected(true);
+                lockBtn.setVisibility(VISIBLE);
                 break;
         }
 

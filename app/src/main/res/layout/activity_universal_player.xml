@@ -156,6 +156,11 @@
 
             </LinearLayout>
 
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Play Other Address：" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -169,10 +174,37 @@
                     android:lines="1" />
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/btn_play_other"
+                    android:id="@+id/btn_clear_focus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Play" />
+                    android:text="Clear Focus" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_play_url"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Play Url" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_assets_file"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Assets File" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_raw_file"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Raw File" />
 
             </LinearLayout>
 

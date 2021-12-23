@@ -1,4 +1,4 @@
-package com.bill.videoplayer;
+package com.bill.videoplayer.app;
 
 import android.app.Application;
 
@@ -10,6 +10,7 @@ import com.bill.baseplayer.render.SurfaceRenderViewFactory;
 import com.bill.baseplayer.render.TextureRenderViewFactory;
 import com.bill.player.exo.ExoPlayerFactory;
 import com.bill.player.ijk.IjkPlayerFactory;
+import com.bill.videoplayer.BuildConfig;
 
 /**
  * author ywb
@@ -21,6 +22,8 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        AppAuxiliary.getInstance().install(this);
+
         VideoViewManager.getInstance().setConfig(VideoViewConfig.create()
                 .setLogEnabled(BuildConfig.DEBUG)
                 .setPlayerFactory(IjkPlayerFactory.create())

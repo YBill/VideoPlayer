@@ -19,6 +19,7 @@ import com.bill.player.controller.component.PrepareComponent;
 import com.bill.videoplayer.R;
 import com.bill.videoplayer.component.DebugInfoComponent;
 import com.bill.videoplayer.util.KeyboardHelper;
+import com.bill.videoplayer.util.Utils;
 import com.bumptech.glide.Glide;
 
 public class UniversalPlayerActivity extends AppCompatActivity implements View.OnClickListener {
@@ -60,12 +61,13 @@ public class UniversalPlayerActivity extends AppCompatActivity implements View.O
         // 设置封面图
         ImageView thumbIv = ((PrepareComponent) videoController.getControlComponent(
                 PrepareComponent.class.getSimpleName())).getThumbIv();
-        Glide.with(this).load(URL_1).into(thumbIv);
+        thumbIv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        Glide.with(this).load(URL_2).into(thumbIv);
 
         // set url
         DataSource dataSource = new DataSource();
-        dataSource.mUrl = URL_1;
-        dataSource.title = "复仇者联盟4";
+        dataSource.mUrl = URL_2;
+        dataSource.mTitle = "喜欢一个人";
         videoView.setDataSource(dataSource);
 
         // play
@@ -97,7 +99,10 @@ public class UniversalPlayerActivity extends AppCompatActivity implements View.O
         muteBtn.setOnClickListener(this);
         mirrorRotateBtn.setOnClickListener(this);
 
-        findViewById(R.id.btn_play_other).setOnClickListener(this);
+        findViewById(R.id.btn_clear_focus).setOnClickListener(this);
+        findViewById(R.id.btn_play_url).setOnClickListener(this);
+        findViewById(R.id.btn_assets_file).setOnClickListener(this);
+        findViewById(R.id.btn_raw_file).setOnClickListener(this);
     }
 
     @Override
@@ -178,14 +183,39 @@ public class UniversalPlayerActivity extends AppCompatActivity implements View.O
                 isMirrorRotate = !isMirrorRotate;
                 break;
 
-            case R.id.btn_play_other:
+            case R.id.btn_assets_file:
+                inputUrlEt.clearFocus(); // 取消输入框焦点
+                KeyboardHelper.hideSoftInput(inputUrlEt); // 关闭软键盘
+                videoView.release();
+                DataSource assetsDs = new DataSource();
+                assetsDs.mAssetsPath = "avengers.mp4";
+                assetsDs.mTitle = "/assets/avengers.mp4";
+                videoView.setDataSource(assetsDs);
+                videoView.start();
+                break;
+            case R.id.btn_raw_file:
+                inputUrlEt.clearFocus(); // 取消输入框焦点
+                KeyboardHelper.hideSoftInput(inputUrlEt); // 关闭软键盘
+                videoView.release();
+                DataSource rawDs = new DataSource();
+                rawDs.mRawId = R.raw.avengers;
+                rawDs.mTitle = "/res/raw/avengers.mp4";
+                videoView.setDataSource(rawDs);
+                videoView.start();
+                break;
+            case R.id.btn_clear_focus:
+                inputUrlEt.clearFocus(); // 取消输入框焦点
+                KeyboardHelper.hideSoftInput(inputUrlEt); // 关闭软键盘
+                break;
+            case R.id.btn_play_url:
                 inputUrlEt.clearFocus(); // 取消输入框焦点
                 KeyboardHelper.hideSoftInput(inputUrlEt); // 关闭软键盘
                 videoView.release();
                 String url = inputUrlEt.getText().toString().trim();
                 if (!TextUtils.isEmpty(url)) {
-                    DataSource dataSource = new DataSource(url);
-                    videoView.setDataSource(dataSource);
+                    DataSource urlDs = new DataSource(url);
+                    urlDs.mTitle = "Input Url";
+                    videoView.setDataSource(urlDs);
                     videoView.start();
                 }
                 break;
@@ -208,6 +238,10 @@ public class UniversalPlayerActivity extends AppCompatActivity implements View.O
     @Override
     public void onBackPressed() {
         if (videoView != null && videoView.isFullScreen()) {
+            if (videoView.getVideoController() != null && videoView.getVideoController().isLocked()) {
+                Utils.toast("请先解锁屏幕");
+                return;
+            }
             this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             videoView.exitFullScreen();
         } else {

@@ -3,7 +3,7 @@
     package="com.bill.videoplayer">
 
     <application
-        android:name=".App"
+        android:name=".app.App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,11 +13,6 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".act.UniversalPlayerActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
-            android:exported="true"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".PlayerTestAct"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:exported="true"
             android:screenOrientation="portrait" />

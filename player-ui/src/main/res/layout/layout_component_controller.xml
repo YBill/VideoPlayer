@@ -109,6 +109,6 @@
         android:background="@drawable/player_ui_shape_lock_btn_bg"
         android:scaleType="center"
         android:src="@drawable/player_ui_selector_lock_button"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </FrameLayout>

@@ -20,7 +20,7 @@ public class DataSource {
     public @RawRes
     int mRawId; // raw下视频文件ID
 
-    public String title; // 视频的title
+    public String mTitle; // 视频的title
 
     public DataSource() {
 
