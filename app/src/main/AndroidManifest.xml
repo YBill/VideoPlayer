@@ -12,6 +12,12 @@
         android:theme="@style/Theme.VideoPlayer"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".act.TinyGroupActivity"
+            android:exported="true" />
+        <activity
+            android:name=".act.TinyActivity"
+            android:exported="true" />
+        <activity
             android:name=".act.ParallelPlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:exported="true"

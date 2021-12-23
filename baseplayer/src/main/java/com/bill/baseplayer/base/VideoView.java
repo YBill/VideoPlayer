@@ -822,6 +822,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
             int size = (int) (Utils.getScreenWidth(getContext(), false) / 2f);
             this.removeView(mPlayerContainer);
             LayoutParams params = new LayoutParams(size, size);
+            params.gravity = Gravity.TOP | Gravity.END;
             contentView.addView(mPlayerContainer, params);
         } else {
             this.removeView(mPlayerContainer);
@@ -874,7 +875,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
 
     /**
      * 设置小窗播放容器
-     * 不设置则默认添加到 android.R.id.content 的右下角，宽高为屏幕宽的一半
+     * 不设置则默认添加到 android.R.id.content 的右上角，宽高为屏幕宽的一半
      *
      * @param tinyScreenContainerView 小窗容器
      */

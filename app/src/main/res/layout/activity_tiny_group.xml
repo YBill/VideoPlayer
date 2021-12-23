@@ -4,25 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="20dp"
-    tools:context=".MainActivity">
+    android:padding="10dp"
+    tools:context=".act.TinyGroupActivity">
 
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="handlePlayer"
-        android:text="通用播放器" />
+        android:onClick="handlePIP"
+        android:text="画中画" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="handleOpenMore"
-        android:text="播放器多开" />
+        android:onClick="handleAndroidOPIP"
+        android:text="Android O 画中画" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="handleTiny"
-        android:text="小窗播放" />
+        android:onClick="handleListPIP"
+        android:text="列表滑动进入画中画" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="handleListTiny"
+        android:text="列表滑动进入小窗" />
 
 </LinearLayout>
