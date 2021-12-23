@@ -1,6 +1,7 @@
 package com.bill.baseplayer.controller;
 
 import android.graphics.Bitmap;
+import android.view.ViewGroup;
 
 import com.bill.baseplayer.config.AspectRatioType;
 import com.bill.baseplayer.player.DataSource;
@@ -61,6 +62,8 @@ public interface PlayerControl {
     void exitTinyScreen();
 
     boolean isTinyScreen();
+
+    void setTinyScreenView(ViewGroup tinyScreenContainerView);
 
     DataSource getDataSource();
 

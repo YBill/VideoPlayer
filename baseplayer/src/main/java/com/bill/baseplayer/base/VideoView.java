@@ -36,7 +36,6 @@ import com.bill.baseplayer.util.CreateClsFactory;
 import com.bill.baseplayer.util.MLog;
 import com.bill.baseplayer.util.Utils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,10 +58,10 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     private CreateClsFactory<IRenderView> mRenderViewFactory; // 用于实例化渲染器
 
     private BaseVideoController mVideoController; // 控制器
-
     private FrameLayout mPlayerContainer; // 播放器总容器
 
     private DataSource mDataSource; // data source
+    private long mCurrentPosition; // 当前正在播放视频的位置
 
     private List<OnVideoStateChangeListener> mOnStateChangeListeners; // 保存了所有监听器
 
@@ -78,12 +77,11 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     private boolean mIsMute; // 是否静音
 
     private final int[] mVideoSize = {0, 0}; // 视频宽高
-    private int[] mTinyScreenSize = {0, 0}; // 小窗宽高
+
+    private ViewGroup mTinyScreenContainerView; // 小窗容器
 
     private boolean mIsFullScreen; // 是否处于全屏状态
     private boolean mIsTinyScreen; // 是否处于小窗状态
-
-    private long mCurrentPosition; // 当前正在播放视频的位置
 
     public VideoView(@NonNull Context context) {
         this(context, null);
@@ -491,15 +489,6 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     }
 
     /**
-     * 设置小窗的宽高
-     *
-     * @param tinyScreenSize tinyScreenSize[0]是宽，tinyScreenSize[1]是高
-     */
-    public void setTinyScreenSize(int[] tinyScreenSize) {
-        this.mTinyScreenSize = tinyScreenSize;
-    }
-
-    /**
      * 添加播放器监听
      */
     public void addVideoStateChangeListener(@NonNull OnVideoStateChangeListener listener) {
@@ -818,30 +807,33 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
 
     /**
      * 进入小窗
+     * 查看 {@link VideoView#setTinyScreenView}
      */
     @Override
     public void enterTinyScreen() {
         if (mIsTinyScreen) return;
-        ViewGroup contentView = getContentView();
-        if (contentView == null)
-            return;
+
+        if (mTinyScreenContainerView == null) {
+            ViewGroup contentView = getContentView();
+            if (contentView == null)
+                return;
+
+            // 大小设置为宽的一半
+            int size = (int) (Utils.getScreenWidth(getContext(), false) / 2f);
+            this.removeView(mPlayerContainer);
+            LayoutParams params = new LayoutParams(size, size);
+            contentView.addView(mPlayerContainer, params);
+        } else {
+            this.removeView(mPlayerContainer);
+            LayoutParams params = new LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+            mTinyScreenContainerView.addView(mPlayerContainer, params);
+        }
 
         mIsTinyScreen = true;
-
-        int width = mTinyScreenSize[0];
-        if (width <= 0) {
-            width = (int) (Utils.getScreenWidth(getContext(), false) / 2f);
-        }
-        int height = mTinyScreenSize[1];
-        if (height <= 0) {
-            height = (int) (width * 9f / 16);
-        }
-
-        this.removeView(mPlayerContainer);
-        LayoutParams params = new LayoutParams(width, height);
-        params.gravity = Gravity.BOTTOM | Gravity.END;
-        contentView.addView(mPlayerContainer, params);
         setPlayerState(VideoPlayerType.PLAYER_TINY_SCREEN);
+
     }
 
     /**
@@ -850,13 +842,18 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     @Override
     public void exitTinyScreen() {
         if (!mIsTinyScreen) return;
-        ViewGroup contentView = getContentView();
-        if (contentView == null)
-            return;
+
+        if (mTinyScreenContainerView == null) {
+            ViewGroup contentView = getContentView();
+            if (contentView == null)
+                return;
+            contentView.removeView(mPlayerContainer);
+        } else {
+            mTinyScreenContainerView.removeView(mPlayerContainer);
+        }
 
         mIsTinyScreen = false;
 
-        contentView.removeView(mPlayerContainer);
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
@@ -873,6 +870,17 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     @Override
     public boolean isTinyScreen() {
         return mIsTinyScreen;
+    }
+
+    /**
+     * 设置小窗播放容器
+     * 不设置则默认添加到 android.R.id.content 的右下角，宽高为屏幕宽的一半
+     *
+     * @param tinyScreenContainerView 小窗容器
+     */
+    @Override
+    public void setTinyScreenView(ViewGroup tinyScreenContainerView) {
+        mTinyScreenContainerView = tinyScreenContainerView;
     }
 
     @Override

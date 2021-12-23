@@ -3,6 +3,7 @@ package com.bill.baseplayer.controller;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 
@@ -148,6 +149,11 @@ public class ControlWrapper implements PlayerControl, IVideoController {
     @Override
     public boolean isTinyScreen() {
         return mPlayerControl.isTinyScreen();
+    }
+
+    @Override
+    public void setTinyScreenView(ViewGroup tinyScreenContainerView) {
+        mPlayerControl.setTinyScreenView(tinyScreenContainerView);
     }
 
     @Override

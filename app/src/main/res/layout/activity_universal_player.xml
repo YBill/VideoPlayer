@@ -6,11 +6,23 @@
     android:orientation="vertical"
     tools:context=".act.UniversalPlayerActivity">
 
-    <com.bill.baseplayer.base.VideoView
-        android:id="@+id/video_player"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+        <com.bill.baseplayer.base.VideoView
+            android:id="@+id/video_player"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <FrameLayout
+            android:id="@+id/fl_tiny_container"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="end" />
+
+    </FrameLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

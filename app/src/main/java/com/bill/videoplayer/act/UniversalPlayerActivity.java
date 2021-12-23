@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +31,7 @@ public class UniversalPlayerActivity extends AppCompatActivity implements View.O
     private VideoView videoView;
     private StandardVideoController videoController;
 
+    private FrameLayout tinyContainerView;
     private AppCompatEditText inputUrlEt;
     private AppCompatButton tinyBtn;
     private AppCompatButton loopBtn;
@@ -51,6 +53,9 @@ public class UniversalPlayerActivity extends AppCompatActivity implements View.O
 
     private void initPlayer() {
         videoView = findViewById(R.id.video_player);
+
+        // 设置小窗位置，不设置则添加到 android.R.id.content 的右下角
+        videoView.setTinyScreenView(tinyContainerView);
 
         // set controller
         videoController = new StandardVideoController(this);
@@ -76,6 +81,7 @@ public class UniversalPlayerActivity extends AppCompatActivity implements View.O
     }
 
     private void initView() {
+        tinyContainerView = findViewById(R.id.fl_tiny_container);
         inputUrlEt = findViewById(R.id.et_input_url);
         tinyBtn = findViewById(R.id.btn_tiny_screen);
         loopBtn = findViewById(R.id.btn_loop);
@@ -247,6 +253,20 @@ public class UniversalPlayerActivity extends AppCompatActivity implements View.O
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (videoView != null)
+            videoView.resume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (videoView != null)
+            videoView.pause();
     }
 
     @Override
