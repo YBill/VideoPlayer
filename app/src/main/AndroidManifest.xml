@@ -12,10 +12,26 @@
         android:theme="@style/Theme.VideoPlayer"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".act.TinyGroupActivity"
+            android:name=".act.ShortVideoListActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".act.ShortVideoDetailActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".act.ShortVideoGroupActivity"
             android:exported="true" />
         <activity
-            android:name=".act.TinyActivity"
+            android:name=".act.SmallVideoDetailActivity"
+            android:exported="true" />
+        <activity
+            android:name=".act.SmallVideoListActivity"
+            android:exported="true" />
+        <activity
+            android:name=".act.TinyGroupActivity"
             android:exported="true" />
         <activity
             android:name=".act.ParallelPlayerActivity"

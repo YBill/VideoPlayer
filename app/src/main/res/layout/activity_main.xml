@@ -22,6 +22,18 @@
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="handleShortVideo"
+        android:text="短视频" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="handleSmallVideo"
+        android:text="小视频" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:onClick="handleTiny"
         android:text="小窗播放" />
 

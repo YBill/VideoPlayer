@@ -16,6 +16,8 @@ import com.bill.baseplayer.render.TextureRenderViewFactory;
 import com.bill.player.exo.ExoPlayerFactory;
 import com.bill.player.ijk.IjkPlayerFactory;
 import com.bill.videoplayer.act.ParallelPlayerActivity;
+import com.bill.videoplayer.act.ShortVideoGroupActivity;
+import com.bill.videoplayer.act.SmallVideoListActivity;
 import com.bill.videoplayer.act.TinyGroupActivity;
 import com.bill.videoplayer.act.UniversalPlayerActivity;
 import com.bill.videoplayer.util.DebugUtils;
@@ -35,6 +37,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void handleOpenMore(View view) {
         Intent intent = new Intent(this, ParallelPlayerActivity.class);
+        startActivity(intent);
+    }
+
+    public void handleShortVideo(View view) {
+        Intent intent = new Intent(this, ShortVideoGroupActivity.class);
+        startActivity(intent);
+    }
+
+    public void handleSmallVideo(View view) {
+        Intent intent = new Intent(this, SmallVideoListActivity.class);
         startActivity(intent);
     }
 
