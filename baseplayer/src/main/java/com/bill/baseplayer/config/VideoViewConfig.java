@@ -70,6 +70,7 @@ public class VideoViewConfig {
 
         /**
          * 在移动环境下调用start()后是否继续播放，默认继续播放
+         * 配合 VideoViewManager.getInstance().setPlayOnMobileNetwork(true) 使用（用户继续后应该如果不再需要提示）
          */
         public Builder setPlayOnMobileNetwork(boolean playOnMobileNetwork) {
             mPlayOnMobileNetwork = playOnMobileNetwork;
@@ -93,7 +94,7 @@ public class VideoViewConfig {
         }
 
         /**
-         * 设置解码器
+         * 设置解码器，默认使用MediaPlayer
          */
         public Builder setPlayerFactory(CreateClsFactory<AbstractPlayer> playerFactory) {
             mPlayerFactory = playerFactory;
@@ -101,7 +102,7 @@ public class VideoViewConfig {
         }
 
         /**
-         * 设置渲染器
+         * 设置渲染器，默认使用TextureView
          */
         public Builder setRenderViewFactory(CreateClsFactory<IRenderView> renderViewFactory) {
             mRenderViewFactory = renderViewFactory;
@@ -109,7 +110,7 @@ public class VideoViewConfig {
         }
 
         /**
-         * 设置视频比例
+         * 设置视频比例 {@link AspectRatioType}
          */
         public Builder setScreenScaleType(@AspectRatioType int screenScaleType) {
             mScreenScaleType = screenScaleType;

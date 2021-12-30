@@ -687,7 +687,7 @@ public class VideoView extends FrameLayout implements PlayerControl, AbstractPla
     }
 
     /**
-     * 设置视频比例
+     * 设置视频比例 {@link AspectRatioType}
      */
     @Override
     public void setScreenScaleType(@AspectRatioType int screenScaleType) {
