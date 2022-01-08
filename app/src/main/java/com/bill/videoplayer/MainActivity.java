@@ -15,13 +15,18 @@ import com.bill.baseplayer.render.SurfaceRenderViewFactory;
 import com.bill.baseplayer.render.TextureRenderViewFactory;
 import com.bill.player.exo.ExoPlayerFactory;
 import com.bill.player.ijk.IjkPlayerFactory;
-import com.bill.videoplayer.act.ParallelPlayerActivity;
-import com.bill.videoplayer.act.ShortVideoGroupActivity;
-import com.bill.videoplayer.act.SmallVideoListActivity;
-import com.bill.videoplayer.act.TinyGroupActivity;
-import com.bill.videoplayer.act.UniversalPlayerActivity;
+import com.bill.videoplayer.parallel.ParallelPlayerActivity;
+import com.bill.videoplayer.short_video.ShortVideoGroupActivity;
+import com.bill.videoplayer.small_video.SmallVideoListActivity;
+import com.bill.videoplayer.tiny.TinyGroupActivity;
+import com.bill.videoplayer.universal_player.UniversalPlayerActivity;
 import com.bill.videoplayer.util.DebugUtils;
 
+/**
+ * author ywb
+ * date 2022/1/8
+ * desc 首页
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override

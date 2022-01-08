@@ -7,6 +7,10 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewParent;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.bill.videoplayer.app.AppAuxiliary;
@@ -16,7 +20,7 @@ import java.util.List;
 /**
  * author ywb
  * date 2021/12/23
- * desc
+ * desc 通用工具类
  */
 public class Utils {
 
@@ -66,6 +70,17 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    /**
+     * 将View从父控件中移除
+     */
+    public static void removeViewFormParent(View v) {
+        if (v == null) return;
+        ViewParent parent = v.getParent();
+        if (parent instanceof ViewGroup) {
+            ((ViewGroup) parent).removeView(v);
+        }
     }
 
 }

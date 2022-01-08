@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/workspace/as/VideoPlayer/app/src/main/res/drawable/default_placeholder_img.xml" value="0.3697916666666667" />
+        <entry key="..\:/workspace/as/VideoPlayer/app/src/main/res/drawable/small_video_placeholder_img.xml" value="0.3697916666666667" />
         <entry key="..\:/workspace/as/VideoPlayer/app/src/main/res/layout/activity_main.xml" value="0.3536458333333333" />
         <entry key="..\:/workspace/as/VideoPlayer/app/src/main/res/layout/activity_parallel_player.xml" value="0.3536458333333333" />
         <entry key="..\:/workspace/as/VideoPlayer/app/src/main/res/layout/activity_player_test.xml" value="0.3536458333333333" />
@@ -13,6 +15,9 @@
         <entry key="..\:/workspace/as/VideoPlayer/app/src/main/res/layout/activity_small_video_list.xml" value="0.3536458333333333" />
         <entry key="..\:/workspace/as/VideoPlayer/app/src/main/res/layout/activity_tiny_group.xml" value="0.3536458333333333" />
         <entry key="..\:/workspace/as/VideoPlayer/app/src/main/res/layout/activity_universal_player.xml" value="0.3536458333333333" />
+        <entry key="..\:/workspace/as/VideoPlayer/app/src/main/res/layout/adapter_small_video_detail.xml" value="0.36614583333333334" />
+        <entry key="..\:/workspace/as/VideoPlayer/app/src/main/res/layout/adapter_small_video_list.xml" value="0.3536458333333333" />
+        <entry key="..\:/workspace/as/VideoPlayer/app/src/main/res/layout/layout_small_video_component.xml" value="0.3536458333333333" />
         <entry key="..\:/workspace/as/VideoPlayer/app/src/main/res/menu/main_menu.xml" value="0.3536458333333333" />
         <entry key="..\:/workspace/as/VideoPlayer/player-ui/src/main/res/drawable/layer_progress_bar.xml" value="0.3697916666666667" />
         <entry key="..\:/workspace/as/VideoPlayer/player-ui/src/main/res/drawable/layer_seekbar_progress.xml" value="0.3697916666666667" />

@@ -460,17 +460,17 @@ public class BaseVideoController extends FrameLayout implements
     }
 
     private void handlePlayStateChanged(@VideoPlayType int playState) {
-        onPlayStateChanged(playState);
         for (IControlComponent component : mControlComponents) {
             component.onPlayStateChanged(playState);
         }
+        onPlayStateChanged(playState);
     }
 
     private void handlePlayerStateChanged(@VideoPlayerType int playerState) {
-        onPlayerStateChanged(playerState);
         for (IControlComponent component : mControlComponents) {
             component.onPlayerStateChanged(playerState);
         }
+        onPlayerStateChanged(playerState);
     }
 
     private void handleSingleTap() {

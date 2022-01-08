@@ -1,4 +1,4 @@
-package com.bill.videoplayer.act;
+package com.bill.videoplayer.parallel;
 
 import android.os.Bundle;
 
@@ -15,6 +15,11 @@ import com.bill.player.ijk.IjkPlayerFactory;
 import com.bill.videoplayer.R;
 import com.bill.videoplayer.component.DebugInfoComponent;
 
+/**
+ * author ywb
+ * date 2022/12/23
+ * desc 播放器多开
+ */
 public class ParallelPlayerActivity extends AppCompatActivity {
 
     private static final String URL_1 = "https://rmrbtest-image.peopleapp.com/upload/video/201809/1537349021125fcfb438615c1b.mp4";

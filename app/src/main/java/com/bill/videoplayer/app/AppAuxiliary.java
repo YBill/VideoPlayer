@@ -6,7 +6,7 @@ import android.content.Context;
 /**
  * author ywb
  * date 2021/12/23
- * desc
+ * desc ApplicationContext
  */
 public class AppAuxiliary {
 

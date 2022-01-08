@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".act.ParallelPlayerActivity">
+    tools:context=".parallel.ParallelPlayerActivity">
 
     <com.bill.baseplayer.base.VideoView
         android:id="@+id/video_player_1"

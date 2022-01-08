@@ -12,34 +12,34 @@
         android:theme="@style/Theme.VideoPlayer"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".act.ShortVideoListActivity"
+            android:name=".short_video.ShortVideoListActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".act.ShortVideoDetailActivity"
+            android:name=".short_video.ShortVideoDetailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".act.ShortVideoGroupActivity"
+            android:name=".short_video.ShortVideoGroupActivity"
             android:exported="true" />
         <activity
-            android:name=".act.SmallVideoDetailActivity"
+            android:name=".small_video.SmallVideoDetailActivity"
             android:exported="true" />
         <activity
-            android:name=".act.SmallVideoListActivity"
+            android:name=".small_video.SmallVideoListActivity"
             android:exported="true" />
         <activity
-            android:name=".act.TinyGroupActivity"
+            android:name=".tiny.TinyGroupActivity"
             android:exported="true" />
         <activity
-            android:name=".act.ParallelPlayerActivity"
+            android:name=".parallel.ParallelPlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:exported="true"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".act.UniversalPlayerActivity"
+            android:name=".universal_player.UniversalPlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:exported="true"
             android:screenOrientation="portrait" />

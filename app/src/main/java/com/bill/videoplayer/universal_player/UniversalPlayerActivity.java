@@ -1,11 +1,10 @@
-package com.bill.videoplayer.act;
+package com.bill.videoplayer.universal_player;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +22,11 @@ import com.bill.videoplayer.util.KeyboardHelper;
 import com.bill.videoplayer.util.Utils;
 import com.bumptech.glide.Glide;
 
+/**
+ * author ywb
+ * date 2022/12/22
+ * desc 通用播放器页
+ */
 public class UniversalPlayerActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String URL_1 = "http://vfx.mtime.cn/Video/2019/03/14/mp4/190314223540373995.mp4";
