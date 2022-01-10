@@ -36,6 +36,10 @@ public class SmallVideoListAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.mData = data;
     }
 
+    public List<SmallVideoBean> getData() {
+        return mData;
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

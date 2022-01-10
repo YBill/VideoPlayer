@@ -1,6 +1,5 @@
 package com.bill.videoplayer.small_video;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -11,9 +10,15 @@ import com.bill.baseplayer.base.BaseVideoController;
 import com.bill.baseplayer.base.VideoView;
 import com.bill.baseplayer.player.DataSource;
 import com.bill.videoplayer.R;
-import com.bill.videoplayer.component.DebugInfoComponent;
-import com.bill.videoplayer.util.ParseVideoDataHelper;
+import com.bill.videoplayer.event.SmallVideoDataEvent;
 import com.bill.videoplayer.util.Utils;
+import com.gyf.immersionbar.ImmersionBar;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 /**
  * author ywb
@@ -23,27 +28,32 @@ import com.bill.videoplayer.util.Utils;
 public class SmallVideoDetailActivity extends AppCompatActivity {
 
     private RecyclerView mVideoRv;
+    private SmallVideoDetailAdapter mAdapter;
     private VideoLayoutManager mLayoutManager;
     private VideoView mVideoView;
     private BaseVideoController mController;
     private int mCurrentPosition = -1;
 
+    private List<SmallVideoBean> mData;
+    private int mIndex = -1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ImmersionBar.with(this).init();
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
         setContentView(R.layout.activity_small_video_detail);
         initView();
         initVideo();
 
-        Intent extras = getIntent();
-        int index = extras.getIntExtra("index", 0);
-        mVideoRv.scrollToPosition(index);
+        if (mIndex >= 0)
+            mVideoRv.scrollToPosition(mIndex);
     }
 
     private void initVideo() {
         mVideoView = new VideoView(this);
         mController = new BaseVideoController(this);
-        mController.addControlComponent(new DebugInfoComponent(this));
+//        mController.addControlComponent(new DebugInfoComponent(this));
         mVideoView.setVideoController(mController);
         mVideoView.setLooping(true);
     }
@@ -52,8 +62,8 @@ public class SmallVideoDetailActivity extends AppCompatActivity {
         mVideoRv = findViewById(R.id.rv_small_video_detail);
         mLayoutManager = new VideoLayoutManager(this);
         mVideoRv.setLayoutManager(mLayoutManager);
-        SmallVideoDetailAdapter mAdapter = new SmallVideoDetailAdapter(this, null);
-        mAdapter.setData(ParseVideoDataHelper.parseSmallVideoData(this));
+        mAdapter = new SmallVideoDetailAdapter(this, null);
+        mAdapter.setData(mData);
         mVideoRv.setAdapter(mAdapter);
 
         mLayoutManager.setOnViewPagerListener(new OnViewPagerListener() {
@@ -91,6 +101,18 @@ public class SmallVideoDetailActivity extends AppCompatActivity {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onSmallVideoListDataEvent(SmallVideoDataEvent event) {
+        if (mVideoRv == null) {
+            mData = event.mList;
+            mIndex = event.mIndex;
+        } else {
+            mAdapter.setData(mData);
+            mAdapter.notifyDataSetChanged();
+            mVideoRv.scrollToPosition(mIndex);
+        }
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -110,6 +132,7 @@ public class SmallVideoDetailActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         if (mVideoView != null) {
             mVideoView.release();
         }
