@@ -21,14 +21,12 @@ import java.util.List;
  * date 2022/1/8
  * desc 小视频详情页Adapter
  */
-public class SmallVideoDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SmallVideoDetailAdapter extends CacheSmallVideoAdapter {
 
-    private final Context mContext;
     private final CustomItemClickListener<SmallVideoBean> mClickListener;
-    private List<SmallVideoBean> mData;
 
     public SmallVideoDetailAdapter(Context context, CustomItemClickListener<SmallVideoBean> clickListener) {
-        mContext = context;
+        super(context);
         this.mClickListener = clickListener;
     }
 

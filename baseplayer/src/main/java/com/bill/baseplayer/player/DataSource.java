@@ -22,6 +22,8 @@ public class DataSource {
 
     public String mTitle; // 视频的title
 
+    public Map<String, Object> mOtherParams; // 其他参数，用户可以自定义
+
     public DataSource() {
 
     }

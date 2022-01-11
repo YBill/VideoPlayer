@@ -10,6 +10,10 @@ import androidx.appcompat.widget.AppCompatImageView;
 import com.bill.baseplayer.config.VideoPlayType;
 import com.bill.player.controller.component.BaseComponent;
 import com.bill.videoplayer.R;
+import com.bill.videoplayer.cache.PreloadManager;
+import com.bill.videoplayer.util.VPLog;
+
+import java.util.Map;
 
 /**
  * author ywb
@@ -70,6 +74,18 @@ public class SmallVideoComponent extends BaseComponent {
                 playBtn.setVisibility(VISIBLE);
                 break;
             case VideoPlayType.STATE_PREPARED:
+                if (mControlWrapper != null) {
+                    try {
+                        Map<String, Object> params = mControlWrapper.getDataSource().mOtherParams;
+                        Object position = params.get("position");
+                        Object isReverseScroll = params.get("isReverseScroll");
+                        // 准备完成后继续缓存视频
+                        VPLog.d("PreLoadCache", "resumePreload position = " + position + ", isReverseScroll = " + isReverseScroll);
+                        PreloadManager.getInstance().resumePreload((int) position, (boolean) isReverseScroll);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 break;
         }
 

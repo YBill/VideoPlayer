@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/players" />
             <option value="$PROJECT_DIR$/players/exo" />
             <option value="$PROJECT_DIR$/players/ijk" />
+            <option value="$PROJECT_DIR$/videocache" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

@@ -47,6 +47,7 @@ dependencies {
     implementation project(':player-ui')
     implementation project(':players:ijk')
     implementation project(':players:exo')
+    implementation project(':videocache')
 
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.12.0'

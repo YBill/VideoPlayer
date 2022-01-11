@@ -10,15 +10,20 @@ import com.bill.baseplayer.base.BaseVideoController;
 import com.bill.baseplayer.base.VideoView;
 import com.bill.baseplayer.player.DataSource;
 import com.bill.videoplayer.R;
+import com.bill.videoplayer.cache.PreloadManager;
+import com.bill.videoplayer.cache.VideoCacheManager;
 import com.bill.videoplayer.event.SmallVideoDataEvent;
 import com.bill.videoplayer.util.Utils;
+import com.bill.videoplayer.util.VPLog;
 import com.gyf.immersionbar.ImmersionBar;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * author ywb
@@ -86,16 +91,29 @@ public class SmallVideoDetailActivity extends AppCompatActivity {
     private void playerVideo() {
         int visibleItemPosition = mLayoutManager.findLastCompletelyVisibleItemPosition();
         if (visibleItemPosition >= 0 && mCurrentPosition != visibleItemPosition) {
+            boolean isReverseScroll = mCurrentPosition > visibleItemPosition; // 是否反向滑动
             mVideoView.release(); // 停止上一个视频
             mCurrentPosition = visibleItemPosition;
             View holderView = mLayoutManager.findViewByPosition(mCurrentPosition);
             if (holderView != null) {
+                // 播放器前先暂停缓存视频
+                PreloadManager.getInstance().pausePreload();
+
                 Utils.removeViewFormParent(mVideoView);
                 SmallVideoDetailAdapter.SmallVideoHolder viewHolder = (SmallVideoDetailAdapter.SmallVideoHolder)
                         mVideoRv.getChildViewHolder(holderView);
                 viewHolder.videoViewContainer.addView(mVideoView);
                 mController.addControlComponent(viewHolder.videoComponent);
-                mVideoView.setDataSource(new DataSource(viewHolder.smallVideoBean.video_url));
+
+                String proxyUrl = PreloadManager.getInstance().getPlayUrl(viewHolder.smallVideoBean.video_url);
+                VPLog.d("PreLoadCache", "proxyUrl：" + proxyUrl);
+                // 传递position和方向，在准备完成后使用
+                Map<String, Object> map = new HashMap<>();
+                map.put("position", mCurrentPosition);
+                map.put("isReverseScroll", isReverseScroll);
+                DataSource dataSource = new DataSource(proxyUrl);
+                dataSource.mOtherParams = map;
+                mVideoView.setDataSource(dataSource);
                 mVideoView.start();
             }
         }
@@ -136,5 +154,9 @@ public class SmallVideoDetailActivity extends AppCompatActivity {
         if (mVideoView != null) {
             mVideoView.release();
         }
+
+        VPLog.d("PreLoadCache", "清空缓存");
+        PreloadManager.getInstance().removeAllPreloadTask();
+        VideoCacheManager.getInstance().clearAllCache();
     }
 }
