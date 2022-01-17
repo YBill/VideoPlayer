@@ -6,6 +6,8 @@ import android.content.ContextWrapper;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.telephony.TelephonyManager;
@@ -111,6 +113,37 @@ public class Utils {
 
         // 未知网络
         return NETWORK_UNKNOWN;
+    }
+
+    public static int getNetworkType2(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        // Android版本在6.0之前只能使用NetworkInfo获取网络状态
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            if (connectivityManager != null) {
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                if (networkInfo != null) {
+                    if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                        return NETWORK_WIFI;
+                    } else if (networkInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                        return NETWORK_MOBILE;
+                    }
+                }
+            }
+        } else {
+            if (connectivityManager != null) {
+                Network networks = connectivityManager.getActiveNetwork();
+                NetworkCapabilities networkCapabilities = connectivityManager.getNetworkCapabilities(networks);
+                if (networkCapabilities != null) {
+                    if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+                        return NETWORK_WIFI;
+                    } else if (networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+                        return NETWORK_MOBILE;
+                    }
+                }
+            }
+        }
+        //无网络
+        return NO_NETWORK;
     }
 
     /**
