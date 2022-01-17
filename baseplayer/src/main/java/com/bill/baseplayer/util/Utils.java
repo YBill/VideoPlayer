@@ -32,13 +32,17 @@ public class Utils {
     public static final int NETWORK_UNKNOWN = -1; // unknown
 
     public static boolean isHasNet(Context context) {
-        int type = getNetworkType(context);
-        return type == NETWORK_WIFI || type == NETWORK_MOBILE;
+        return isMobileNet(context) || isWiFi(context);
     }
 
     public static boolean isMobileNet(Context context) {
         int type = getNetworkType(context);
         return type == NETWORK_MOBILE;
+    }
+
+    public static boolean isWiFi(Context context) {
+        int type = getNetworkType(context);
+        return type == NETWORK_WIFI || type == NETWORK_ETHERNET;
     }
 
     /**
@@ -71,15 +75,15 @@ public class Utils {
             // 移动数据连接,不能与连接共存,如果wifi打开，则自动关闭
             switch (networkInfo.getSubtype()) {
                 // 2G
-                case TelephonyManager.NETWORK_TYPE_GPRS:
-                case TelephonyManager.NETWORK_TYPE_EDGE:
-                case TelephonyManager.NETWORK_TYPE_CDMA:
+                case TelephonyManager.NETWORK_TYPE_GPRS: // 联通2g
+                case TelephonyManager.NETWORK_TYPE_EDGE: // 电信2g
+                case TelephonyManager.NETWORK_TYPE_CDMA: // 移动2g
                 case TelephonyManager.NETWORK_TYPE_1xRTT:
                 case TelephonyManager.NETWORK_TYPE_IDEN:
                     // 3G
                 case TelephonyManager.NETWORK_TYPE_UMTS:
                 case TelephonyManager.NETWORK_TYPE_EVDO_0:
-                case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                case TelephonyManager.NETWORK_TYPE_EVDO_A: // 电信3g
                 case TelephonyManager.NETWORK_TYPE_HSDPA:
                 case TelephonyManager.NETWORK_TYPE_HSUPA:
                 case TelephonyManager.NETWORK_TYPE_HSPA:
@@ -91,6 +95,17 @@ public class Utils {
                     // 5G
                 case TelephonyManager.NETWORK_TYPE_NR:
                     return NETWORK_MOBILE;
+            }
+        } else {
+            String subtypeName = networkInfo.getSubtypeName();
+            // 中国移动 联通 电信 三种3G制式
+            if (subtypeName.equalsIgnoreCase("TD-SCDMA")
+                    || subtypeName.equalsIgnoreCase("WCDMA")
+                    || subtypeName.equalsIgnoreCase("CDMA2000")) {
+                return NETWORK_MOBILE; // 3G
+            } else {
+                MLog.d("NetworkType = " + subtypeName);
+                return NETWORK_MOBILE;
             }
         }
 
